@@ -15,6 +15,8 @@ public class pacienteController {
     public List<pacienteDTO> listarPacientes() {
         return pacientes;
     }
+
+    
     @GetMapping("/{id}")
     public pacienteDTO obtenerPaciente(@PathVariable Long id) {
         for (pacienteDTO p : pacientes) {
@@ -35,9 +37,7 @@ public class pacienteController {
 
 
     @PutMapping("/{id}")
-    public pacienteDTO actualizarPaciente(
-            @PathVariable Long id,
-            @RequestBody pacienteDTO pacienteActualizado) {
+    public pacienteDTO actualizarPaciente(@PathVariable Long id, @RequestBody pacienteDTO pacienteActualizado) {
         for (pacienteDTO p : pacientes) {
             if (p.getId().equals(id)) {
                 p.setNombre(pacienteActualizado.getNombre());
@@ -53,9 +53,7 @@ public class pacienteController {
     
     @DeleteMapping("/{id}")
     public String eliminarPaciente(@PathVariable Long id) {
-
         pacientes.removeIf(p -> p.getId().equals(id));
-
         return "Paciente eliminado";
     }
 }
