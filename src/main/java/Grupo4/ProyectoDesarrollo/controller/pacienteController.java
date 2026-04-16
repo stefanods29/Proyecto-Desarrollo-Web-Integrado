@@ -10,7 +10,6 @@ import java.util.List;
 @RequestMapping("/api/pacientes")
 public class pacienteController {
     private List<pacienteDTO> pacientes = new ArrayList<>();
-
     @GetMapping
     public List<pacienteDTO> listarPacientes() {
         return pacientes;
