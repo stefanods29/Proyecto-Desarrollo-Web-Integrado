@@ -72,6 +72,7 @@ public class MedicoServiceImpl implements MedicoService {
         dto.setId(medico.getId());
         dto.setNombre(medico.getNombre());
         dto.setEspecialidad(medico.getEspecialidad());
+        dto.setTelefono(medico.getTelefono());
         dto.setCorreo(medico.getCorreo());
         return dto;
     }

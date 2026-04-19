@@ -31,8 +31,13 @@ public class medicoController {
     }
 
     @PostMapping
-    public ResponseEntity<medicoDTO> crearMedico(
-            @Valid @RequestBody medicoDTO medico) {
+    public ResponseEntity<medicoDTO> crearMedico(@RequestBody medicoDTO medico) {
+
+        System.out.println("==== DEBUG ====");
+        System.out.println("NOMBRE: " + medico.getNombre());
+        System.out.println("TELEFONO: " + medico.getTelefono());
+        System.out.println("CORREO: " + medico.getCorreo());
+
         return ResponseEntity.ok(medicoService.crear(medico));
     }
 
