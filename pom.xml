@@ -12,7 +12,7 @@
     <packaging>jar</packaging>
 
     <name>ProyectoDesarrollo</name>
-    <description>Proyecto Spring Boot con Java 25</description>
+    <description>Proyecto Spring Boot con Java 25 (compilando en release 21)</description>
 
     <!-- Spring Boot Parent -->
     <parent>
@@ -22,9 +22,9 @@
         <relativePath/>
     </parent>
 
-    <!-- Java Version -->
+    <!-- IMPORTANTE: Compilamos en 21 aunque uses JDK 25 -->
     <properties>
-        <java.version>25</java.version>
+        <java.version>21</java.version>
     </properties>
 
     <dependencies>
@@ -61,7 +61,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Swagger (Opcional pero recomendado) -->
+        <!-- Swagger -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -80,13 +80,12 @@
     <build>
         <plugins>
 
-            <!-- Maven Compiler Plugin -->
+            <!-- Compiler configurado para generar bytecode compatible con Java 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>25</source>
-                    <target>25</target>
+                    <release>21</release>
                 </configuration>
             </plugin>
 
