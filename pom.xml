@@ -12,7 +12,7 @@
     <packaging>jar</packaging>
 
     <name>ProyectoDesarrollo</name>
-    <description>Proyecto Spring Boot con Java 21</description>
+    <description>Proyecto Spring Boot con Java 25</description>
 
     <!-- Spring Boot Parent -->
     <parent>
