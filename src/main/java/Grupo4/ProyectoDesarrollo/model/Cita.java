@@ -68,8 +68,7 @@ public class Cita {
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
-    public Cita() {
-    }
+
 
     
 }
