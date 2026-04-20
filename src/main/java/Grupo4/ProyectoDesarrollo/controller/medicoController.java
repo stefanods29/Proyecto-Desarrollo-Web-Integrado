@@ -1,57 +1,56 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
 import Grupo4.ProyectoDesarrollo.dto.medicoDTO;
+import Grupo4.ProyectoDesarrollo.service.MedicoService;
+
+import jakarta.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/medicos")
 public class medicoController {
-    private List<medicoDTO> medicos = new ArrayList<>();
-    @GetMapping
-    public List<medicoDTO> listarMedicos() {
-        return medicos;
+
+    private final MedicoService medicoService;
+
+    public medicoController(MedicoService medicoService) {
+        this.medicoService = medicoService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<medicoDTO>> listarMedicos() {
+        return ResponseEntity.ok(medicoService.listar());
+    }
 
     @GetMapping("/{id}")
-    public medicoDTO obtenerMedico(@PathVariable Long id) {
-        for (medicoDTO m : medicos) {
-            if (m.getId().equals(id)) {
-                return m;
-            }
-        }
-        return null;
+    public ResponseEntity<medicoDTO> obtenerMedico(@PathVariable Long id) {
+        return ResponseEntity.ok(medicoService.obtener(id));
     }
-
 
     @PostMapping
-    public medicoDTO crearMedico(@RequestBody medicoDTO medico) {
-        medico.setId((long) (medicos.size() + 1));
-        medicos.add(medico);
-        return medico;
-    }
+    public ResponseEntity<medicoDTO> crearMedico(@RequestBody medicoDTO medico) {
 
+        System.out.println("==== DEBUG ====");
+        System.out.println("NOMBRE: " + medico.getNombre());
+        System.out.println("TELEFONO: " + medico.getTelefono());
+        System.out.println("CORREO: " + medico.getCorreo());
+
+        return ResponseEntity.ok(medicoService.crear(medico));
+    }
 
     @PutMapping("/{id}")
-    public medicoDTO actualizarMedico(@PathVariable Long id,@RequestBody medicoDTO medicoActualizado) {
-        for (medicoDTO m : medicos) {
-            if (m.getId().equals(id)) {
-                m.setNombre(medicoActualizado.getNombre());
-                m.setEspecialidad(medicoActualizado.getEspecialidad());
-                m.setTelefono(medicoActualizado.getTelefono());
-                m.setCorreo(medicoActualizado.getCorreo());
-                return m;
-            }
-        }
-        return null;
+    public ResponseEntity<medicoDTO> actualizarMedico(
+            @PathVariable Long id,
+            @Valid @RequestBody medicoDTO medicoActualizado) {
+        return ResponseEntity.ok(medicoService.actualizar(id, medicoActualizado));
     }
 
-
     @DeleteMapping("/{id}")
-    public String eliminarMedico(@PathVariable Long id) {
-        medicos.removeIf(m -> m.getId().equals(id));
-        return "Medico eliminado";
+    public ResponseEntity<String> eliminarMedico(@PathVariable Long id) {
+        medicoService.eliminar(id);
+        return ResponseEntity.ok("Medico eliminado correctamente");
     }
 }
