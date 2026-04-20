@@ -117,10 +117,5 @@ public class Paciente {
     public Paciente() {
     }
 
-    @PrePersist
-    protected void onCreate() {
-        if (this.fechaRegistro == null) {
-            this.fechaRegistro = LocalDateTime.now();
-        }
-    }
+    
 }

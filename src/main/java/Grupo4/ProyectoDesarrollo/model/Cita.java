@@ -71,10 +71,5 @@ public class Cita {
     public Cita() {
     }
 
-    @PrePersist
-    protected void onCreate() {
-        if (this.fechaCreacion == null) {
-            this.fechaCreacion = LocalDateTime.now();
-        }
-    }
+    
 }
