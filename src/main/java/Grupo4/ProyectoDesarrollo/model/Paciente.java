@@ -100,7 +100,7 @@ public class Paciente {
     @Getter
     @Setter
     @ManyToOne
-    @JoinColumn(name = "clinica_id") 
+    @JoinColumn(name = "clinica_id")
     private Clinica clinica;
 
     @Getter
