@@ -1,56 +1,43 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
-import Grupo4.ProyectoDesarrollo.dto.medicoDTO;
+import Grupo4.ProyectoDesarrollo.model.Medico;
 import Grupo4.ProyectoDesarrollo.service.MedicoService;
-
-import jakarta.validation.Valid;
-
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/medicos")
+@RequiredArgsConstructor
 public class medicoController {
 
-    private final MedicoService medicoService;
+    private final MedicoService service;
 
-    public medicoController(MedicoService medicoService) {
-        this.medicoService = medicoService;
+    @PostMapping
+    public Medico crear(@RequestBody Medico medico) {
+        return service.crear(medico);
     }
 
     @GetMapping
-    public ResponseEntity<List<medicoDTO>> listarMedicos() {
-        return ResponseEntity.ok(medicoService.listar());
+    public List<Medico> listar() {
+        return service.listar();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<medicoDTO> obtenerMedico(@PathVariable Long id) {
-        return ResponseEntity.ok(medicoService.obtener(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<medicoDTO> crearMedico(@RequestBody medicoDTO medico) {
-
-        System.out.println("==== DEBUG ====");
-        System.out.println("NOMBRE: " + medico.getNombre());
-        System.out.println("TELEFONO: " + medico.getTelefono());
-        System.out.println("CORREO: " + medico.getCorreo());
-
-        return ResponseEntity.ok(medicoService.crear(medico));
+    public Medico buscarPorId(@PathVariable Long id) {
+        return service.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<medicoDTO> actualizarMedico(
-            @PathVariable Long id,
-            @Valid @RequestBody medicoDTO medicoActualizado) {
-        return ResponseEntity.ok(medicoService.actualizar(id, medicoActualizado));
+    public Medico actualizar(@PathVariable Long id,
+                              @RequestBody Medico medico) {
+        medico.setId(id);
+        return service.crear(medico);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarMedico(@PathVariable Long id) {
-        medicoService.eliminar(id);
-        return ResponseEntity.ok("Medico eliminado correctamente");
+    public void eliminar(@PathVariable Long id) {
+        service.eliminar(id);
     }
 }
