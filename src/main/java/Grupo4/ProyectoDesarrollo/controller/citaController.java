@@ -23,17 +23,14 @@ public class citaController {
                 return c;
             }
         }
-
         return null;
     }
 
 
     @PostMapping
     public citaDTO crearCita(@RequestBody citaDTO cita) {
-
         cita.setId((long) (citas.size() + 1));
         citas.add(cita);
-
         return cita;
     }
 
