@@ -1,15 +1,15 @@
 package Grupo4.ProyectoDesarrollo.service;
 
+import Grupo4.ProyectoDesarrollo.model.Medico;
 import java.util.List;
-import Grupo4.ProyectoDesarrollo.dto.medicoDTO;
 
 public interface MedicoService {
 
-    List<medicoDTO> listar();
-    medicoDTO obtener(Long id);
-    medicoDTO crear(medicoDTO medico);
-    medicoDTO actualizar(Long id, medicoDTO medico);
+    Medico crear(Medico medico);
+
+    List<Medico> listar();
+
+    Medico buscarPorId(Long id);
+
     void eliminar(Long id);
-    medicoDTO buscarPorId(Long id);
-    medicoDTO guardar(medicoDTO medicoDTO);
 }
