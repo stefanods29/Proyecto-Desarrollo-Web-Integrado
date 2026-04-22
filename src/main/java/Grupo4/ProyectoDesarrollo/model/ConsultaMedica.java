@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Entity
 @Table(name = "ConsultaMedica")
@@ -121,11 +119,11 @@ public class ConsultaMedica {
     @Getter
     @Setter
     @Column(nullable = false)
-    private LocalDateTime fechaActualizada;
+    private LocalDateTime fechaActualizacion;
 
     public ConsultaMedica() {}
 
-    public ConsultaMedica(Long id, Paciente paciente, Medico medico, Cita cita, Clinica clinica, String anamnesis, String examenFisico, String diagnostico, String tratamiento, String observaciones, String presionArterial, Double temperatura, Integer frecuenciaCardiaca, Integer frecuenciaRespiratoria, Double peso, Double talla, LocalDateTime fechaConsulta, LocalDateTime fechaActualizada) {
+    public ConsultaMedica(Long id, Paciente paciente, Medico medico, Cita cita, Clinica clinica, String anamnesis, String examenFisico, String diagnostico, String tratamiento, String observaciones, String presionArterial, Double temperatura, Integer frecuenciaCardiaca, Integer frecuenciaRespiratoria, Double peso, Double talla, LocalDateTime fechaConsulta, LocalDateTime fechaActualizacion) {
         this.id = id;
         this.paciente = paciente;
         this.medico = medico;
@@ -143,6 +141,6 @@ public class ConsultaMedica {
         this.peso = peso;
         this.talla = talla;
         this.fechaConsulta = fechaConsulta;
-        this.fechaActualizada = fechaActualizada;
+        this.fechaActualizacion = fechaActualizacion;
     }
 }

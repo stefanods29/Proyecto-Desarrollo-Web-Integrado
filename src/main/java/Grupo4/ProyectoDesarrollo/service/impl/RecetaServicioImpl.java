@@ -1,8 +1,9 @@
-package Grupo4.ProyectoDesarrollo.servicio.impl;
+package Grupo4.ProyectoDesarrollo.service.impl;
 
 import Grupo4.ProyectoDesarrollo.model.Receta;
 import Grupo4.ProyectoDesarrollo.repository.RecetaRepository;
-import Grupo4.ProyectoDesarrollo.servicio.RecetaServicio;
+import Grupo4.ProyectoDesarrollo.service.RecetaServicio;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;

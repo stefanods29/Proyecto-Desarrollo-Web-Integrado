@@ -1,6 +1,7 @@
 package Grupo4.ProyectoDesarrollo;
 
 import Grupo4.ProyectoDesarrollo.dto.medicoDTO;
+import Grupo4.ProyectoDesarrollo.model.Medico;
 import Grupo4.ProyectoDesarrollo.service.MedicoService;
 
 import org.junit.jupiter.api.Test;
@@ -18,13 +19,13 @@ class MedicoServiceTest {
     @Test
     void deberiaCrearMedico() {
 
-        medicoDTO medico = new medicoDTO();
+        Medico medico = new Medico();
         medico.setNombre("Caleb Romero");
         medico.setEspecialidad("Cardiologia");
         medico.setTelefono("987654321");
         medico.setCorreo("caleb@test.com");
 
-        medicoDTO creado = medicoService.crear(medico);
+        Medico creado = medicoService.crear(medico);
 
         assertNotNull(creado.getId());
         assertEquals("Caleb Romero", creado.getNombre());

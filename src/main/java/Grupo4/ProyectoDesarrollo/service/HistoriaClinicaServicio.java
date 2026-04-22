@@ -1,4 +1,4 @@
-package Grupo4.ProyectoDesarrollo.servicio;
+package Grupo4.ProyectoDesarrollo.service;
 
 import Grupo4.ProyectoDesarrollo.model.HistoriaClinica;
 

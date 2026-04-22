@@ -1,8 +1,9 @@
-package Grupo4.ProyectoDesarrollo.servicio.impl;
+package Grupo4.ProyectoDesarrollo.service.impl;
 
 import Grupo4.ProyectoDesarrollo.model.HistoriaClinica;
 import Grupo4.ProyectoDesarrollo.repository.HistoriaClinicaRepository;
-import Grupo4.ProyectoDesarrollo.servicio.HistoriaClinicaServicio;
+import Grupo4.ProyectoDesarrollo.service.HistoriaClinicaServicio;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -17,7 +17,7 @@ public class MedicoServiceImpl implements MedicoService {
     private final MedicoRepository medicoRepository;
 
     @Override
-    public Medico guardar(Medico medico) {
+    public Medico crear(Medico medico) {
         return medicoRepository.save(medico);
     }
 
@@ -27,7 +27,7 @@ public class MedicoServiceImpl implements MedicoService {
     }
 
     @Override
-    public Medico obtenerPorId(Long id) {
+    public Medico buscarPorId(Long id) {
         return medicoRepository.findById(id).orElse(null);
     }
 

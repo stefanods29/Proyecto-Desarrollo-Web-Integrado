@@ -3,14 +3,11 @@ package Grupo4.ProyectoDesarrollo.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Import;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
-@Table(name="Receta")
+@Table(name = "Receta")
 public class Receta {
 
     @Getter
@@ -49,18 +46,14 @@ public class Receta {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)
-    private List<DetalleReceta> detalles;
-
-    @Getter
-    @Setter
     @Column(nullable = false)
     private LocalDateTime fechaEmision;
 
     public Receta() {
     }
 
-    public Receta(Long id, ConsultaMedica consultaMedica, Medico medico, Paciente paciente, String indicaciones, List<DetalleReceta> detalles, LocalDateTime fechaEmision) {
+    public Receta(Long id, ConsultaMedica consultaMedica, Medico medico, Paciente paciente, String indicaciones,
+            List<DetalleReceta> detalles, LocalDateTime fechaEmision) {
         this.id = id;
         this.consultaMedica = consultaMedica;
         this.medico = medico;

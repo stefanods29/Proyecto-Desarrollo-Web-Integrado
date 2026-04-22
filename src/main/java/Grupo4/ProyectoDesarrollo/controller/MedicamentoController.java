@@ -1,6 +1,7 @@
 package Grupo4.ProyectoDesarrollo.controller;
 import Grupo4.ProyectoDesarrollo.model.Medicamento;
-import Grupo4.ProyectoDesarrollo.servicio.MedicamentoServicio;
+import Grupo4.ProyectoDesarrollo.service.MedicamentoServicio;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

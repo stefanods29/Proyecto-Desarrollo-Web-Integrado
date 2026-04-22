@@ -1,8 +1,9 @@
-package Grupo4.ProyectoDesarrollo.servicio.impl;
+package Grupo4.ProyectoDesarrollo.service.impl;
 
 import Grupo4.ProyectoDesarrollo.model.ArchivoClinico;
 import Grupo4.ProyectoDesarrollo.repository.ArchivoClinicoRepository;
-import Grupo4.ProyectoDesarrollo.servicio.ArchivoClinicoServicio;
+import Grupo4.ProyectoDesarrollo.service.ArchivoClinicoServicio;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;

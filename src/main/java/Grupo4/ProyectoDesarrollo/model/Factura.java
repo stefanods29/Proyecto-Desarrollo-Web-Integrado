@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -60,7 +61,7 @@ public class Factura {
 
     @Getter
     @Setter
-    @Column(nullable=false)
+    @OneToMany(mappedBy="factura")
     private List<DetalleFactura> detalles;
     
     @Getter
@@ -80,19 +81,19 @@ public class Factura {
 
     @Getter
     @Setter
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name="idPaciente", nullable=false)
     private Paciente paciente;
 
     @Getter
     @Setter
-    @OneToMany
-    @JoinColumn(name="idCita", nullable=false)
+    @ManyToOne
+    @JoinColumn(name="idCita", nullable=true)
     private Cita cita;
 
     @Getter
     @Setter
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name="idClinica", nullable=false)
     private Clinica clinica;
 }

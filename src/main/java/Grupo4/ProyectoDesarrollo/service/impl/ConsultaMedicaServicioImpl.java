@@ -1,8 +1,9 @@
-package Grupo4.ProyectoDesarrollo.servicio.impl;
+package Grupo4.ProyectoDesarrollo.service.impl;
 
 import Grupo4.ProyectoDesarrollo.model.ConsultaMedica;
 import Grupo4.ProyectoDesarrollo.repository.ConsultaMedicaRepository;
-import Grupo4.ProyectoDesarrollo.servicio.ConsultaMedicaServicio;
+import Grupo4.ProyectoDesarrollo.service.ConsultaMedicaServicio;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public class ConsultaMedicaServicioImpl implements ConsultaMedicaServicio {
         existente.setTalla(consulta.getTalla());
 
         existente.setFechaConsulta(consulta.getFechaConsulta());
-        existente.setFechaActualizada(consulta.getFechaActualizada());
+        existente.setFechaActualizacion(consulta.getFechaActualizacion());
 
         return repository.save(existente);    }
 

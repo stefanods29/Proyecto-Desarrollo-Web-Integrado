@@ -2,8 +2,8 @@ package Grupo4.ProyectoDesarrollo.controller;
 
 
 import Grupo4.ProyectoDesarrollo.model.ArchivoClinico;
-import Grupo4.ProyectoDesarrollo.servicio.ArchivoClinicoServicio;
-import org.springframework.http.RequestEntity;
+import Grupo4.ProyectoDesarrollo.service.ArchivoClinicoServicio;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

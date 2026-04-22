@@ -1,7 +1,8 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
 import Grupo4.ProyectoDesarrollo.model.DetalleReceta;
-import Grupo4.ProyectoDesarrollo.servicio.DetalleRecetaServicio;
+import Grupo4.ProyectoDesarrollo.service.DetalleRecetaServicio;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
