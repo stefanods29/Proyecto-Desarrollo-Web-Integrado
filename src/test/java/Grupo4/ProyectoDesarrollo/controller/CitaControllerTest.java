@@ -15,10 +15,10 @@ public class CitaControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Se instancia directamente porque el controller no depende de un servicio externo
+        
         controller = new CitaController();
     }
-    // listarCitas()
+    
     @Test
     void testListarCitas() {
         List<CitaDTO> resultado = controller.listarCitas();
@@ -43,14 +43,14 @@ public class CitaControllerTest {
         assertEquals(2, resultado.size());
     }
 
-    // obtenerCita()
+    
     @Test
     void testObtenerCita() {
         CitaDTO cita = new CitaDTO();
         cita.setPacienteId(1L);
         cita.setMedicoId(10L);
         cita.setEstado("PENDIENTE");
-        CitaDTO creada = controller.crearCita(cita); // ID asignado = 1
+        CitaDTO creada = controller.crearCita(cita); 
         CitaDTO resultado = controller.obtenerCita(creada.getId());
         assertNotNull(resultado);
         assertEquals(creada.getId(), resultado.getId());
@@ -63,7 +63,7 @@ public class CitaControllerTest {
         assertNull(resultado);
     }
 
-    // crearCita()
+    
     @Test
     void testCrearCita() {
         CitaDTO cita = new CitaDTO();
@@ -73,7 +73,7 @@ public class CitaControllerTest {
         CitaDTO resultado = controller.crearCita(cita);
         assertNotNull(resultado);
         assertNotNull(resultado.getId());
-        assertEquals(1L, resultado.getId()); // Primera cita → ID = 1
+        assertEquals(1L, resultado.getId()); 
         assertEquals(1, controller.listarCitas().size());
     }
 
@@ -90,7 +90,7 @@ public class CitaControllerTest {
         assertEquals(2, controller.listarCitas().size());
     }
 
-    // actualizarCita()
+    
     @Test
     void testActualizarCita() {
         CitaDTO cita = new CitaDTO();
@@ -138,3 +138,4 @@ public class CitaControllerTest {
         assertEquals(1, controller.listarCitas().size()); 
     }
 }
+

@@ -33,11 +33,11 @@ public class ArchivoClinicoServicioImplTest {
         archivo.setTipoArchivo("PDF");
         archivo.setRutaArchivo("/archivos/historial_001.pdf");
         archivo.setDescripcion("Historial clínico del paciente");
-        // archivo.setConsultaMedica(...); // Configura si tienes el objeto disponible
-        // archivo.setFechaSubida(LocalDate.now());
+        
+        
     }
 
-    // findAll()
+    
     @Test
     void testFindAll() {
         List<ArchivoClinico> lista = Arrays.asList(archivo, new ArchivoClinico());
@@ -57,7 +57,7 @@ public class ArchivoClinicoServicioImplTest {
         verify(repository, times(1)).findAll();
     }
 
-    // fidnById()
+    
     @Test
     void testFindById() {
         when(repository.findById(1L)).thenReturn(Optional.of(archivo));
@@ -76,7 +76,7 @@ public class ArchivoClinicoServicioImplTest {
         verify(repository, times(1)).findById(99L);
     }
 
-    // save()
+    
     @Test
     void testSave() {
         when(repository.save(archivo)).thenReturn(archivo);
@@ -89,18 +89,18 @@ public class ArchivoClinicoServicioImplTest {
 
     @Test
     void testSavellamaRepositorio() {
-        // Arrange
+        
         ArchivoClinico nuevo = new ArchivoClinico();
         when(repository.save(nuevo)).thenReturn(nuevo);
 
-        // Act
+        
         servicio.save(nuevo);
 
-        // Assert
+        
         verify(repository, times(1)).save(nuevo);
     }
 
-    // update()
+    
     @Test
     void testUpdate_idExistente_actualizaCamposYRetornaArchivo() {
         ArchivoClinico datosNuevos = new ArchivoClinico();
@@ -108,8 +108,8 @@ public class ArchivoClinicoServicioImplTest {
         datosNuevos.setTipoArchivo("JPG");
         datosNuevos.setRutaArchivo("/archivos/actualizado.pdf");
         datosNuevos.setDescripcion("Descripción actualizada");
-        // datosNuevos.setConsultaMedica(...);
-        // datosNuevos.setFechaSubida(LocalDate.now());
+        
+        
 
         when(repository.findById(1L)).thenReturn(Optional.of(archivo));
         when(repository.save(archivo)).thenReturn(archivo);
@@ -129,10 +129,10 @@ public class ArchivoClinicoServicioImplTest {
         ArchivoClinico resultado = servicio.update(99L, archivo);
         assertNull(resultado);
         verify(repository, times(1)).findById(99L);
-        verify(repository, never()).save(any()); // nunca debe guardar si no existe
+        verify(repository, never()).save(any()); 
     }
 
-    // delete()
+    
     @Test
     void testDelete() {
         doNothing().when(repository).deleteById(1L);
@@ -145,6 +145,7 @@ public class ArchivoClinicoServicioImplTest {
         doNothing().when(repository).deleteById(3L);
         servicio.delete(3L);
         verify(repository, times(1)).deleteById(3L);
-        verify(repository, never()).deleteById(1L); // verifica que no elimino otro registro
+        verify(repository, never()).deleteById(1L); 
     }
 }
+

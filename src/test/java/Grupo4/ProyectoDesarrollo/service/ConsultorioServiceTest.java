@@ -61,7 +61,7 @@ class ConsultorioServiceTest {
 
     @Test
     void actualizar() {
-        // Usamos anyLong() para evitar cualquier error de coincidencia de ID
+        
         when(repository.existsById(anyLong())).thenReturn(true);
         when(repository.save(any(Consultorio.class))).thenReturn(consultorio);
 

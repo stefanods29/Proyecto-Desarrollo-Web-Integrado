@@ -30,10 +30,10 @@ public class Clinica {
     @Column(unique = true)
     private String correo;
 
-    private String planSuscripcion; // basico, profesional, enterprise, etc
+    private String planSuscripcion; 
 
     @Column(nullable = false)
-    private String estado; // ACTIVA, SUSPENDIDA, CANCELADA
+    private String estado; 
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaRegistro;

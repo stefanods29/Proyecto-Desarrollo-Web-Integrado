@@ -32,13 +32,13 @@ public class CitaServiceImplTest {
     void setUp() {
         cita = new Cita();
         cita.setId(1L);
-        // cita.setPacienteId(10L);
-        // cita.setMedicoId(5L);
-        // cita.setEstado("PENDIENTE");
-        // cita.setFechaHora(LocalDateTime.now());
+        
+        
+        
+        
     }
 
-    // crear
+    
     @Test
     void testCrear() {
         when(repository.save(cita)).thenReturn(cita);
@@ -56,7 +56,7 @@ public class CitaServiceImplTest {
         verify(repository, times(1)).save(nueva);
     }
 
-    // listar
+    
     @Test
     void testListar() {
         List<Cita> lista = Arrays.asList(cita, new Cita());
@@ -76,7 +76,7 @@ public class CitaServiceImplTest {
         verify(repository, times(1)).findAll();
     }
 
-    // buscarPorId
+    
     @Test
     void testBuscarPorId() {
         when(repository.findById(1L)).thenReturn(Optional.of(cita));
@@ -97,7 +97,7 @@ public class CitaServiceImplTest {
         verify(repository, times(1)).findById(99L);
     }
 
-    // eliminar()
+    
     @Test
     void testEliminarId() {
         doNothing().when(repository).deleteById(1L);

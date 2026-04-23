@@ -27,12 +27,12 @@ public class ClinicaControllerTest {
     void setUp() {
         clinica = new Clinica();
         clinica.setId(1L);
-        // clinica.setNombre("Clínica San Juan");
-        // clinica.setDireccion("Av. Principal 123");
-        // clinica.setTelefono("999888777");
+        
+        
+        
     }
 
-    // crear
+    
     @Test
     void testCrear() {
         when(service.crear(clinica)).thenReturn(clinica);
@@ -50,7 +50,7 @@ public class ClinicaControllerTest {
         verify(service, times(1)).crear(nueva);
     }
 
-    // listar
+    
     @Test
     void testListar() {
         List<Clinica> lista = Arrays.asList(clinica, new Clinica());
@@ -70,7 +70,7 @@ public class ClinicaControllerTest {
         verify(service, times(1)).listar();
     }
 
-    // buscarPorId
+    
     @Test
     void testBuscarPorId() {
         when(service.buscarPorId(1L)).thenReturn(clinica);
@@ -88,19 +88,19 @@ public class ClinicaControllerTest {
         verify(service, times(1)).buscarPorId(99L);
     }
 
-    // actualizar
+    
     @Test
     void testActualizar() {
         Clinica datosActualizados = new Clinica();
-        // datosActualizados.setNombre("Clínica Actualizada");
-        // datosActualizados.setDireccion("Av. Nueva 456");
+        
+        
         Clinica esperada = new Clinica();
         esperada.setId(1L);
-        // esperada.setNombre("Clínica Actualizada");
+        
         when(service.crear(any(Clinica.class))).thenReturn(esperada);
         Clinica resultado = controller.actualizar(1L, datosActualizados);
         assertNotNull(resultado);
-        assertEquals(1L, resultado.getId()); // El ID fue seteado por el controller antes de llamar al service
+        assertEquals(1L, resultado.getId()); 
         verify(service, times(1)).crear(datosActualizados);
     }
 
@@ -109,7 +109,7 @@ public class ClinicaControllerTest {
         Clinica datosActualizados = new Clinica();
         when(service.crear(datosActualizados)).thenReturn(datosActualizados);
         controller.actualizar(5L, datosActualizados);
-        assertEquals(5L, datosActualizados.getId()); // El controller hace clinica.setId(id)
+        assertEquals(5L, datosActualizados.getId()); 
         verify(service, times(1)).crear(datosActualizados);
     }
 }

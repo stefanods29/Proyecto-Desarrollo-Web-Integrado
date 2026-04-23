@@ -32,12 +32,12 @@ public class ClinicaServiceImplTest {
     void setUp() {
         clinica = new Clinica();
         clinica.setId(1L);
-        // clinica.setNombre("Clínica San Juan");
-        // clinica.setDireccion("Av. Principal 123");
-        // clinica.setTelefono("999888777");
+        
+        
+        
     }
 
-    // crear
+    
     @Test
     void testCrear() {
         when(repository.save(clinica)).thenReturn(clinica);
@@ -55,7 +55,7 @@ public class ClinicaServiceImplTest {
         verify(repository, times(1)).save(nueva);
     }
 
-    // listar()
+    
     @Test
     void testListar() {
         List<Clinica> lista = Arrays.asList(clinica, new Clinica());
@@ -75,7 +75,7 @@ public class ClinicaServiceImplTest {
         verify(repository, times(1)).findAll();
     }
 
-    // buscarPorId
+    
     @Test
     void testBuscarPorId() {
         when(repository.findById(1L)).thenReturn(Optional.of(clinica));
@@ -96,7 +96,7 @@ public class ClinicaServiceImplTest {
         verify(repository, times(1)).findById(99L);
     }
 
-    // eliminar
+    
     @Test
     void testEliminar() {
         doNothing().when(repository).deleteById(1L);
@@ -112,3 +112,4 @@ public class ClinicaServiceImplTest {
         verify(repository, never()).deleteById(1L);
     }
 }
+

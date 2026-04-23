@@ -28,7 +28,7 @@ public class ArchivoClinicoControllerTest {
     @BeforeEach
     void setUp() {archivo = new ArchivoClinico();archivo.setId(1L);}
 
-    // listar
+    
     @Test
     void testListarStatus200() {
         List<ArchivoClinico> lista = Arrays.asList(archivo, new ArchivoClinico());
@@ -48,7 +48,7 @@ public class ArchivoClinicoControllerTest {
         assertTrue(respuesta.getBody().isEmpty());
     }
 
-    // obtener()
+    
     @Test
     void testObtenerid() {
         when(servicio.findById(1L)).thenReturn(archivo);
@@ -68,7 +68,7 @@ public class ArchivoClinicoControllerTest {
         verify(servicio, times(1)).findById(99L);
     }
 
-    // crear()
+    
     @Test
     void testCrear() {
         when(servicio.save(archivo)).thenReturn(archivo);
@@ -87,7 +87,7 @@ public class ArchivoClinicoControllerTest {
         verify(servicio, times(1)).save(nuevo);
     }
 
-    // actualizar()
+    
     @Test
     void testActualizarid() {
         ArchivoClinico actualizado = new ArchivoClinico();
@@ -109,7 +109,7 @@ public class ArchivoClinicoControllerTest {
         verify(servicio, times(1)).update(99L, archivo);
     }
 
-    // eliminar()
+    
     @Test
     void testEliminar() {
         doNothing().when(servicio).delete(1L);
@@ -127,3 +127,4 @@ public class ArchivoClinicoControllerTest {
         verify(servicio, never()).delete(1L);
     }
 }
+
