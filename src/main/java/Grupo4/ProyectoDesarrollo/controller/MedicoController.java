@@ -3,6 +3,7 @@ package Grupo4.ProyectoDesarrollo.controller;
 import Grupo4.ProyectoDesarrollo.model.Medico;
 import Grupo4.ProyectoDesarrollo.service.MedicoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +26,10 @@ public class MedicoController {
     }
 
     @GetMapping("/{id}")
-    public Medico buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id);
+    public ResponseEntity<Medico> buscarPorId(@PathVariable Long id) {
+        Medico medico = service.buscarPorId(id);
+        if (medico == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(medico);
     }
 
     @PutMapping("/{id}")
