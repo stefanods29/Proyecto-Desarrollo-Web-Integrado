@@ -42,7 +42,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         existente.setCorreo(usuario.getCorreo());
         existente.setTelefono(usuario.getTelefono());
         existente.setRol(usuario.getRol());
-        existente.setActivo(usuario.isActivo());
+        existente.setActivo(usuario.getActivo());
 
         return repository.save(existente);
     }

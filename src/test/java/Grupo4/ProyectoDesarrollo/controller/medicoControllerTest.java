@@ -12,13 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
-class medicoControllerTest {
+    class MedicoControllerTest {
 
     @Mock
     private MedicoService service;
 
     @InjectMocks
-    private medicoController controller;
+    private MedicoController controller;
 
     @BeforeEach
     void setUp() {

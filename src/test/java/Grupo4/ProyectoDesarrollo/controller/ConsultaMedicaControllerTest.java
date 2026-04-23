@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -69,14 +71,14 @@ class ConsultaMedicaControllerTest {
 
     @Test
     void crearOk() {
-        when(servicio.save(any(ConsultaMedica.class))).thenReturn(consultaMock);
+    when(servicio.save(any(ConsultaMedica.class))).thenReturn(consultaMock);
 
-        ResponseEntity<ConsultaMedica> response = controller.crear(new ConsultaMedica());
+    ResponseEntity<ConsultaMedica> response = controller.crear(new ConsultaMedica());
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(consultaMock, response.getBody());
-        verify(servicio, times(1)).save(any(ConsultaMedica.class));
-    }
+    assertEquals(HttpStatus.CREATED, response.getStatusCode()); 
+    assertEquals(consultaMock, response.getBody());
+    verify(servicio, times(1)).save(any(ConsultaMedica.class));
+}
 
     @Test
     void actualizarOk() {
@@ -102,14 +104,16 @@ class ConsultaMedicaControllerTest {
     }
 
     @Test
-    void eliminarOk() {
-        Long id = 1L;
-        doNothing().when(servicio).delete(id);
+void eliminarOk() {
+    Long id = 1L;
 
-        ResponseEntity<String> response = controller.eliminar(id);
+    when(servicio.findById(id)).thenReturn(consultaMock);
+    doNothing().when(servicio).delete(id);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Consulta eliminada", response.getBody());
-        verify(servicio, times(1)).delete(id);
-    }
+    ResponseEntity<Void> response = controller.eliminar(id);
+
+    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    assertNull(response.getBody());
+    verify(servicio, times(1)).delete(id);
+}
 }
