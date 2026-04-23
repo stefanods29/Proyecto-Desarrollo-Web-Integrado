@@ -22,7 +22,7 @@ public class ClinicaController {
     @GetMapping
     public List<Clinica> listar() {
         return service.listar();
-    }   
+    }
 
     @GetMapping("/{id}")
     public Clinica buscarPorId(@PathVariable Long id) {
@@ -33,5 +33,10 @@ public class ClinicaController {
     public Clinica actualizar(@PathVariable Long id, @RequestBody Clinica clinica) {
         clinica.setId(id);
         return service.crear(clinica);
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminar(@PathVariable Long id) {
+        service.eliminar(id);
     }
 }
