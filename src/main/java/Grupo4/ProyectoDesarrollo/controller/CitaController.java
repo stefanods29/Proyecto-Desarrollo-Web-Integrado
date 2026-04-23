@@ -1,24 +1,24 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
-import Grupo4.ProyectoDesarrollo.dto.citaDTO;
+import Grupo4.ProyectoDesarrollo.dto.CitaDTO;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/citas")
-public class citaController {
-    private List<citaDTO> citas = new ArrayList<>();
+public class CitaController {
+    private List<CitaDTO> citas = new ArrayList<>();
     @GetMapping
-    public List<citaDTO> listarCitas() {
+    public List<CitaDTO> listarCitas() {
         return citas;
     }
 
 
     @GetMapping("/{id}")
-    public citaDTO obtenerCita(@PathVariable Long id) {
+    public CitaDTO obtenerCita(@PathVariable Long id) {
 
-        for (citaDTO c : citas) {
+        for (CitaDTO c : citas) {
             if (c.getId().equals(id)) {
                 return c;
             }
@@ -28,7 +28,7 @@ public class citaController {
 
 
     @PostMapping
-    public citaDTO crearCita(@RequestBody citaDTO cita) {
+    public CitaDTO crearCita(@RequestBody CitaDTO cita) {
         cita.setId((long) (citas.size() + 1));
         citas.add(cita);
         return cita;
@@ -36,8 +36,8 @@ public class citaController {
 
 
     @PutMapping("/{id}")
-    public citaDTO actualizarCita(@PathVariable Long id, @RequestBody citaDTO citaActualizada) {
-        for (citaDTO c : citas) {
+    public CitaDTO actualizarCita(@PathVariable Long id, @RequestBody CitaDTO citaActualizada) {
+        for (CitaDTO c : citas) {
             if (c.getId().equals(id)) {
                 c.setPacienteId(citaActualizada.getPacienteId());
                 c.setMedicoId(citaActualizada.getMedicoId());

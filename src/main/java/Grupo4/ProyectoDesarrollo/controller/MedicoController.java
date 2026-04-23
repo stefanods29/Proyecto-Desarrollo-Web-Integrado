@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/medicos")
 @RequiredArgsConstructor
-public class medicoController {
+public class MedicoController {
 
     private final MedicoService service;
 

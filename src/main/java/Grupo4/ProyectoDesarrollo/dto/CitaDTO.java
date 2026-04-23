@@ -4,7 +4,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class citaDTO {
+public class CitaDTO {
     private Long id;
     private Long pacienteId;
     private Long medicoId;
