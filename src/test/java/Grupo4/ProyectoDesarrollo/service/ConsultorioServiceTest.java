@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class) // Esto asegura que los Mocks se inyecten bien
+@ExtendWith(MockitoExtension.class) 
 class ConsultorioServiceTest {
 
     @Mock

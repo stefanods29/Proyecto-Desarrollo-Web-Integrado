@@ -61,7 +61,6 @@ class EspecialidadServiceTest {
 
     @Test
     void actualizar() {
-        // Obligatorio simular que existe para que no lance la RuntimeException
         when(repository.existsById(anyLong())).thenReturn(true);
         when(repository.save(any(Especialidad.class))).thenReturn(especialidad);
 
@@ -74,7 +73,6 @@ class EspecialidadServiceTest {
 
     @Test
     void eliminar() {
-        // Obligatorio simular que existe para que no lance la RuntimeException
         when(repository.existsById(anyLong())).thenReturn(true);
         doNothing().when(repository).deleteById(anyLong());
 
