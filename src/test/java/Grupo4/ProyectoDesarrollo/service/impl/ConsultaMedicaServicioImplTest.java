@@ -1,8 +1,7 @@
-package Grupo4.ProyectoDesarrollo.service;
+package Grupo4.ProyectoDesarrollo.service.impl;
 
 import Grupo4.ProyectoDesarrollo.model.ConsultaMedica;
 import Grupo4.ProyectoDesarrollo.repository.ConsultaMedicaRepository;
-import Grupo4.ProyectoDesarrollo.service.impl.ConsultaMedicaServicioImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ConsultaMedicaServicioTest {
+class ConsultaMedicaServicioImplTest {
 
     @Mock
     private ConsultaMedicaRepository repository;
@@ -36,18 +35,17 @@ class ConsultaMedicaServicioTest {
     }
 
     @Test
-    void findAllOk() {
-        when(repository.findAll()).thenReturn(Arrays.asList(consultaMock));
+    void findAll_DeberiaRetornarListaDeConsultas() {
+        when(repository.findAll()).thenReturn(Arrays.asList(consultaMock, new ConsultaMedica()));
 
         List<ConsultaMedica> resultado = service.findAll();
 
-        assertNotNull(resultado);
-        assertFalse(resultado.isEmpty());
+        assertEquals(2, resultado.size());
         verify(repository, times(1)).findAll();
     }
 
     @Test
-    void findByIdOk() {
+    void findById_DeberiaRetornarConsulta_CuandoExiste() {
         when(repository.findById(1L)).thenReturn(Optional.of(consultaMock));
 
         ConsultaMedica resultado = service.findById(1L);
@@ -58,28 +56,52 @@ class ConsultaMedicaServicioTest {
     }
 
     @Test
-    void saveOk() {
+    void findById_DeberiaRetornarNull_CuandoNoExiste() {
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+
+        ConsultaMedica resultado = service.findById(1L);
+
+        assertNull(resultado);
+        verify(repository, times(1)).findById(1L);
+    }
+
+    @Test
+    void save_DeberiaGuardarYRetornarConsulta() {
         when(repository.save(any(ConsultaMedica.class))).thenReturn(consultaMock);
 
         ConsultaMedica resultado = service.save(new ConsultaMedica());
 
         assertNotNull(resultado);
+        assertEquals(1L, resultado.getId());
         verify(repository, times(1)).save(any(ConsultaMedica.class));
     }
 
     @Test
-    void updateOk() {
+    void update_DeberiaActualizarYRetornarConsulta_CuandoExiste() {
         when(repository.findById(1L)).thenReturn(Optional.of(consultaMock));
         when(repository.save(any(ConsultaMedica.class))).thenReturn(consultaMock);
 
         ConsultaMedica resultado = service.update(1L, new ConsultaMedica());
 
         assertNotNull(resultado);
+        assertEquals(1L, resultado.getId());
+        verify(repository, times(1)).findById(1L);
         verify(repository, times(1)).save(any(ConsultaMedica.class));
     }
 
     @Test
-    void deleteOk() {
+    void update_DeberiaRetornarNull_CuandoNoExiste() {
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+
+        ConsultaMedica resultado = service.update(1L, new ConsultaMedica());
+
+        assertNull(resultado);
+        verify(repository, times(1)).findById(1L);
+        verify(repository, never()).save(any(ConsultaMedica.class));
+    }
+
+    @Test
+    void delete_DeberiaLlamarARepositoryDeleteById() {
         doNothing().when(repository).deleteById(1L);
 
         service.delete(1L);
