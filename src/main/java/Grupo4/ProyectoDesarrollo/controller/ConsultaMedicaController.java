@@ -3,6 +3,7 @@ package Grupo4.ProyectoDesarrollo.controller;
 import Grupo4.ProyectoDesarrollo.model.ConsultaMedica;
 import Grupo4.ProyectoDesarrollo.service.ConsultaMedicaServicio;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,35 +19,43 @@ public class ConsultaMedicaController {
         this.servicio = servicio;
     }
 
-
     @GetMapping
     public ResponseEntity<List<ConsultaMedica>> listar() {
-        return ResponseEntity.ok(servicio.findAll());
+        List<ConsultaMedica> lista = servicio.findAll();
+        return ResponseEntity.ok(lista);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ConsultaMedica> obtener(@PathVariable Long id) {
-        ConsultaMedica obte = servicio.findById(id);
-        if (obte == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(obte);
+        ConsultaMedica consulta = servicio.findById(id);
+        if (consulta == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(consulta);
     }
 
     @PostMapping
-    public ResponseEntity<ConsultaMedica> crear(@RequestBody ConsultaMedica obte) {
-        return ResponseEntity.ok(servicio.save(obte));
+    public ResponseEntity<ConsultaMedica> crear(@RequestBody ConsultaMedica consulta) {
+        ConsultaMedica creada = servicio.save(consulta);
+        return ResponseEntity.status(HttpStatus.CREATED).body(creada);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ConsultaMedica> actualizar(@PathVariable Long id, @RequestBody ConsultaMedica obte) {
-        ConsultaMedica actualizado = servicio.update(id, obte);
-        if (actualizado == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(actualizado);
+    public ResponseEntity<ConsultaMedica> actualizar(@PathVariable Long id, @RequestBody ConsultaMedica consulta) {
+        ConsultaMedica actualizada = servicio.update(id, consulta);
+        if (actualizada == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(actualizada);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminar(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        ConsultaMedica existente = servicio.findById(id);
+        if (existente == null) {
+            return ResponseEntity.notFound().build();
+        }
         servicio.delete(id);
-        return ResponseEntity.ok("Consulta eliminada");
+        return ResponseEntity.noContent().build();
     }
 }
-
