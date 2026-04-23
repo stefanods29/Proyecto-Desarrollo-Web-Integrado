@@ -1,6 +1,6 @@
 package Grupo4.ProyectoDesarrollo.dto;
 
-public class medicoDTO {
+public class MedicoDTO {
 
     private Long id;
     private String nombre;
@@ -8,7 +8,7 @@ public class medicoDTO {
     private String telefono;
     private String correo;
 
-    public medicoDTO() {
+    public MedicoDTO() {
     }
 
     public Long getId() {
