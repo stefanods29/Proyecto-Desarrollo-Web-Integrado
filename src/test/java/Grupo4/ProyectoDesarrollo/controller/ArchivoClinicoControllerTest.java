@@ -30,7 +30,7 @@ public class ArchivoClinicoControllerTest {
 
     // listar
     @Test
-    void testListarStatus200() {
+    void testListar200() {
         List<ArchivoClinico> lista = Arrays.asList(archivo, new ArchivoClinico());
         when(servicio.findAll()).thenReturn(lista);
         ResponseEntity<List<ArchivoClinico>> respuesta = controller.listar();
