@@ -27,11 +27,25 @@ public class ConsultorioServiceImpl implements ConsultorioService {
     @Override
     public Consultorio buscarPorId(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Consultorio no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Error: Consultorio con ID " + id + " no encontrado."));
+    }
+
+    @Override
+    public Consultorio actualizar(Long id, Consultorio consultorio) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Error: No se puede actualizar. El consultorio con ID " + id + " no existe.");
+        }
+
+        consultorio.setId(id);
+        return repository.save(consultorio);
     }
 
     @Override
     public void eliminar(Long id) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Error: No se puede eliminar. El consultorio con ID " + id + " no existe.");
+        }
+
         repository.deleteById(id);
     }
 }

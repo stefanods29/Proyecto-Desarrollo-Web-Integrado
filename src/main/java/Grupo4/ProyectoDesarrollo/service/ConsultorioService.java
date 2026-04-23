@@ -11,5 +11,7 @@ public interface ConsultorioService {
 
     Consultorio buscarPorId(Long id);
 
+    Consultorio actualizar(Long id, Consultorio consultorio);
+
     void eliminar(Long id);
 }

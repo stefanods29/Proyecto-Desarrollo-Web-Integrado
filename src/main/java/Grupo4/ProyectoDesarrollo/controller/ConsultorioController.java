@@ -30,8 +30,7 @@ public class ConsultorioController {
     }
 
     @PutMapping("/{id}")
-    public Consultorio actualizar(@PathVariable Long id,
-                                   @RequestBody Consultorio consultorio) {
+    public Consultorio actualizar(@PathVariable Long id, @RequestBody Consultorio consultorio) {
         consultorio.setId(id);
         return service.crear(consultorio);
     }
