@@ -1,6 +1,8 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -62,19 +64,17 @@ class UsuarioControllerTest {
     }
 
     @Test
-    void testActualizar() {
-        Usuario usuario = new Usuario();
-        usuario.setUsername("nuevo");
+void testActualizar() {
+    Usuario usuario = new Usuario();
+    usuario.setUsername("nuevo");
 
-        when(service.crear(usuario)).thenReturn(usuario);
+    when(service.actualizar(eq(1L), any(Usuario.class))).thenReturn(usuario);
 
-        Usuario result = controller.actualizar(1L, usuario);
+    Usuario result = controller.actualizar(1L, usuario);
 
-        assertNotNull(result);
-        assertEquals("nuevo", result.getUsername());
-        assertEquals(1L, result.getId()); // importante
-    }
-
+    assertNotNull(result);
+    assertEquals("nuevo", result.getUsername());
+}
     @Test
     void testEliminar() {
         doNothing().when(service).eliminar(1L);

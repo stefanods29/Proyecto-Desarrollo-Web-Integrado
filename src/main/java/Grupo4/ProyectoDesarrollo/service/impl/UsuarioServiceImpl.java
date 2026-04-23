@@ -5,6 +5,7 @@ import Grupo4.ProyectoDesarrollo.repository.UsuarioRepository;
 import Grupo4.ProyectoDesarrollo.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -27,6 +28,23 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Usuario buscarPorId(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+
+    @Override
+    public Usuario actualizar(Long id, Usuario usuario) {
+        Usuario existente = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        existente.setUsername(usuario.getUsername());
+        existente.setPassword(usuario.getPassword());
+        existente.setNombre(usuario.getNombre());
+        existente.setApellido(usuario.getApellido());
+        existente.setCorreo(usuario.getCorreo());
+        existente.setTelefono(usuario.getTelefono());
+        existente.setRol(usuario.getRol());
+        existente.setActivo(usuario.isActivo());
+
+        return repository.save(existente);
     }
 
     @Override

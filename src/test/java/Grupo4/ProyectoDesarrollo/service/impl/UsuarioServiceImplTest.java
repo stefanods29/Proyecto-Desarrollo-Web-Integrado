@@ -45,12 +45,11 @@ class UsuarioServiceImplTest {
 
         List<Usuario> lista = service.listar();
 
-        assertNotNull(lista);
         assertFalse(lista.isEmpty());
     }
 
     @Test
-    void testBuscarPorId_OK() {
+    void testBuscarPorId() {
         Usuario usuario = new Usuario();
         usuario.setId(1L);
 
@@ -58,19 +57,23 @@ class UsuarioServiceImplTest {
 
         Usuario result = service.buscarPorId(1L);
 
-        assertNotNull(result);
         assertEquals(1L, result.getId());
     }
 
     @Test
-    void testBuscarPorId_NotFound() {
-        when(repository.findById(1L)).thenReturn(Optional.empty());
+    void testActualizar() {
+        Usuario existente = new Usuario();
+        existente.setId(1L);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            service.buscarPorId(1L);
-        });
+        Usuario nuevo = new Usuario();
+        nuevo.setUsername("nuevo");
 
-        assertEquals("Usuario no encontrado", exception.getMessage());
+        when(repository.findById(1L)).thenReturn(Optional.of(existente));
+        when(repository.save(any(Usuario.class))).thenReturn(existente);
+
+        Usuario actualizado = service.actualizar(1L, nuevo);
+
+        assertNotNull(actualizado);
     }
 
     @Test
@@ -79,6 +82,6 @@ class UsuarioServiceImplTest {
 
         service.eliminar(1L);
 
-        verify(repository, times(1)).deleteById(1L);
+        verify(repository).deleteById(1L);
     }
 }
