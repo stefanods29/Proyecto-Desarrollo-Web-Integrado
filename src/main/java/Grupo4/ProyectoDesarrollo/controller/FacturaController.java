@@ -11,7 +11,6 @@ import java.util.List;
 @RequestMapping("/api/facturas")
 @RequiredArgsConstructor
 public class FacturaController {
-
     private final FacturaService service;
 
     @PostMapping
