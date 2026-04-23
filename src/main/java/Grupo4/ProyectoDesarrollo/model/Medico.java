@@ -28,6 +28,6 @@ public class Medico {
     @JoinColumn(name = "clinica_id")
     private Clinica clinica;
 
-    private boolean activo = true;
+    private Boolean activo = true;
     
 }

@@ -40,7 +40,7 @@ public class MedicamentoServicioImpl implements MedicamentoServicio {
         existente.setPresentacion(medicamento.getPresentacion());
         existente.setConcentracion(medicamento.getConcentracion());
         existente.setViaAdministracion(medicamento.getViaAdministracion());
-        existente.setActivo(medicamento.isActivo());
+        existente.setActivo(medicamento.getActivo());
         return repository.save(existente);
     }
 
