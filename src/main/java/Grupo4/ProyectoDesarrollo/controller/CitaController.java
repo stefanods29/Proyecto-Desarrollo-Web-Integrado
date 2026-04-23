@@ -7,7 +7,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/citas")
-public class CitaController {
+public class citaController {
     private List<citaDTO> citas = new ArrayList<>();
     @GetMapping
     public List<citaDTO> listarCitas() {

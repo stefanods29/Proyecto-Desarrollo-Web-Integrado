@@ -7,5 +7,6 @@ public interface UsuarioService {
     Usuario crear(Usuario usuario);
     List<Usuario> listar();
     Usuario buscarPorId(Long id);
+    Usuario actualizar(Long id, Usuario usuario); 
     void eliminar(Long id);
 }

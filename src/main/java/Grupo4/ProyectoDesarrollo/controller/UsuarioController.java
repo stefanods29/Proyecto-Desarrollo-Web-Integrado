@@ -31,8 +31,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public Usuario actualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
-        usuario.setId(id);
-        return service.crear(usuario);
+        return service.actualizar(id, usuario);
     }
 
     @DeleteMapping("/{id}")

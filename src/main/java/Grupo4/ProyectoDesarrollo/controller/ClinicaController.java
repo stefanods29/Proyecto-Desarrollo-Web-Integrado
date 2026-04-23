@@ -22,7 +22,7 @@ public class ClinicaController {
     @GetMapping
     public List<Clinica> listar() {
         return service.listar();
-    }
+    }   
 
     @GetMapping("/{id}")
     public Clinica buscarPorId(@PathVariable Long id) {

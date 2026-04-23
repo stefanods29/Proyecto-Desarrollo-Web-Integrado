@@ -1,12 +1,13 @@
 package Grupo4.ProyectoDesarrollo.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import java.util.List;
-
 import Grupo4.ProyectoDesarrollo.model.HorarioMedico;
 import Grupo4.ProyectoDesarrollo.repository.HorarioMedicoRepository;
 import Grupo4.ProyectoDesarrollo.service.HorarioMedicoService;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
