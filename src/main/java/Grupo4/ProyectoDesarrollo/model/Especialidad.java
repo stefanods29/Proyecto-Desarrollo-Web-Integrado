@@ -21,5 +21,5 @@ public class Especialidad {
     @Column(length = 500)
     private String descripcion;
 
-    private boolean activa;
+    private Boolean activa;
 }

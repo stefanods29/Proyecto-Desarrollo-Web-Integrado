@@ -34,5 +34,5 @@ public class HorarioMedico {
 
     private Integer duracionTurnoMinutos;
 
-    private boolean activo;
+    private Boolean activo;
 }

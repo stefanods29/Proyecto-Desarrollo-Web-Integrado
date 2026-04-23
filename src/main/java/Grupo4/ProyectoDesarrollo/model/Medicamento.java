@@ -50,7 +50,7 @@ public class Medicamento {
     @Getter
     @Setter
     @Column(nullable = false)
-    private boolean activo;
+    private Boolean activo;
 
     public Medicamento() {
     }

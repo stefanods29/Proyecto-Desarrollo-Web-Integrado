@@ -18,7 +18,7 @@ public class Consultorio {
     private String nombre;
     private String ubicacion;
     private Integer capacidad;
-    private boolean activo;
+    private Boolean activo;
 
     @ManyToOne
     @JoinColumn(name = "clinica_id", nullable = false)
