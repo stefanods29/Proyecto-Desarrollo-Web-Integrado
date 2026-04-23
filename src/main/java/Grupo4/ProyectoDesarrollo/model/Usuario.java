@@ -49,7 +49,7 @@ public class Usuario {
 
     @Builder.Default
     @Column(nullable = false)
-    private boolean activo = true;
+    private Boolean activo = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinica_id")

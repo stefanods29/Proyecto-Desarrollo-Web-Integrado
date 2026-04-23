@@ -50,6 +50,4 @@ public class ArchivoClinicoController {
         servicio.delete(id);
         return ResponseEntity.ok("Archivo Eliminado");
     }
-
-
 }
