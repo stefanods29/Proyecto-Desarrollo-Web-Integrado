@@ -38,7 +38,6 @@ public class MedicoServiceImpl implements MedicoService {
 
     @Override
     public Medico actualizar(Long id, Medico medico) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actualizar'");
+        return medicoRepository.save(medico);
     }
 }

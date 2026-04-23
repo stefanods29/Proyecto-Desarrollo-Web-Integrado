@@ -11,6 +11,7 @@ import Grupo4.ProyectoDesarrollo.service.MedicoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.http.ResponseEntity;
 
     class MedicoControllerTest {
 
@@ -55,7 +56,8 @@ import org.mockito.*;
 
         when(service.buscarPorId(1L)).thenReturn(medico);
 
-        Medico result = controller.buscarPorId(1L);
+        ResponseEntity<Medico> response = controller.buscarPorId(1L);
+        Medico result = response.getBody();
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
