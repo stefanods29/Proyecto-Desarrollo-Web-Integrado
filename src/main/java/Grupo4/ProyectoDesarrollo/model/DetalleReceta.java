@@ -4,45 +4,33 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name="DetalleReceta")
 public class DetalleReceta {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "receta_id", nullable = false)
     private Receta receta;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "medicamento_id", nullable = false)
     private Medicamento medicamento;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String dosis;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String frecuencia;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String duracion;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String instrucciones;
 

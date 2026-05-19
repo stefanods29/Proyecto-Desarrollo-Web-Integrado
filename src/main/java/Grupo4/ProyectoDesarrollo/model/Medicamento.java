@@ -6,49 +6,35 @@ import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name="Medicamento")
 public class Medicamento {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
-    @Getter
-    @Setter
     @OneToMany(mappedBy = "medicamento")
     private List<DetalleReceta> detalleRecetas;
 
-    @Getter
-    @Setter
     @Column (nullable = false)
     private String nombreComercial;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String nombreGenerico;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String presentacion;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String concentracion;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String viaAdministracion;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private Boolean activo;
 

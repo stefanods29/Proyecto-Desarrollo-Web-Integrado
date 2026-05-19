@@ -5,44 +5,32 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "ArchivoClinico")
 public class ArchivoClinico {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "consultamedica_id", nullable = false)
     private ConsultaMedica consultaMedica;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String nombreArchivo;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String tipoArchivo;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String rutaArchivo;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String descripcion;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private LocalDateTime fechaSubida;
 

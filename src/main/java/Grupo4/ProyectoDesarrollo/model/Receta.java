@@ -6,46 +6,34 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "Receta")
 public class Receta {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
-    @Setter
     @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)
     private List<DetalleReceta> detalles;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "consultamedica_id", nullable = false)
     private ConsultaMedica consultaMedica;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "medico_id", nullable = false)
     private Medico medico;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String indicaciones;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private LocalDateTime fechaEmision;
 
