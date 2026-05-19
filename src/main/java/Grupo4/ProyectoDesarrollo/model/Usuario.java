@@ -3,6 +3,7 @@ package Grupo4.ProyectoDesarrollo.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import Grupo4.ProyectoDesarrollo.model.enums.Rol;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,14 +18,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @Builder
 public class Usuario {
 
-    public enum Rol {
-        SUPER_ADMIN,
-        ADMIN_CLINICA,
-        MEDICO,
-        RECEPCIONISTA,
-        ENFERMERA,
-        PACIENTE
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

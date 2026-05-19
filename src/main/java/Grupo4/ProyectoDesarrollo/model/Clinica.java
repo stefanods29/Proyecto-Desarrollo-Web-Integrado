@@ -3,6 +3,7 @@ package Grupo4.ProyectoDesarrollo.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import Grupo4.ProyectoDesarrollo.model.enums.ClinicaEstado;
 
 @Entity
 @Table(name = "clinica")
@@ -32,8 +33,9 @@ public class Clinica {
 
     private String planSuscripcion; 
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String estado; 
+    private ClinicaEstado estado; 
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaRegistro;

@@ -14,6 +14,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import Grupo4.ProyectoDesarrollo.model.enums.FacturaEstado;
+import Grupo4.ProyectoDesarrollo.model.enums.MetodoPago;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -51,13 +55,15 @@ public class Factura {
 
     @Getter
     @Setter
+    @Enumerated(EnumType.STRING)
     @Column(nullable=false, length = 200)
-    private String estado;
+    private FacturaEstado estado;
 
     @Getter
     @Setter
+    @Enumerated(EnumType.STRING)
     @Column(nullable=false)
-    private String metodoPago;
+    private MetodoPago metodoPago;
 
     @Getter
     @Setter

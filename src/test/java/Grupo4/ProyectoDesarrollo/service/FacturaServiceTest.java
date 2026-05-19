@@ -1,6 +1,8 @@
 package Grupo4.ProyectoDesarrollo.service;
 
 import Grupo4.ProyectoDesarrollo.model.Factura;
+import Grupo4.ProyectoDesarrollo.model.enums.FacturaEstado;
+import Grupo4.ProyectoDesarrollo.model.enums.MetodoPago;
 import Grupo4.ProyectoDesarrollo.repository.FacturaRepository;
 import Grupo4.ProyectoDesarrollo.service.impl.FacturaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,8 +39,8 @@ class FacturaServiceTest {
         factura.setSubtotal(BigDecimal.valueOf(100));
         factura.setImpuesto(BigDecimal.valueOf(18));
         factura.setTotal(BigDecimal.valueOf(118));
-        factura.setEstado("PAGADO");
-        factura.setMetodoPago("EFECTIVO");
+        factura.setEstado(FacturaEstado.PAGADA);
+        factura.setMetodoPago(MetodoPago.EFECTIVO);
     }
 
     @Test

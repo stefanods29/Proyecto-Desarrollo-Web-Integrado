@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import Grupo4.ProyectoDesarrollo.model.enums.CitaEstado;
 
 @Entity
 @Table(name = "citas")
@@ -34,7 +35,8 @@ public class Cita {
 
     private LocalDateTime fechaFin;
 
-    private String estado;
+    @Enumerated(EnumType.STRING)
+    private CitaEstado estado;
 
     private String motivo;
 
