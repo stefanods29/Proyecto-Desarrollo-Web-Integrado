@@ -1,53 +1,41 @@
 package Grupo4.ProyectoDesarrollo.dto;
 
+import Grupo4.ProyectoDesarrollo.model.*;
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MedicoDTO {
-
     private Long id;
-    private String nombre;
-    private String especialidad;
-    private String telefono;
-    private String correo;
+    private String numeroColegiatura;
+    private Long usuarioId;
+    private Long especialidadId;
+    private Long clinicaId;
+    private Boolean activo;
 
-    public MedicoDTO() {
+    public static MedicoDTO fromEntity(Medico medico) {
+        if (medico == null) return null;
+        return MedicoDTO.builder()
+                .id(medico.getId())
+                .numeroColegiatura(medico.getNumeroColegiatura())
+                .usuarioId(medico.getUsuario() != null ? medico.getUsuario().getId() : null)
+                .especialidadId(medico.getEspecialidad() != null ? medico.getEspecialidad().getId() : null)
+                .clinicaId(medico.getClinica() != null ? medico.getClinica().getId() : null)
+                .activo(medico.getActivo())
+                .build();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEspecialidad() {
-        return especialidad;
-    }
-
-    public void setEspecialidad(String especialidad) {
-        this.especialidad = especialidad;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public Medico toEntity(Usuario usuario, Especialidad especialidad, Clinica clinica) {
+        Medico medico = new Medico();
+        medico.setId(this.id);
+        medico.setNumeroColegiatura(this.numeroColegiatura);
+        medico.setUsuario(usuario);
+        medico.setEspecialidad(especialidad);
+        medico.setClinica(clinica);
+        medico.setActivo(this.activo != null ? this.activo : true);
+        return medico;
     }
 }

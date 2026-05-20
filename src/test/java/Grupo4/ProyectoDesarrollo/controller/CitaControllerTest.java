@@ -1,6 +1,7 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
 import Grupo4.ProyectoDesarrollo.dto.CitaDTO;
+import Grupo4.ProyectoDesarrollo.model.enums.CitaEstado;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,6 @@ public class CitaControllerTest {
 
     @BeforeEach
     void setUp() {
-        
         controller = new CitaController();
     }
     
@@ -31,11 +31,11 @@ public class CitaControllerTest {
         CitaDTO cita1 = new CitaDTO();
         cita1.setPacienteId(1L);
         cita1.setMedicoId(10L);
-        cita1.setEstado("PENDIENTE");
+        cita1.setEstado(CitaEstado.PENDIENTE);
         CitaDTO cita2 = new CitaDTO();
         cita2.setPacienteId(2L);
         cita2.setMedicoId(20L);
-        cita2.setEstado("CONFIRMADA");
+        cita2.setEstado(CitaEstado.CONFIRMADA);
 
         controller.crearCita(cita1);
         controller.crearCita(cita2);
@@ -43,18 +43,17 @@ public class CitaControllerTest {
         assertEquals(2, resultado.size());
     }
 
-    
     @Test
     void testObtenerCita() {
         CitaDTO cita = new CitaDTO();
         cita.setPacienteId(1L);
         cita.setMedicoId(10L);
-        cita.setEstado("PENDIENTE");
+        cita.setEstado(CitaEstado.PENDIENTE);
         CitaDTO creada = controller.crearCita(cita); 
         CitaDTO resultado = controller.obtenerCita(creada.getId());
         assertNotNull(resultado);
         assertEquals(creada.getId(), resultado.getId());
-        assertEquals("PENDIENTE", resultado.getEstado());
+        assertEquals(CitaEstado.PENDIENTE, resultado.getEstado());
     }
 
     @Test
@@ -63,13 +62,12 @@ public class CitaControllerTest {
         assertNull(resultado);
     }
 
-    
     @Test
     void testCrearCita() {
         CitaDTO cita = new CitaDTO();
         cita.setPacienteId(5L);
         cita.setMedicoId(15L);
-        cita.setEstado("PENDIENTE");
+        cita.setEstado(CitaEstado.PENDIENTE);
         CitaDTO resultado = controller.crearCita(cita);
         assertNotNull(resultado);
         assertNotNull(resultado.getId());
@@ -80,9 +78,9 @@ public class CitaControllerTest {
     @Test
     void testCrearCitaidIncremental() {
         CitaDTO cita1 = new CitaDTO();
-        cita1.setEstado("PENDIENTE");
+        cita1.setEstado(CitaEstado.PENDIENTE);
         CitaDTO cita2 = new CitaDTO();
-        cita2.setEstado("CONFIRMADA");
+        cita2.setEstado(CitaEstado.CONFIRMADA);
         CitaDTO primera = controller.crearCita(cita1);
         CitaDTO segunda = controller.crearCita(cita2);
         assertEquals(1L, primera.getId());
@@ -90,29 +88,28 @@ public class CitaControllerTest {
         assertEquals(2, controller.listarCitas().size());
     }
 
-    
     @Test
     void testActualizarCita() {
         CitaDTO cita = new CitaDTO();
         cita.setPacienteId(1L);
         cita.setMedicoId(10L);
-        cita.setEstado("PENDIENTE");
+        cita.setEstado(CitaEstado.PENDIENTE);
         CitaDTO creada = controller.crearCita(cita);
         CitaDTO datosActualizados = new CitaDTO();
         datosActualizados.setPacienteId(2L);
         datosActualizados.setMedicoId(20L);
-        datosActualizados.setEstado("CONFIRMADA");
+        datosActualizados.setEstado(CitaEstado.CONFIRMADA);
         CitaDTO resultado = controller.actualizarCita(creada.getId(), datosActualizados);
         assertNotNull(resultado);
         assertEquals(2L, resultado.getPacienteId());
         assertEquals(20L, resultado.getMedicoId());
-        assertEquals("CONFIRMADA", resultado.getEstado());
+        assertEquals(CitaEstado.CONFIRMADA, resultado.getEstado());
     }
 
     @Test
     void testActualizarCitaidInexistente() {
         CitaDTO datosActualizados = new CitaDTO();
-        datosActualizados.setEstado("CANCELADA");
+        datosActualizados.setEstado(CitaEstado.CANCELADA);
         CitaDTO resultado = controller.actualizarCita(99L, datosActualizados);
         assertNull(resultado);
     }
@@ -120,7 +117,7 @@ public class CitaControllerTest {
     @Test
     void testEliminarCita() {
         CitaDTO cita = new CitaDTO();
-        cita.setEstado("PENDIENTE");
+        cita.setEstado(CitaEstado.PENDIENTE);
         CitaDTO creada = controller.crearCita(cita);
         String mensaje = controller.eliminarCita(creada.getId());
         assertEquals("Cita eliminada", mensaje);
@@ -131,7 +128,7 @@ public class CitaControllerTest {
     @Test
     void testEliminarCitaidInexistente() {
         CitaDTO cita = new CitaDTO();
-        cita.setEstado("PENDIENTE");
+        cita.setEstado(CitaEstado.PENDIENTE);
         controller.crearCita(cita);
         String mensaje = controller.eliminarCita(99L); 
         assertEquals("Cita eliminada", mensaje);
