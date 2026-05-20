@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
+import jakarta.validation.constraints.*;
 
 @Getter
 @Setter
@@ -21,20 +22,25 @@ public class Receta {
 
     @ManyToOne
     @JoinColumn(name = "consultamedica_id", nullable = false)
+    @NotNull
     private ConsultaMedica consultaMedica;
 
     @ManyToOne
     @JoinColumn(name = "medico_id", nullable = false)
+    @NotNull
     private Medico medico;
 
     @ManyToOne
     @JoinColumn(name = "paciente_id", nullable = false)
+    @NotNull
     private Paciente paciente;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
+    @NotNull
     private String indicaciones;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
+    @NotNull
     private LocalDateTime fechaEmision;
 
     public Receta() {
@@ -49,5 +55,10 @@ public class Receta {
         this.indicaciones = indicaciones;
         this.detalles = detalles;
         this.fechaEmision = fechaEmision;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.fechaEmision = LocalDateTime.now();
     }
 }

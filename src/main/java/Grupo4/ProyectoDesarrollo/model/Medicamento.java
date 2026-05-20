@@ -3,8 +3,8 @@ package Grupo4.ProyectoDesarrollo.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
+import jakarta.validation.constraints.*;
 
 @Getter
 @Setter
@@ -16,26 +16,36 @@ public class Medicamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @OneToMany(mappedBy = "medicamento")
     private List<DetalleReceta> detalleRecetas;
 
-    @Column (nullable = false)
+    @Column(nullable = false, length = 150)
+    @NotNull
+    @Size(min = 1, max = 150)
     private String nombreComercial;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 150)
+    @NotNull
+    @Size(min = 1, max = 150)
     private String nombreGenerico;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
+    @NotNull
+    @Size(max = 100)
     private String presentacion;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
+    @NotNull
+    @Size(max = 50)
     private String concentracion;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
+    @NotNull
+    @Size(max = 100)
     private String viaAdministracion;
 
     @Column(nullable = false)
+    @NotNull
     private Boolean activo;
 
     public Medicamento() {

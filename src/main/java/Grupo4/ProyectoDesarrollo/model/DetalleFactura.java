@@ -1,15 +1,8 @@
 package Grupo4.ProyectoDesarrollo.model;
 
 import java.math.BigDecimal;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -25,20 +18,29 @@ public class DetalleFactura {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDetalleFactura;
 
-    @Column(nullable = false, length=200)
+    @Column(nullable = false, length=250)
+    @NotNull
+    @Size(max=250)
     private String descripcion;
 
     @Column(nullable = false)
-    private int cantidad;
+    @NotNull
+    @Min(1)
+    private Integer cantidad;
 
     @Column(nullable = false)
+    @NotNull
+    @DecimalMin("0.00")
     private BigDecimal precioUnitario;
 
     @Column(nullable = false)
+    @NotNull
+    @DecimalMin("0.00")
     private BigDecimal total;
 
     @ManyToOne
     @JoinColumn(name="idFactura", nullable=false)
+    @NotNull
     private Factura factura;
 
 }

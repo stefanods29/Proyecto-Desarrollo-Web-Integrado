@@ -3,19 +3,8 @@ package Grupo4.ProyectoDesarrollo.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import Grupo4.ProyectoDesarrollo.model.enums.FacturaEstado;
 import Grupo4.ProyectoDesarrollo.model.enums.MetodoPago;
 import lombok.Getter;
@@ -33,33 +22,45 @@ public class Factura {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idFactura;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 50)
+    @NotNull
+    @Size(max = 50)
     private String numeroFactura;
 
     @Column(nullable=false)
+    @NotNull
+    @DecimalMin("0.00")
     private BigDecimal subtotal;
 
     @Column(nullable=false)
+    @NotNull
+    @DecimalMin("0.00")
     private BigDecimal impuesto;
 
     @Column(nullable=false)
+    @NotNull
+    @DecimalMin("0.00")
     private BigDecimal total;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable=false, length = 200)
+    @NotNull
     private FacturaEstado estado;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable=false)
+    @NotNull
     private MetodoPago metodoPago;
 
-    @OneToMany(mappedBy="factura")
+    @OneToMany(mappedBy="factura", cascade = CascadeType.ALL)
     private List<DetalleFactura> detalles;
     
-    @Column(nullable=false)
+    @Column(nullable=false, updatable = false)
+    @NotNull
     private LocalDateTime fechaEmision;
 
     @Column(nullable=false)
+    @NotNull
     private LocalDateTime fechaActualizacion;
 
     @Column(nullable=false)
@@ -67,6 +68,7 @@ public class Factura {
 
     @ManyToOne
     @JoinColumn(name="idPaciente", nullable=false)
+    @NotNull
     private Paciente paciente;
 
     @ManyToOne
@@ -75,5 +77,17 @@ public class Factura {
 
     @ManyToOne
     @JoinColumn(name="idClinica", nullable=false)
+    @NotNull
     private Clinica clinica;
+
+    @PrePersist
+    public void prePersist() {
+        this.fechaEmision = LocalDateTime.now();
+        this.fechaActualizacion = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.fechaActualizacion = LocalDateTime.now();
+    }
 }
