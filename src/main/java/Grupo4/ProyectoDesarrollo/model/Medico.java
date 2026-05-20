@@ -12,6 +12,7 @@ public class Medico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idMedico")
     private Long id;
 
     @Column(unique = true, nullable = false, length = 50)

@@ -13,6 +13,7 @@ public class DetalleReceta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idDetalleReceta")
     private Long id;
 
     @ManyToOne

@@ -15,6 +15,7 @@ public class ConsultaMedica {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idConsultaMedica")
     private Long id;
 
     @ManyToOne

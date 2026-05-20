@@ -20,7 +20,8 @@ public class Factura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idFactura;
+    @Column(name = "idFactura")
+    private Long id;
 
     @Column(unique = true, nullable = false, length = 50)
     @NotNull

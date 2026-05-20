@@ -19,6 +19,7 @@ public class HistoriaClinica {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idHistoriaClinica")
     private Long id;
 
     @OneToOne

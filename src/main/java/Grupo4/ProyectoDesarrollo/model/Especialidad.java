@@ -14,6 +14,7 @@ public class Especialidad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idEspecialidad")
     private Long id;
 
     @Column(unique = true, nullable = false, length = 100)

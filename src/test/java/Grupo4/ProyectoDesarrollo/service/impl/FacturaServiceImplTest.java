@@ -29,7 +29,7 @@ class FacturaServiceImplTest {
     @BeforeEach
     void setUp() {
         factura = new Factura();
-        factura.setIdFactura(1L);
+        factura.setId(1L);
     }
 
     @Test
@@ -39,7 +39,7 @@ class FacturaServiceImplTest {
         Factura resultado = service.crear(factura);
 
         assertNotNull(resultado);
-        assertEquals(1L, resultado.getIdFactura());
+        assertEquals(1L, resultado.getId());
         verify(repository).save(factura);
     }
 
@@ -61,7 +61,7 @@ class FacturaServiceImplTest {
         Factura resultado = service.buscarPorId(1L);
 
         assertNotNull(resultado);
-        assertEquals(1L, resultado.getIdFactura());
+        assertEquals(1L, resultado.getId());
     }
 
     @Test

@@ -14,6 +14,7 @@ public class Medicamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idMedicamento")
     private Long id;
 
     @OneToMany(mappedBy = "medicamento")

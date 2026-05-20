@@ -14,6 +14,7 @@ public class Consultorio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idConsultorio")
     private Long id;
 
     @Column(nullable = false, length = 50)

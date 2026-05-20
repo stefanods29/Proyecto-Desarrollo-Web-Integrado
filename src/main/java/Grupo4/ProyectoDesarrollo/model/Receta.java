@@ -15,6 +15,7 @@ public class Receta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idReceta")
     private Long id;
 
     @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)

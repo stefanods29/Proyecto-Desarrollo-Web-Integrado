@@ -30,7 +30,7 @@ public class FacturaController {
 
     @PutMapping("/{id}")
     public Factura actualizar(@PathVariable Long id, @RequestBody Factura factura) {
-        factura.setIdFactura(id);
+        factura.setId(id);
         return service.crear(factura);
     }
 }

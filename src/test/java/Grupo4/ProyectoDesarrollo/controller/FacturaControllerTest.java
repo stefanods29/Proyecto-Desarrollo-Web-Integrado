@@ -31,7 +31,7 @@ class FacturaControllerTest {
     @BeforeEach
     void setUp() {
         facturaMock = new Factura();
-        facturaMock.setIdFactura(1L);
+        facturaMock.setId(1L);
         facturaMock.setNumeroFactura("F001");
     }
 
@@ -64,7 +64,7 @@ class FacturaControllerTest {
         Factura response = controller.buscarPorId(1L);
 
         assertNotNull(response);
-        assertEquals(1L, response.getIdFactura());
+        assertEquals(1L, response.getId());
         verify(service, times(1)).buscarPorId(1L);
     }
     @Test

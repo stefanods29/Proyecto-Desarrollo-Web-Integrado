@@ -17,6 +17,7 @@ public class HorarioMedico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idHorarioMedico")
     private Long id;
 
     @ManyToOne
