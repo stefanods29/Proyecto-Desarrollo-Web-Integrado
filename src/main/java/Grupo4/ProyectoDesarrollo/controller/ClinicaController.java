@@ -1,11 +1,13 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
+import Grupo4.ProyectoDesarrollo.dto.ClinicaDTO;
 import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.service.ClinicaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/clinicas")
@@ -15,24 +17,30 @@ public class ClinicaController {
     private final ClinicaService service;
 
     @PostMapping
-    public Clinica crear(@RequestBody Clinica clinica) {
-        return service.crear(clinica);
+    public ClinicaDTO crear(@RequestBody ClinicaDTO dto) {
+        Clinica clinica = dto.toEntity();
+        Clinica guardada = service.crear(clinica);
+        return ClinicaDTO.fromEntity(guardada);
     }
 
     @GetMapping
-    public List<Clinica> listar() {
-        return service.listar();
+    public List<ClinicaDTO> listar() {
+        return service.listar().stream()
+                .map(ClinicaDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Clinica buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id);
+    public ClinicaDTO buscarPorId(@PathVariable Long id) {
+        return ClinicaDTO.fromEntity(service.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public Clinica actualizar(@PathVariable Long id, @RequestBody Clinica clinica) {
-        clinica.setId(id);
-        return service.crear(clinica);
+    public ClinicaDTO actualizar(@PathVariable Long id, @RequestBody ClinicaDTO dto) {
+        dto.setId(id);
+        Clinica clinica = dto.toEntity();
+        Clinica guardada = service.crear(clinica);
+        return ClinicaDTO.fromEntity(guardada);
     }
 
     @DeleteMapping("/{id}")
