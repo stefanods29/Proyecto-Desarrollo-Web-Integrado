@@ -1,6 +1,8 @@
 package Grupo4.ProyectoDesarrollo.service;
 
 import Grupo4.ProyectoDesarrollo.model.Factura;
+import Grupo4.ProyectoDesarrollo.model.enums.FacturaEstado;
+import Grupo4.ProyectoDesarrollo.model.enums.MetodoPago;
 import Grupo4.ProyectoDesarrollo.repository.FacturaRepository;
 import Grupo4.ProyectoDesarrollo.service.impl.FacturaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,13 +34,13 @@ class FacturaServiceTest {
     @BeforeEach
     void setUp() {
         factura = new Factura();
-        factura.setIdFactura(1L);
+        factura.setId(1L);
         factura.setNumeroFactura("F001-0001");
         factura.setSubtotal(BigDecimal.valueOf(100));
         factura.setImpuesto(BigDecimal.valueOf(18));
         factura.setTotal(BigDecimal.valueOf(118));
-        factura.setEstado("PAGADO");
-        factura.setMetodoPago("EFECTIVO");
+        factura.setEstado(FacturaEstado.PAGADA);
+        factura.setMetodoPago(MetodoPago.EFECTIVO);
     }
 
     @Test
@@ -48,7 +50,7 @@ class FacturaServiceTest {
         Factura resultado = service.crear(factura);
 
         assertNotNull(resultado);
-        assertEquals(1L, resultado.getIdFactura());
+        assertEquals(1L, resultado.getId());
         verify(repository).save(any(Factura.class));
     }
 
@@ -69,7 +71,7 @@ class FacturaServiceTest {
         Factura resultado = service.buscarPorId(1L);
 
         assertNotNull(resultado);
-        assertEquals(1L, resultado.getIdFactura());
+        assertEquals(1L, resultado.getId());
         verify(repository).findById(1L);
     }
 

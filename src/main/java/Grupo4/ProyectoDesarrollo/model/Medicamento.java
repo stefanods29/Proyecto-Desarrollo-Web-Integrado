@@ -3,53 +3,50 @@ package Grupo4.ProyectoDesarrollo.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
+import jakarta.validation.constraints.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name="Medicamento")
 public class Medicamento {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idMedicamento")
     private Long id;
 
-
-    @Getter
-    @Setter
     @OneToMany(mappedBy = "medicamento")
     private List<DetalleReceta> detalleRecetas;
 
-    @Getter
-    @Setter
-    @Column (nullable = false)
+    @Column(nullable = false, length = 150)
+    @NotNull
+    @Size(min = 1, max = 150)
     private String nombreComercial;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 150)
+    @NotNull
+    @Size(min = 1, max = 150)
     private String nombreGenerico;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
+    @NotNull
+    @Size(max = 100)
     private String presentacion;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
+    @NotNull
+    @Size(max = 50)
     private String concentracion;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
+    @NotNull
+    @Size(max = 100)
     private String viaAdministracion;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
+    @NotNull
     private Boolean activo;
 
     public Medicamento() {

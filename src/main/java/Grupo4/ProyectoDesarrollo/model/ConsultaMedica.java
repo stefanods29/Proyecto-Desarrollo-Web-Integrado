@@ -5,120 +5,110 @@ import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
+import jakarta.validation.constraints.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "ConsultaMedica")
 public class ConsultaMedica {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idConsultaMedica")
     private Long id;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "HistoriaClinica_id", nullable = false)
+    @NotNull
     private HistoriaClinica historiaClinica;
 
-    @Getter
-    @Setter
     @OneToMany(mappedBy = "consultaMedica")
     private List<Receta> recetas;
 
-    @Getter
-    @Setter
     @OneToMany(mappedBy = "consultaMedica")
     private List<ArchivoClinico> archivos;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "paciente_id", nullable = false)
+    @NotNull
     private Paciente paciente;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "medico_id", nullable = false)
+    @NotNull
     private Medico medico;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "cita_id")
     private Cita cita;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "clinica_id", nullable = false)
+    @NotNull
     private Clinica clinica;
 
-    @Getter
-    @Setter
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
+    @NotNull
     private String anamnesis;
 
-    @Getter
-    @Setter
     @Column(columnDefinition = "TEXT")
     private String examenFisico;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
+    @NotNull
+    @Size(max = 500)
     private String diagnostico;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
+    @NotNull
     private String tratamiento;
 
-    @Getter
-    @Setter
     @Column(columnDefinition = "TEXT")
+    @Size(max = 1000)
     private String observaciones;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
+    @NotNull
+    @Size(max = 20)
     private String presionArterial;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
+    @NotNull
+    @DecimalMin("30.0")
+    @DecimalMax("45.0")
     private Double temperatura;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
+    @NotNull
+    @Min(0)
+    @Max(300)
     private Integer frecuenciaCardiaca;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
+    @NotNull
+    @Min(0)
+    @Max(100)
     private Integer frecuenciaRespiratoria;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
+    @NotNull
+    @DecimalMin("0.0")
+    @DecimalMax("500.0")
     private Double peso;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
+    @NotNull
+    @DecimalMin("0.0")
+    @DecimalMax("3.0")
     private Double talla;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
+    @NotNull
     private LocalDateTime fechaConsulta;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
+    @NotNull
     private LocalDateTime fechaActualizacion;
 
     public ConsultaMedica() {}
@@ -142,5 +132,16 @@ public class ConsultaMedica {
         this.talla = talla;
         this.fechaConsulta = fechaConsulta;
         this.fechaActualizacion = fechaActualizacion;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.fechaConsulta = LocalDateTime.now();
+        this.fechaActualizacion = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.fechaActualizacion = LocalDateTime.now();
     }
 }

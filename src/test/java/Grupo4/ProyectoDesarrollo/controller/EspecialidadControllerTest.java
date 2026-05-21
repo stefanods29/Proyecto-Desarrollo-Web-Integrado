@@ -1,5 +1,6 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
+import Grupo4.ProyectoDesarrollo.dto.EspecialidadDTO;
 import Grupo4.ProyectoDesarrollo.model.Especialidad;
 import Grupo4.ProyectoDesarrollo.service.EspecialidadService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -37,9 +39,11 @@ class EspecialidadControllerTest {
     void crear_ok() {
         when(service.crear(any(Especialidad.class))).thenReturn(especialidadMock);
 
-        Especialidad resultado = controller.crear(new Especialidad());
+        EspecialidadDTO dto = EspecialidadDTO.fromEntity(especialidadMock);
+        EspecialidadDTO resultado = controller.crear(dto);
 
-        assertEquals(especialidadMock, resultado);
+        assertNotNull(resultado);
+        assertEquals(1L, resultado.getId());
         verify(service, times(1)).crear(any(Especialidad.class));
     }
 
@@ -48,10 +52,9 @@ class EspecialidadControllerTest {
         List<Especialidad> listaEsperada = Arrays.asList(especialidadMock, new Especialidad());
         when(service.listar()).thenReturn(listaEsperada);
 
-        List<Especialidad> resultado = controller.listar();
+        List<EspecialidadDTO> resultado = controller.listar();
 
         assertEquals(2, resultado.size());
-        assertEquals(listaEsperada, resultado);
         verify(service, times(1)).listar();
     }
 
@@ -60,23 +63,24 @@ class EspecialidadControllerTest {
         Long id = 1L;
         when(service.buscarPorId(id)).thenReturn(especialidadMock);
 
-        Especialidad resultado = controller.buscarPorId(id);
+        EspecialidadDTO resultado = controller.buscarPorId(id);
 
-        assertEquals(especialidadMock, resultado);
+        assertNotNull(resultado);
+        assertEquals(1L, resultado.getId());
         verify(service, times(1)).buscarPorId(id);
     }
 
     @Test
     void actualizar_ok() {
         Long id = 2L;
-        Especialidad especialidadAActualizar = new Especialidad();
+        EspecialidadDTO especialidadAActualizar = EspecialidadDTO.builder().build();
         when(service.crear(any(Especialidad.class))).thenReturn(especialidadMock);
 
-        Especialidad resultado = controller.actualizar(id, especialidadAActualizar);
+        EspecialidadDTO resultado = controller.actualizar(id, especialidadAActualizar);
 
-        assertEquals(id, especialidadAActualizar.getId());
-        assertEquals(especialidadMock, resultado);
-        verify(service, times(1)).crear(especialidadAActualizar);
+        assertNotNull(resultado);
+        assertEquals(1L, resultado.getId());
+        verify(service, times(1)).crear(any(Especialidad.class));
     }
 
     @Test

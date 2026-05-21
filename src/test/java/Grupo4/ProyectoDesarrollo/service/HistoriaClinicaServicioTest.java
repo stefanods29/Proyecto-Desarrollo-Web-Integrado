@@ -48,7 +48,7 @@ class HistoriaClinicaServicioTest {
     void findById() {
         when(repository.findById(1L)).thenReturn(Optional.of(historia));
 
-        HistoriaClinica resultado = service.findById(1L);
+        HistoriaClinica resultado = service.buscarPorId(1L);
 
         assertNotNull(resultado);
         verify(repository).findById(1L);

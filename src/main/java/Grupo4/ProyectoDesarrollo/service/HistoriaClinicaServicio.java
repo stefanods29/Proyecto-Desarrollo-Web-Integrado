@@ -7,7 +7,7 @@ import java.util.List;
 public interface HistoriaClinicaServicio {
     List<HistoriaClinica> findAll();
 
-    HistoriaClinica findById(Long id);
+    HistoriaClinica buscarPorId(Long id);
 
     HistoriaClinica save(HistoriaClinica historia);
 

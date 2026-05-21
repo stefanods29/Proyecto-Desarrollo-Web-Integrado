@@ -4,46 +4,46 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.validation.constraints.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "ArchivoClinico")
 public class ArchivoClinico {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idArchivoClinico")
     private Long id;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "consultamedica_id", nullable = false)
+    @NotNull
     private ConsultaMedica consultaMedica;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
+    @NotNull
+    @Size(min = 1, max = 255)
     private String nombreArchivo;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
+    @NotNull
+    @Size(max = 50)
     private String tipoArchivo;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
+    @NotNull
+    @Size(max = 500)
     private String rutaArchivo;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
+    @NotNull
+    @Size(max = 500)
     private String descripcion;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
+    @NotNull
     private LocalDateTime fechaSubida;
 
     public ArchivoClinico() {
@@ -58,5 +58,10 @@ public class ArchivoClinico {
         this.rutaArchivo = rutaArchivo;
         this.descripcion = descripcion;
         this.fechaSubida = fechaSubida;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.fechaSubida = LocalDateTime.now();
     }
 }

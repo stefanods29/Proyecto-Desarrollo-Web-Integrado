@@ -3,47 +3,46 @@ package Grupo4.ProyectoDesarrollo.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.validation.constraints.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name="DetalleReceta")
 public class DetalleReceta {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idDetalleReceta")
     private Long id;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "receta_id", nullable = false)
+    @NotNull
     private Receta receta;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "medicamento_id", nullable = false)
+    @NotNull
     private Medicamento medicamento;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
+    @NotNull
+    @Size(max = 100)
     private String dosis;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
+    @NotNull
+    @Size(max = 100)
     private String frecuencia;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
+    @NotNull
+    @Size(max = 100)
     private String duracion;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
+    @NotNull
     private String instrucciones;
 
     public DetalleReceta() {
@@ -57,5 +56,5 @@ public class DetalleReceta {
         this.frecuencia = frecuencia;
         this.duracion = duracion;
         this.instrucciones = instrucciones;
-}
+    }
 }

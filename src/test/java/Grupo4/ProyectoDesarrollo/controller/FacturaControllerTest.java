@@ -1,7 +1,14 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
+import Grupo4.ProyectoDesarrollo.dto.FacturaDTO;
+import Grupo4.ProyectoDesarrollo.model.Cita;
+import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.model.Factura;
+import Grupo4.ProyectoDesarrollo.model.Paciente;
+import Grupo4.ProyectoDesarrollo.service.CitaService;
+import Grupo4.ProyectoDesarrollo.service.ClinicaService;
 import Grupo4.ProyectoDesarrollo.service.FacturaService;
+import Grupo4.ProyectoDesarrollo.service.PacienteService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +17,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,59 +32,98 @@ class FacturaControllerTest {
 
     @Mock
     private FacturaService service;
+    @Mock
+    private PacienteService pacienteService;
+    @Mock
+    private CitaService citaService;
+    @Mock
+    private ClinicaService clinicaService;
 
     @InjectMocks
     private FacturaController controller;
 
     private Factura facturaMock;
+    private Paciente pacienteMock;
+    private Cita citaMock;
+    private Clinica clinicaMock;
 
     @BeforeEach
     void setUp() {
+        clinicaMock = new Clinica();
+        clinicaMock.setId(10L);
+        pacienteMock = Paciente.builder().id(2L).build();
+        citaMock = Cita.builder().id(3L).build();
+
         facturaMock = new Factura();
-        facturaMock.setIdFactura(1L);
+        facturaMock.setId(1L);
         facturaMock.setNumeroFactura("F001");
+        facturaMock.setPaciente(pacienteMock);
+        facturaMock.setCita(citaMock);
+        facturaMock.setClinica(clinicaMock);
     }
 
     @Test
-    void crearOk(){
+    void crearOk() {
+        when(pacienteService.buscarPorId(any())).thenReturn(pacienteMock);
+        when(citaService.buscarPorId(any())).thenReturn(citaMock);
+        when(clinicaService.buscarPorId(any())).thenReturn(clinicaMock);
         when(service.crear(any(Factura.class))).thenReturn(facturaMock);
 
-        Factura response = controller.crear(new Factura());
+        FacturaDTO dto = FacturaDTO.fromEntity(facturaMock);
+        ResponseEntity<FacturaDTO> response = controller.crear(dto);
 
-        assertNotNull(response);
-        assertEquals("F001", response.getNumeroFactura());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("F001", response.getBody().getNumeroFactura());
         verify(service, times(1)).crear(any(Factura.class));
     }
 
     @Test
-    void listarOk(){
-        List<Factura> lista = Arrays.asList(facturaMock, new Factura());
+    void listarOk() {
+        List<Factura> lista = Arrays.asList(facturaMock, facturaMock);
         when(service.listar()).thenReturn(lista);
 
-        List<Factura> response = controller.listar();
+        ResponseEntity<List<FacturaDTO>> response = controller.listar();
 
-        assertEquals(2, response.size());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(2, response.getBody().size());
         verify(service, times(1)).listar();
     }
 
     @Test
-    void buscarPorIdOk(){
+    void buscarPorIdOk() {
         when(service.buscarPorId(1L)).thenReturn(facturaMock);
 
-        Factura response = controller.buscarPorId(1L);
+        ResponseEntity<FacturaDTO> response = controller.buscarPorId(1L);
 
-        assertNotNull(response);
-        assertEquals(1L, response.getIdFactura());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1L, response.getBody().getId());
         verify(service, times(1)).buscarPorId(1L);
     }
+
     @Test
-    void actualizarOk(){
-        when(service.crear(any(Factura.class))).thenReturn(facturaMock);
+    void buscarPorIdNotFound() {
+        when(service.buscarPorId(99L)).thenReturn(null);
 
-        Factura response = controller.actualizar(1L, new Factura());
+        ResponseEntity<FacturaDTO> response = controller.buscarPorId(99L);
 
-        assertNotNull(response);
-        verify(service, times(1)).crear(any(Factura.class));
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        verify(service, times(1)).buscarPorId(99L);
     }
 
+    @Test
+    void actualizarOk() {
+        when(pacienteService.buscarPorId(any())).thenReturn(pacienteMock);
+        when(citaService.buscarPorId(any())).thenReturn(citaMock);
+        when(clinicaService.buscarPorId(any())).thenReturn(clinicaMock);
+        when(service.crear(any(Factura.class))).thenReturn(facturaMock);
+
+        FacturaDTO dto = FacturaDTO.fromEntity(facturaMock);
+        ResponseEntity<FacturaDTO> response = controller.actualizar(1L, dto);
+
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(service, times(1)).crear(any(Factura.class));
+    }
 }

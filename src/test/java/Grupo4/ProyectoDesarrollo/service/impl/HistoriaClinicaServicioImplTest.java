@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +49,7 @@ class HistoriaClinicaServicioImplTest {
     void findById() {
         when(repository.findById(1L)).thenReturn(Optional.of(historia));
 
-        HistoriaClinica resultado = servicio.findById(1L);
+        HistoriaClinica resultado = servicio.buscarPorId(1L);
 
         assertNotNull(resultado);
         assertEquals(1L, resultado.getId());

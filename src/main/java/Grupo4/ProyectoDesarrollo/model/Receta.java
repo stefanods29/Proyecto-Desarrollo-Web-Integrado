@@ -5,48 +5,43 @@ import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
+import jakarta.validation.constraints.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "Receta")
 public class Receta {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idReceta")
     private Long id;
 
-    @Getter
-    @Setter
     @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)
     private List<DetalleReceta> detalles;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "consultamedica_id", nullable = false)
+    @NotNull
     private ConsultaMedica consultaMedica;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "medico_id", nullable = false)
+    @NotNull
     private Medico medico;
 
-    @Getter
-    @Setter
     @ManyToOne
     @JoinColumn(name = "paciente_id", nullable = false)
+    @NotNull
     private Paciente paciente;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
+    @NotNull
     private String indicaciones;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
+    @NotNull
     private LocalDateTime fechaEmision;
 
     public Receta() {
@@ -61,5 +56,10 @@ public class Receta {
         this.indicaciones = indicaciones;
         this.detalles = detalles;
         this.fechaEmision = fechaEmision;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.fechaEmision = LocalDateTime.now();
     }
 }
