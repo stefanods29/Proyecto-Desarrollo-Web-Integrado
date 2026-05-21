@@ -38,5 +38,5 @@ public class Medico {
 
     @Column(nullable = false)
     @NotNull
-    private Boolean activo = true;
+    private Boolean activo;
 }
