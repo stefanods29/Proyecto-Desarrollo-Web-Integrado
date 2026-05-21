@@ -1,7 +1,12 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
+import Grupo4.ProyectoDesarrollo.dto.HorarioMedicoDTO;
+import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.model.HorarioMedico;
+import Grupo4.ProyectoDesarrollo.model.Medico;
+import Grupo4.ProyectoDesarrollo.service.ClinicaService;
 import Grupo4.ProyectoDesarrollo.service.HorarioMedicoService;
+import Grupo4.ProyectoDesarrollo.service.MedicoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,14 +27,26 @@ class HorarioMedicoControllerTest {
 
     @Mock
     private HorarioMedicoService service;
+    @Mock
+    private MedicoService medicoService;
+    @Mock
+    private ClinicaService clinicaService;
 
     @InjectMocks
     private HorarioMedicoController controller;
 
     private HorarioMedico horarioMock;
+    private Medico medicoMock;
+    private Clinica clinicaMock;
 
     @BeforeEach
     void setUp() {
+        clinicaMock = new Clinica();
+        clinicaMock.setId(2L);
+        medicoMock = new Medico();
+        medicoMock.setId(3L);
+        medicoMock.setClinica(clinicaMock);
+
         horarioMock = new HorarioMedico();
         horarioMock.setId(1L);
         horarioMock.setDiaSemana(DayOfWeek.MONDAY);
@@ -37,14 +54,16 @@ class HorarioMedicoControllerTest {
         horarioMock.setHoraFin(LocalTime.of(12, 0));
         horarioMock.setDuracionTurnoMinutos(30);
         horarioMock.setActivo(true);
+        horarioMock.setMedico(medicoMock);
+        horarioMock.setClinica(clinicaMock);
     }
 
     @Test
     void listarOk() {
-        List<HorarioMedico> lista = Arrays.asList(horarioMock, new HorarioMedico());
+        List<HorarioMedico> lista = Arrays.asList(horarioMock, horarioMock);
         when(service.listar()).thenReturn(lista);
 
-        List<HorarioMedico> response = controller.listar();
+        List<HorarioMedicoDTO> response = controller.listar();
 
         assertEquals(2, response.size());
         verify(service, times(1)).listar();
@@ -55,7 +74,7 @@ class HorarioMedicoControllerTest {
         Long id = 1L;
         when(service.buscarPorId(id)).thenReturn(horarioMock);
 
-        HorarioMedico response = controller.buscarPorId(id);
+        HorarioMedicoDTO response = controller.buscarPorId(id);
 
         assertNotNull(response);
         assertEquals(id, response.getId());
@@ -67,7 +86,7 @@ class HorarioMedicoControllerTest {
         Long id = 1L;
         when(service.buscarPorId(id)).thenReturn(null);
 
-        HorarioMedico response = controller.buscarPorId(id);
+        HorarioMedicoDTO response = controller.buscarPorId(id);
 
         assertNull(response);
         verify(service, times(1)).buscarPorId(id);
@@ -75,9 +94,12 @@ class HorarioMedicoControllerTest {
 
     @Test
     void crearOk() {
+        when(medicoService.buscarPorId(any())).thenReturn(medicoMock);
+        when(clinicaService.buscarPorId(any())).thenReturn(clinicaMock);
         when(service.crear(any(HorarioMedico.class))).thenReturn(horarioMock);
 
-        HorarioMedico response = controller.crear(new HorarioMedico());
+        HorarioMedicoDTO dto = HorarioMedicoDTO.fromEntity(horarioMock);
+        HorarioMedicoDTO response = controller.crear(dto);
 
         assertNotNull(response);
         assertEquals(1L, response.getId());
@@ -87,9 +109,12 @@ class HorarioMedicoControllerTest {
     @Test
     void actualizarOk() {
         Long id = 1L;
+        when(medicoService.buscarPorId(any())).thenReturn(medicoMock);
+        when(clinicaService.buscarPorId(any())).thenReturn(clinicaMock);
         when(service.crear(any(HorarioMedico.class))).thenReturn(horarioMock);
 
-        HorarioMedico response = controller.actualizar(id, new HorarioMedico());
+        HorarioMedicoDTO dto = HorarioMedicoDTO.fromEntity(horarioMock);
+        HorarioMedicoDTO response = controller.actualizar(id, dto);
 
         assertNotNull(response);
         assertEquals(1L, response.getId());

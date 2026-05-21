@@ -1,138 +1,182 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
 import Grupo4.ProyectoDesarrollo.dto.CitaDTO;
+import Grupo4.ProyectoDesarrollo.model.*;
 import Grupo4.ProyectoDesarrollo.model.enums.CitaEstado;
-
+import Grupo4.ProyectoDesarrollo.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class CitaControllerTest {
 
+    @Mock
+    private CitaService service;
+    @Mock
+    private PacienteService pacienteService;
+    @Mock
+    private MedicoService medicoService;
+    @Mock
+    private ConsultorioService consultorioService;
+    @Mock
+    private ClinicaService clinicaService;
+
+    @InjectMocks
     private CitaController controller;
+
+    private Paciente pacienteMock;
+    private Medico medicoMock;
+    private Consultorio consultorioMock;
+    private Clinica clinicaMock;
 
     @BeforeEach
     void setUp() {
-        controller = new CitaController();
+        pacienteMock = Paciente.builder().id(1L).build();
+        medicoMock = Medico.builder().id(10L).build();
+        consultorioMock = Consultorio.builder().id(5L).build();
+        clinicaMock = Clinica.builder().id(2L).build();
     }
-    
+
     @Test
     void testListarCitas() {
+        when(service.listar()).thenReturn(Collections.emptyList());
         List<CitaDTO> resultado = controller.listarCitas();
         assertNotNull(resultado);
         assertTrue(resultado.isEmpty());
+        verify(service, times(1)).listar();
     }
 
     @Test
     void testListarCitasConDatos() {
-        CitaDTO cita1 = new CitaDTO();
-        cita1.setPacienteId(1L);
-        cita1.setMedicoId(10L);
-        cita1.setEstado(CitaEstado.PENDIENTE);
-        CitaDTO cita2 = new CitaDTO();
-        cita2.setPacienteId(2L);
-        cita2.setMedicoId(20L);
-        cita2.setEstado(CitaEstado.CONFIRMADA);
+        Cita cita1 = Cita.builder()
+                .id(1L)
+                .paciente(pacienteMock)
+                .medico(medicoMock)
+                .estado(CitaEstado.PENDIENTE)
+                .build();
+        Cita cita2 = Cita.builder()
+                .id(2L)
+                .paciente(pacienteMock)
+                .medico(medicoMock)
+                .estado(CitaEstado.CONFIRMADA)
+                .build();
 
-        controller.crearCita(cita1);
-        controller.crearCita(cita2);
+        when(service.listar()).thenReturn(Arrays.asList(cita1, cita2));
+
         List<CitaDTO> resultado = controller.listarCitas();
         assertEquals(2, resultado.size());
+        assertEquals(1L, resultado.get(0).getId());
+        assertEquals(CitaEstado.PENDIENTE, resultado.get(0).getEstado());
+        assertEquals(2L, resultado.get(1).getId());
+        assertEquals(CitaEstado.CONFIRMADA, resultado.get(1).getEstado());
     }
 
     @Test
     void testObtenerCita() {
-        CitaDTO cita = new CitaDTO();
-        cita.setPacienteId(1L);
-        cita.setMedicoId(10L);
-        cita.setEstado(CitaEstado.PENDIENTE);
-        CitaDTO creada = controller.crearCita(cita); 
-        CitaDTO resultado = controller.obtenerCita(creada.getId());
+        Cita cita = Cita.builder()
+                .id(1L)
+                .paciente(pacienteMock)
+                .medico(medicoMock)
+                .estado(CitaEstado.PENDIENTE)
+                .build();
+
+        when(service.buscarPorId(1L)).thenReturn(cita);
+
+        CitaDTO resultado = controller.obtenerCita(1L);
         assertNotNull(resultado);
-        assertEquals(creada.getId(), resultado.getId());
+        assertEquals(1L, resultado.getId());
         assertEquals(CitaEstado.PENDIENTE, resultado.getEstado());
     }
 
     @Test
     void testObtenerCitaidInexistente() {
+        when(service.buscarPorId(99L)).thenReturn(null);
         CitaDTO resultado = controller.obtenerCita(99L);
         assertNull(resultado);
     }
 
     @Test
     void testCrearCita() {
-        CitaDTO cita = new CitaDTO();
-        cita.setPacienteId(5L);
-        cita.setMedicoId(15L);
-        cita.setEstado(CitaEstado.PENDIENTE);
-        CitaDTO resultado = controller.crearCita(cita);
-        assertNotNull(resultado);
-        assertNotNull(resultado.getId());
-        assertEquals(1L, resultado.getId()); 
-        assertEquals(1, controller.listarCitas().size());
-    }
+        CitaDTO citaDTO = CitaDTO.builder()
+                .pacienteId(1L)
+                .medicoId(10L)
+                .consultorioId(5L)
+                .clinicaId(2L)
+                .estado(CitaEstado.PENDIENTE)
+                .build();
 
-    @Test
-    void testCrearCitaidIncremental() {
-        CitaDTO cita1 = new CitaDTO();
-        cita1.setEstado(CitaEstado.PENDIENTE);
-        CitaDTO cita2 = new CitaDTO();
-        cita2.setEstado(CitaEstado.CONFIRMADA);
-        CitaDTO primera = controller.crearCita(cita1);
-        CitaDTO segunda = controller.crearCita(cita2);
-        assertEquals(1L, primera.getId());
-        assertEquals(2L, segunda.getId());
-        assertEquals(2, controller.listarCitas().size());
+        Cita citaGuardada = Cita.builder()
+                .id(1L)
+                .paciente(pacienteMock)
+                .medico(medicoMock)
+                .consultorio(consultorioMock)
+                .clinica(clinicaMock)
+                .estado(CitaEstado.PENDIENTE)
+                .build();
+
+        when(pacienteService.buscarPorId(1L)).thenReturn(pacienteMock);
+        when(medicoService.buscarPorId(10L)).thenReturn(medicoMock);
+        when(consultorioService.buscarPorId(5L)).thenReturn(consultorioMock);
+        when(clinicaService.buscarPorId(2L)).thenReturn(clinicaMock);
+        when(service.crear(any(Cita.class))).thenReturn(citaGuardada);
+
+        CitaDTO resultado = controller.crearCita(citaDTO);
+        assertNotNull(resultado);
+        assertEquals(1L, resultado.getId());
+        assertEquals(CitaEstado.PENDIENTE, resultado.getEstado());
+        assertEquals(1L, resultado.getPacienteId());
+        assertEquals(10L, resultado.getMedicoId());
     }
 
     @Test
     void testActualizarCita() {
-        CitaDTO cita = new CitaDTO();
-        cita.setPacienteId(1L);
-        cita.setMedicoId(10L);
-        cita.setEstado(CitaEstado.PENDIENTE);
-        CitaDTO creada = controller.crearCita(cita);
-        CitaDTO datosActualizados = new CitaDTO();
-        datosActualizados.setPacienteId(2L);
-        datosActualizados.setMedicoId(20L);
-        datosActualizados.setEstado(CitaEstado.CONFIRMADA);
-        CitaDTO resultado = controller.actualizarCita(creada.getId(), datosActualizados);
+        CitaDTO citaDTO = CitaDTO.builder()
+                .pacienteId(1L)
+                .medicoId(10L)
+                .consultorioId(5L)
+                .clinicaId(2L)
+                .estado(CitaEstado.CONFIRMADA)
+                .build();
+
+        Cita citaGuardada = Cita.builder()
+                .id(1L)
+                .paciente(pacienteMock)
+                .medico(medicoMock)
+                .consultorio(consultorioMock)
+                .clinica(clinicaMock)
+                .estado(CitaEstado.CONFIRMADA)
+                .build();
+
+        when(pacienteService.buscarPorId(1L)).thenReturn(pacienteMock);
+        when(medicoService.buscarPorId(10L)).thenReturn(medicoMock);
+        when(consultorioService.buscarPorId(5L)).thenReturn(consultorioMock);
+        when(clinicaService.buscarPorId(2L)).thenReturn(clinicaMock);
+        when(service.crear(any(Cita.class))).thenReturn(citaGuardada);
+
+        CitaDTO resultado = controller.actualizarCita(1L, citaDTO);
         assertNotNull(resultado);
-        assertEquals(2L, resultado.getPacienteId());
-        assertEquals(20L, resultado.getMedicoId());
+        assertEquals(1L, resultado.getId());
         assertEquals(CitaEstado.CONFIRMADA, resultado.getEstado());
     }
 
     @Test
-    void testActualizarCitaidInexistente() {
-        CitaDTO datosActualizados = new CitaDTO();
-        datosActualizados.setEstado(CitaEstado.CANCELADA);
-        CitaDTO resultado = controller.actualizarCita(99L, datosActualizados);
-        assertNull(resultado);
-    }
-
-    @Test
     void testEliminarCita() {
-        CitaDTO cita = new CitaDTO();
-        cita.setEstado(CitaEstado.PENDIENTE);
-        CitaDTO creada = controller.crearCita(cita);
-        String mensaje = controller.eliminarCita(creada.getId());
+        doNothing().when(service).eliminar(1L);
+        String mensaje = controller.eliminarCita(1L);
         assertEquals("Cita eliminada", mensaje);
-        assertEquals(0, controller.listarCitas().size());
-        assertNull(controller.obtenerCita(creada.getId())); 
-    }
-
-    @Test
-    void testEliminarCitaidInexistente() {
-        CitaDTO cita = new CitaDTO();
-        cita.setEstado(CitaEstado.PENDIENTE);
-        controller.crearCita(cita);
-        String mensaje = controller.eliminarCita(99L); 
-        assertEquals("Cita eliminada", mensaje);
-        assertEquals(1, controller.listarCitas().size()); 
+        verify(service, times(1)).eliminar(1L);
     }
 }
-

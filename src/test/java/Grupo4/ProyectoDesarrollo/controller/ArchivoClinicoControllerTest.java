@@ -1,7 +1,10 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
+import Grupo4.ProyectoDesarrollo.dto.ArchivoClinicoDTO;
 import Grupo4.ProyectoDesarrollo.model.ArchivoClinico;
+import Grupo4.ProyectoDesarrollo.model.ConsultaMedica;
 import Grupo4.ProyectoDesarrollo.service.ArchivoClinicoServicio;
+import Grupo4.ProyectoDesarrollo.service.ConsultaMedicaServicio;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,18 +25,30 @@ import static org.mockito.Mockito.*;
 public class ArchivoClinicoControllerTest {
     @Mock
     private ArchivoClinicoServicio servicio;
+    @Mock
+    private ConsultaMedicaServicio consultaMedicaServicio;
+
     @InjectMocks
     private ArchivoClinicoController controller;
-    private ArchivoClinico archivo;
-    @BeforeEach
-    void setUp() {archivo = new ArchivoClinico();archivo.setId(1L);}
 
-    
+    private ArchivoClinico archivo;
+    private ConsultaMedica consultaMock;
+
+    @BeforeEach
+    void setUp() {
+        consultaMock = new ConsultaMedica();
+        consultaMock.setId(5L);
+
+        archivo = new ArchivoClinico();
+        archivo.setId(1L);
+        archivo.setConsultaMedica(consultaMock);
+    }
+
     @Test
     void testListarStatus200() {
-        List<ArchivoClinico> lista = Arrays.asList(archivo, new ArchivoClinico());
+        List<ArchivoClinico> lista = Arrays.asList(archivo, archivo);
         when(servicio.findAll()).thenReturn(lista);
-        ResponseEntity<List<ArchivoClinico>> respuesta = controller.listar();
+        ResponseEntity<List<ArchivoClinicoDTO>> respuesta = controller.listar();
         assertEquals(HttpStatus.OK, respuesta.getStatusCode());
         assertNotNull(respuesta.getBody());
         assertEquals(2, respuesta.getBody().size());
@@ -43,16 +58,15 @@ public class ArchivoClinicoControllerTest {
     @Test
     void testListar() {
         when(servicio.findAll()).thenReturn(List.of());
-        ResponseEntity<List<ArchivoClinico>> respuesta = controller.listar();
+        ResponseEntity<List<ArchivoClinicoDTO>> respuesta = controller.listar();
         assertEquals(HttpStatus.OK, respuesta.getStatusCode());
         assertTrue(respuesta.getBody().isEmpty());
     }
 
-    
     @Test
     void testObtenerid() {
         when(servicio.findById(1L)).thenReturn(archivo);
-        ResponseEntity<ArchivoClinico> respuesta = controller.obtener(1L);
+        ResponseEntity<ArchivoClinicoDTO> respuesta = controller.obtener(1L);
         assertEquals(HttpStatus.OK, respuesta.getStatusCode());
         assertNotNull(respuesta.getBody());
         assertEquals(1L, respuesta.getBody().getId());
@@ -62,54 +76,53 @@ public class ArchivoClinicoControllerTest {
     @Test
     void testObtener() {
         when(servicio.findById(99L)).thenReturn(null);
-        ResponseEntity<ArchivoClinico> respuesta = controller.obtener(99L);
+        ResponseEntity<ArchivoClinicoDTO> respuesta = controller.obtener(99L);
         assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
         assertNull(respuesta.getBody());
         verify(servicio, times(1)).findById(99L);
     }
 
-    
     @Test
     void testCrear() {
-        when(servicio.save(archivo)).thenReturn(archivo);
-        ResponseEntity<ArchivoClinico> respuesta = controller.crear(archivo);
+        when(consultaMedicaServicio.findById(any())).thenReturn(consultaMock);
+        when(servicio.save(any(ArchivoClinico.class))).thenReturn(archivo);
+
+        ArchivoClinicoDTO dto = ArchivoClinicoDTO.fromEntity(archivo);
+        ResponseEntity<ArchivoClinicoDTO> respuesta = controller.crear(dto);
         assertEquals(HttpStatus.OK, respuesta.getStatusCode());
         assertNotNull(respuesta.getBody());
         assertEquals(archivo.getId(), respuesta.getBody().getId());
-        verify(servicio, times(1)).save(archivo);
+        verify(servicio, times(1)).save(any(ArchivoClinico.class));
     }
 
-    @Test
-    void testCrearArchivoNuevo() {
-        ArchivoClinico nuevo = new ArchivoClinico();
-        when(servicio.save(nuevo)).thenReturn(nuevo);
-        controller.crear(nuevo);
-        verify(servicio, times(1)).save(nuevo);
-    }
-
-    
     @Test
     void testActualizarid() {
+        when(consultaMedicaServicio.findById(any())).thenReturn(consultaMock);
         ArchivoClinico actualizado = new ArchivoClinico();
         actualizado.setId(1L);
-        when(servicio.update(1L, actualizado)).thenReturn(actualizado);
-        ResponseEntity<ArchivoClinico> respuesta = controller.actualizar(1L, actualizado);
+        actualizado.setConsultaMedica(consultaMock);
+        when(servicio.update(eq(1L), any(ArchivoClinico.class))).thenReturn(actualizado);
+
+        ArchivoClinicoDTO dto = ArchivoClinicoDTO.fromEntity(archivo);
+        ResponseEntity<ArchivoClinicoDTO> respuesta = controller.actualizar(1L, dto);
         assertEquals(HttpStatus.OK, respuesta.getStatusCode());
         assertNotNull(respuesta.getBody());
         assertEquals(1L, respuesta.getBody().getId());
-        verify(servicio, times(1)).update(1L, actualizado);
+        verify(servicio, times(1)).update(eq(1L), any(ArchivoClinico.class));
     }
 
     @Test
     void testActualizaridInexistente() {
-        when(servicio.update(99L, archivo)).thenReturn(null);
-        ResponseEntity<ArchivoClinico> respuesta = controller.actualizar(99L, archivo);
+        when(consultaMedicaServicio.findById(any())).thenReturn(consultaMock);
+        when(servicio.update(eq(99L), any(ArchivoClinico.class))).thenReturn(null);
+
+        ArchivoClinicoDTO dto = ArchivoClinicoDTO.fromEntity(archivo);
+        ResponseEntity<ArchivoClinicoDTO> respuesta = controller.actualizar(99L, dto);
         assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
         assertNull(respuesta.getBody());
-        verify(servicio, times(1)).update(99L, archivo);
+        verify(servicio, times(1)).update(eq(99L), any(ArchivoClinico.class));
     }
 
-    
     @Test
     void testEliminar() {
         doNothing().when(servicio).delete(1L);
@@ -127,4 +140,3 @@ public class ArchivoClinicoControllerTest {
         verify(servicio, never()).delete(1L);
     }
 }
-

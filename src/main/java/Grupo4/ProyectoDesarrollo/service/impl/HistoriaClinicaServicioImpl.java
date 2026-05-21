@@ -23,7 +23,7 @@ public class HistoriaClinicaServicioImpl implements HistoriaClinicaServicio {
     }
 
     @Override
-    public HistoriaClinica findById(Long id) {
+    public HistoriaClinica buscarPorId(Long id) {
         return repository.findById(id).orElse(null);
     }
 

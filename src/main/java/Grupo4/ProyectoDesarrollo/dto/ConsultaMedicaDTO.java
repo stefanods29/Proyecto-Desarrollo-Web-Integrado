@@ -57,7 +57,7 @@ public class ConsultaMedicaDTO {
     }
 
     public ConsultaMedica toEntity(HistoriaClinica hc, Paciente paciente, Medico medico, Cita cita, Clinica clinica) {
-        return new ConsultaMedica(
+        ConsultaMedica cm = new ConsultaMedica(
                 this.id,
                 paciente,
                 medico,
@@ -77,5 +77,7 @@ public class ConsultaMedicaDTO {
                 this.fechaConsulta,
                 this.fechaActualizacion
         );
+        cm.setHistoriaClinica(hc);
+        return cm;
     }
 }

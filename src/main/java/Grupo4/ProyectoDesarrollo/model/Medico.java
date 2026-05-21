@@ -8,6 +8,7 @@ import jakarta.validation.constraints.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Medico {
 
     @Id

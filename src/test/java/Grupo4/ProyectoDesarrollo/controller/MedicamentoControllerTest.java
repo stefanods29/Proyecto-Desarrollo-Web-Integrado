@@ -1,5 +1,6 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
+import Grupo4.ProyectoDesarrollo.dto.MedicamentoDTO;
 import Grupo4.ProyectoDesarrollo.model.Medicamento;
 import Grupo4.ProyectoDesarrollo.service.MedicamentoServicio;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class MedicamentoControllerTest {
     @Mock
@@ -41,10 +43,10 @@ class MedicamentoControllerTest {
 
     @Test
     void listarOk() {
-        List<Medicamento> lista = Arrays.asList(medicamentoMock, new Medicamento());
+        List<Medicamento> lista = Arrays.asList(medicamentoMock, medicamentoMock);
         when(servicio.findAll()).thenReturn(lista);
 
-        ResponseEntity<List<Medicamento>> response = controller.listar();
+        ResponseEntity<List<MedicamentoDTO>> response = controller.listar();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, response.getBody().size());
@@ -56,10 +58,10 @@ class MedicamentoControllerTest {
         Long id = 1L;
         when(servicio.findById(id)).thenReturn(medicamentoMock);
 
-        ResponseEntity<Medicamento> response = controller.obtener(id);
+        ResponseEntity<MedicamentoDTO> response = controller.obtener(id);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(medicamentoMock, response.getBody());
+        assertEquals(1L, response.getBody().getId());
         verify(servicio, times(1)).findById(id);
     }
 
@@ -68,7 +70,7 @@ class MedicamentoControllerTest {
         Long id = 1L;
         when(servicio.findById(id)).thenReturn(null);
 
-        ResponseEntity<Medicamento> response = controller.obtener(id);
+        ResponseEntity<MedicamentoDTO> response = controller.obtener(id);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(servicio, times(1)).findById(id);
@@ -78,10 +80,11 @@ class MedicamentoControllerTest {
     void crearOk() {
         when(servicio.save(any(Medicamento.class))).thenReturn(medicamentoMock);
 
-        ResponseEntity<Medicamento> response = controller.crear(new Medicamento());
+        MedicamentoDTO dto = MedicamentoDTO.fromEntity(medicamentoMock);
+        ResponseEntity<MedicamentoDTO> response = controller.crear(dto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(medicamentoMock, response.getBody());
+        assertEquals(1L, response.getBody().getId());
         verify(servicio, times(1)).save(any(Medicamento.class));
     }
 
@@ -90,10 +93,11 @@ class MedicamentoControllerTest {
         Long id = 1L;
         when(servicio.update(eq(id), any(Medicamento.class))).thenReturn(medicamentoMock);
 
-        ResponseEntity<Medicamento> response = controller.actualizar(id, new Medicamento());
+        MedicamentoDTO dto = MedicamentoDTO.fromEntity(medicamentoMock);
+        ResponseEntity<MedicamentoDTO> response = controller.actualizar(id, dto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(medicamentoMock, response.getBody());
+        assertEquals(1L, response.getBody().getId());
         verify(servicio, times(1)).update(eq(id), any(Medicamento.class));
     }
 
@@ -102,7 +106,8 @@ class MedicamentoControllerTest {
         Long id = 1L;
         when(servicio.update(eq(id), any(Medicamento.class))).thenReturn(null);
 
-        ResponseEntity<Medicamento> response = controller.actualizar(id, new Medicamento());
+        MedicamentoDTO dto = MedicamentoDTO.fromEntity(medicamentoMock);
+        ResponseEntity<MedicamentoDTO> response = controller.actualizar(id, dto);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(servicio, times(1)).update(eq(id), any(Medicamento.class));
