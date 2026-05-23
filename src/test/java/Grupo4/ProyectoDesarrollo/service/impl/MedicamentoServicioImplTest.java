@@ -96,6 +96,7 @@ class MedicamentoServicioImplTest {
 
     @Test
     void delete(){
+        when(repository.existsById(1L)).thenReturn(true);
         doNothing().when(repository).deleteById(1L);
 
         servicio.delete(1L);

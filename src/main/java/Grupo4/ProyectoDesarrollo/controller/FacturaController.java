@@ -46,9 +46,7 @@ public class FacturaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FacturaDTO> buscarPorId(@PathVariable Long id) {
-        Factura factura = service.buscarPorId(id);
-        if (factura == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(FacturaDTO.fromEntity(factura));
+        return ResponseEntity.ok(FacturaDTO.fromEntity(service.buscarPorId(id)));
     }
 
     @PutMapping("/{id}")

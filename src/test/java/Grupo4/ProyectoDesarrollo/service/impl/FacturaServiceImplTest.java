@@ -80,6 +80,7 @@ class FacturaServiceImplTest {
     @Test
     void testModificarFacturaPagadaLanzaExcepcion() {
         factura.setEstado(FacturaEstado.PAGADA);
+        when(repository.existsById(1L)).thenReturn(true);
         when(repository.findById(1L)).thenReturn(Optional.of(factura));
 
         assertThrows(BusinessRuleException.class, () -> service.crear(factura));
@@ -98,6 +99,7 @@ class FacturaServiceImplTest {
         modificada.setEstado(FacturaEstado.PAGADA);
         modificada.setNumeroFactura("F001-00000001");
 
+        when(repository.existsById(1L)).thenReturn(true);
         when(repository.findById(1L)).thenReturn(Optional.of(existente));
         when(repository.save(any(Factura.class))).thenAnswer(invocation -> invocation.getArgument(0));
 

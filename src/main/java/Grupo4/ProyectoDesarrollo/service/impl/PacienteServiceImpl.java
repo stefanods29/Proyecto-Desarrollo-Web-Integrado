@@ -18,17 +18,15 @@ public class PacienteServiceImpl implements PacienteService {
 
     @Override
     public Paciente crear(Paciente paciente) {
-        if (paciente.getId() != null) {
+        if (paciente.getId() != null && repository.existsById(paciente.getId())) {
             Paciente existente = repository.findById(paciente.getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Paciente no encontrado con id: " + paciente.getId()));
             if (!existente.getNumeroDocumento().equalsIgnoreCase(paciente.getNumeroDocumento()) &&
                     repository.existsByNumeroDocumento(paciente.getNumeroDocumento())) {
                 throw new DuplicateResourceException("El documento de identidad '" + paciente.getNumeroDocumento() + "' ya está registrado");
             }
-        } else {
-            if (repository.existsByNumeroDocumento(paciente.getNumeroDocumento())) {
-                throw new DuplicateResourceException("El documento de identidad '" + paciente.getNumeroDocumento() + "' ya está registrado");
-            }
+        } else if (repository.existsByNumeroDocumento(paciente.getNumeroDocumento())) {
+            throw new DuplicateResourceException("El documento de identidad '" + paciente.getNumeroDocumento() + "' ya está registrado");
         }
         return repository.save(paciente);
     }
@@ -60,5 +58,10 @@ public class PacienteServiceImpl implements PacienteService {
     @Override
     public List<Paciente> buscarPorClinica(Long clinicaId) {
         return repository.findByClinicaId(clinicaId);
+    }
+
+    @Override
+    public List<Paciente> buscarPorNombreOApellido(String termino) {
+        return repository.buscarPorNombreOApellido(termino);
     }
 }

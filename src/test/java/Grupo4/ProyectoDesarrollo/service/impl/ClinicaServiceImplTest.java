@@ -1,5 +1,6 @@
 package Grupo4.ProyectoDesarrollo.service.impl;
 
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.repository.ClinicaRepository;
 
@@ -88,17 +89,18 @@ public class ClinicaServiceImplTest {
     @Test
     void testBuscarPorIdInexistente() {
         when(repository.findById(99L)).thenReturn(Optional.empty());
-        RuntimeException excepcion = assertThrows(
-            RuntimeException.class,
+        ResourceNotFoundException excepcion = assertThrows(
+            ResourceNotFoundException.class,
             () -> servicio.buscarPorId(99L)
         );
-        assertEquals("Clinica no encontrada", excepcion.getMessage());
+        assertEquals("Clínica no encontrada con id: 99", excepcion.getMessage());
         verify(repository, times(1)).findById(99L);
     }
 
     
     @Test
     void testEliminar() {
+        when(repository.existsById(1L)).thenReturn(true);
         doNothing().when(repository).deleteById(1L);
         servicio.eliminar(1L);
         verify(repository, times(1)).deleteById(1L);
@@ -106,6 +108,7 @@ public class ClinicaServiceImplTest {
 
     @Test
     void testEliminarnoLlamaId() {
+        when(repository.existsById(3L)).thenReturn(true);
         doNothing().when(repository).deleteById(3L);
         servicio.eliminar(3L);
         verify(repository, times(1)).deleteById(3L);

@@ -30,9 +30,7 @@ public class ArchivoClinicoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ArchivoClinicoDTO> obtener(@PathVariable Long id){
-        ArchivoClinico obte = servicio.findById(id);
-        if(obte == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(ArchivoClinicoDTO.fromEntity(obte));
+        return ResponseEntity.ok(ArchivoClinicoDTO.fromEntity(servicio.findById(id)));
     }
 
     @PostMapping
@@ -48,9 +46,7 @@ public class ArchivoClinicoController {
         dto.setId(id);
         ConsultaMedica cm = dto.getConsultaMedicaId() != null ? consultaMedicaServicio.findById(dto.getConsultaMedicaId()) : null;
         ArchivoClinico ac = dto.toEntity(cm);
-        ArchivoClinico actualizado = servicio.update(id, ac);
-        if (actualizado == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(ArchivoClinicoDTO.fromEntity(actualizado));
+        return ResponseEntity.ok(ArchivoClinicoDTO.fromEntity(servicio.update(id, ac)));
     }
 
     @DeleteMapping("/{id}")

@@ -10,4 +10,5 @@ public interface PacienteService {
     void eliminar(Long id);
     Paciente buscarPorNumeroDocumento(String numeroDocumento);
     List<Paciente> buscarPorClinica(Long clinicaId);
+    List<Paciente> buscarPorNombreOApellido(String termino);
 }

@@ -59,9 +59,7 @@ class ConsultaMedicaServicioImplTest {
     void findById_DeberiaRetornarNull_CuandoNoExiste() {
         when(repository.findById(1L)).thenReturn(Optional.empty());
 
-        ConsultaMedica resultado = service.findById(1L);
-
-        assertNull(resultado);
+        assertThrows(Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException.class, () -> service.findById(1L));
         verify(repository, times(1)).findById(1L);
     }
 
@@ -93,15 +91,15 @@ class ConsultaMedicaServicioImplTest {
     void update_DeberiaRetornarNull_CuandoNoExiste() {
         when(repository.findById(1L)).thenReturn(Optional.empty());
 
-        ConsultaMedica resultado = service.update(1L, new ConsultaMedica());
-
-        assertNull(resultado);
+        assertThrows(Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException.class,
+                () -> service.update(1L, new ConsultaMedica()));
         verify(repository, times(1)).findById(1L);
         verify(repository, never()).save(any(ConsultaMedica.class));
     }
 
     @Test
     void delete_DeberiaLlamarARepositoryDeleteById() {
+        when(repository.existsById(1L)).thenReturn(true);
         doNothing().when(repository).deleteById(1L);
 
         service.delete(1L);

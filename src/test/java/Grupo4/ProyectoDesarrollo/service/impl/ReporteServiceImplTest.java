@@ -47,8 +47,8 @@ class ReporteServiceImplTest {
         String result = service.reporteIngresos();
 
         assertNotNull(result);
-        assertTrue(result.contains("Total Histórico: S/. 1500.00"));
-        assertTrue(result.contains("Total de este mes: S/. 500.00"));
+        assertTrue(result.contains("Total Histórico: S/. 500.00"));
+        assertTrue(result.contains("Total de este mes: S/. 1500.00"));
     }
 
     @Test

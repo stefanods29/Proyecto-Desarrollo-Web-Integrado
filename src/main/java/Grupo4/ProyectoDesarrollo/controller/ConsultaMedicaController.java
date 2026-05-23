@@ -33,11 +33,7 @@ public class ConsultaMedicaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ConsultaMedicaDTO> obtener(@PathVariable Long id) {
-        ConsultaMedica consulta = servicio.findById(id);
-        if (consulta == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(ConsultaMedicaDTO.fromEntity(consulta));
+        return ResponseEntity.ok(ConsultaMedicaDTO.fromEntity(servicio.findById(id)));
     }
 
     @PostMapping
@@ -63,19 +59,11 @@ public class ConsultaMedicaController {
         Clinica clinica = dto.getClinicaId() != null ? clinicaService.buscarPorId(dto.getClinicaId()) : null;
 
         ConsultaMedica consulta = dto.toEntity(hc, paciente, medico, cita, clinica);
-        ConsultaMedica actualizada = servicio.update(id, consulta);
-        if (actualizada == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(ConsultaMedicaDTO.fromEntity(actualizada));
+        return ResponseEntity.ok(ConsultaMedicaDTO.fromEntity(servicio.update(id, consulta)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        ConsultaMedica existente = servicio.findById(id);
-        if (existente == null) {
-            return ResponseEntity.notFound().build();
-        }
         servicio.delete(id);
         return ResponseEntity.noContent().build();
     }

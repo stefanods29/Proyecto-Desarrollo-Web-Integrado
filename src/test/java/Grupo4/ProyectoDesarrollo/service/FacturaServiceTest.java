@@ -48,7 +48,6 @@ class FacturaServiceTest {
 
     @Test
     void crear() {
-        when(repository.findById(1L)).thenReturn(Optional.of(factura));
         when(repository.save(any(Factura.class))).thenReturn(factura);
 
         Factura resultado = service.crear(factura);

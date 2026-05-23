@@ -104,11 +104,9 @@ class FacturaControllerTest {
 
     @Test
     void buscarPorIdNotFound() {
-        when(service.buscarPorId(99L)).thenReturn(null);
+        when(service.buscarPorId(99L)).thenThrow(new Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException("Factura no encontrada con id: 99"));
 
-        ResponseEntity<FacturaDTO> response = controller.buscarPorId(99L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException.class, () -> controller.buscarPorId(99L));
         verify(service, times(1)).buscarPorId(99L);
     }
 

@@ -50,6 +50,7 @@ class DetalleFacturaServiceTest {
 
     @Test
     void eliminar() {
+        when(repository.existsById(1L)).thenReturn(true);
         doNothing().when(repository).deleteById(1L);
         service.eliminar(1L);
         verify(repository, times(1)).deleteById(1L);

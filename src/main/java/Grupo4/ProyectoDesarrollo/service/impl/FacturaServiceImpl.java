@@ -23,7 +23,7 @@ public class FacturaServiceImpl implements FacturaService {
 
     @Override
     public Factura crear(Factura factura) {
-        if (factura.getId() != null) {
+        if (factura.getId() != null && repository.existsById(factura.getId())) {
             Factura existente = repository.findById(factura.getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Factura no encontrada con id: " + factura.getId()));
             
@@ -37,7 +37,6 @@ public class FacturaServiceImpl implements FacturaService {
                 factura.setFechaPago(null);
             }
         } else {
-            // New invoice
             if (factura.getNumeroFactura() == null || factura.getNumeroFactura().trim().isEmpty()) {
                 Optional<Factura> lastFacturaOpt = repository.findFirstByOrderByIdDesc();
                 String nextNum = "F001-00000001";
@@ -48,7 +47,6 @@ public class FacturaServiceImpl implements FacturaService {
                             int number = Integer.parseInt(lastNum.substring(5));
                             nextNum = String.format("F001-%08d", number + 1);
                         } catch (NumberFormatException e) {
-                            // fallback
                         }
                     }
                 }
@@ -62,7 +60,6 @@ public class FacturaServiceImpl implements FacturaService {
             }
         }
 
-        // Calculate subtotal, tax, total from DetalleFactura
         BigDecimal subtotal = BigDecimal.ZERO;
         if (factura.getDetalles() != null) {
             for (DetalleFactura detalle : factura.getDetalles()) {

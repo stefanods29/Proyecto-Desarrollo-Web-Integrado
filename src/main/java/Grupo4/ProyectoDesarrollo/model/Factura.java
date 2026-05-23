@@ -64,7 +64,7 @@ public class Factura {
     @NotNull
     private LocalDateTime fechaActualizacion;
 
-    @Column(nullable=false)
+    @Column(nullable=true)
     private LocalDateTime fechaPago;
 
     @ManyToOne

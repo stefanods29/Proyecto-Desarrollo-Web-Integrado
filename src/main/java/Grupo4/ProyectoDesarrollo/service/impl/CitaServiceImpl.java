@@ -20,17 +20,15 @@ public class CitaServiceImpl implements CitaService {
 
     @Override
     public Cita crear(Cita cita) {
-        if (cita.getId() != null) {
+        if (cita.getId() != null && repository.existsById(cita.getId())) {
             Cita existente = repository.findById(cita.getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada con id: " + cita.getId()));
-            
+
             if (cita.getEstado() != existente.getEstado()) {
                 validarTransicionEstado(existente.getEstado(), cita.getEstado());
             }
-        } else {
-            if (cita.getEstado() == null) {
-                cita.setEstado(CitaEstado.PENDIENTE);
-            }
+        } else if (cita.getEstado() == null) {
+            cita.setEstado(CitaEstado.PENDIENTE);
         }
         validarCita(cita);
         return repository.save(cita);

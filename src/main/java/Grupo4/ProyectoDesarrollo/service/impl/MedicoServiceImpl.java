@@ -1,14 +1,13 @@
 package Grupo4.ProyectoDesarrollo.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import java.util.List;
-
-
-
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.Medico;
 import Grupo4.ProyectoDesarrollo.repository.MedicoRepository;
 import Grupo4.ProyectoDesarrollo.service.MedicoService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,16 +27,24 @@ public class MedicoServiceImpl implements MedicoService {
 
     @Override
     public Medico buscarPorId(Long id) {
-        return medicoRepository.findById(id).orElse(null);
+        return medicoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Médico no encontrado con id: " + id));
     }
 
     @Override
     public void eliminar(Long id) {
+        if (!medicoRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Médico no encontrado con id: " + id);
+        }
         medicoRepository.deleteById(id);
     }
 
     @Override
     public Medico actualizar(Long id, Medico medico) {
+        if (!medicoRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Médico no encontrado con id: " + id);
+        }
+        medico.setId(id);
         return medicoRepository.save(medico);
     }
 }

@@ -80,13 +80,13 @@ public class RecetaServicioImplTest {
     void testUpdateNotFound() {
         when(repository.findById(1L)).thenReturn(Optional.empty());
 
-        Receta result = service.update(1L, new Receta());
-
-        assertNull(result);
+        assertThrows(Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException.class,
+                () -> service.update(1L, new Receta()));
     }
 
     @Test
     void testDelete() {
+        when(repository.existsById(1L)).thenReturn(true);
         doNothing().when(repository).deleteById(1L);
 
         service.delete(1L);

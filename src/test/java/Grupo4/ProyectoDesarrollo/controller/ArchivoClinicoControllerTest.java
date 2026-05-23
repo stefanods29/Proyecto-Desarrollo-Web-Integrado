@@ -1,6 +1,7 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
 import Grupo4.ProyectoDesarrollo.dto.ArchivoClinicoDTO;
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.ArchivoClinico;
 import Grupo4.ProyectoDesarrollo.model.ConsultaMedica;
 import Grupo4.ProyectoDesarrollo.service.ArchivoClinicoServicio;
@@ -75,10 +76,8 @@ public class ArchivoClinicoControllerTest {
 
     @Test
     void testObtener() {
-        when(servicio.findById(99L)).thenReturn(null);
-        ResponseEntity<ArchivoClinicoDTO> respuesta = controller.obtener(99L);
-        assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
-        assertNull(respuesta.getBody());
+        when(servicio.findById(99L)).thenThrow(new ResourceNotFoundException("Archivo clínico no encontrado con id: 99"));
+        assertThrows(ResourceNotFoundException.class, () -> controller.obtener(99L));
         verify(servicio, times(1)).findById(99L);
     }
 
@@ -114,12 +113,11 @@ public class ArchivoClinicoControllerTest {
     @Test
     void testActualizaridInexistente() {
         when(consultaMedicaServicio.findById(any())).thenReturn(consultaMock);
-        when(servicio.update(eq(99L), any(ArchivoClinico.class))).thenReturn(null);
+        when(servicio.update(eq(99L), any(ArchivoClinico.class)))
+                .thenThrow(new ResourceNotFoundException("Archivo clínico no encontrado con id: 99"));
 
         ArchivoClinicoDTO dto = ArchivoClinicoDTO.fromEntity(archivo);
-        ResponseEntity<ArchivoClinicoDTO> respuesta = controller.actualizar(99L, dto);
-        assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
-        assertNull(respuesta.getBody());
+        assertThrows(ResourceNotFoundException.class, () -> controller.actualizar(99L, dto));
         verify(servicio, times(1)).update(eq(99L), any(ArchivoClinico.class));
     }
 
