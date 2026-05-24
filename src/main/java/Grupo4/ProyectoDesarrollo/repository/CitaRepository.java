@@ -26,7 +26,7 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
     long contarCitasPorClinica(@Param("clinicaId") Long clinicaId);
 
     @Query("SELECT COUNT(c) > 0 FROM Cita c WHERE c.medico.id = :medicoId " +
-           "AND c.estado NOT IN (Grupo4.ProyectoDesarrollo.model.enums.CitaEstado.CANCELADA, Grupo4.ProyectoDesarrollo.model.enums.CitaEstado.NO_ASISTIO) " +
+           "AND c.estado NOT IN ('CANCELADA', 'NO_ASISTIO') " +
            "AND c.fechaHora < :fechaFin AND c.fechaFin > :fechaHora " +
            "AND (:id IS NULL OR c.id <> :id)")
     boolean existsOverlappingCitaForMedico(
@@ -37,7 +37,7 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
     );
 
     @Query("SELECT COUNT(c) > 0 FROM Cita c WHERE c.consultorio.id = :consultorioId " +
-           "AND c.estado NOT IN (Grupo4.ProyectoDesarrollo.model.enums.CitaEstado.CANCELADA, Grupo4.ProyectoDesarrollo.model.enums.CitaEstado.NO_ASISTIO) " +
+           "AND c.estado NOT IN ('CANCELADA', 'NO_ASISTIO') " +
            "AND c.fechaHora < :fechaFin AND c.fechaFin > :fechaHora " +
            "AND (:id IS NULL OR c.id <> :id)")
     boolean existsOverlappingCitaForConsultorio(
