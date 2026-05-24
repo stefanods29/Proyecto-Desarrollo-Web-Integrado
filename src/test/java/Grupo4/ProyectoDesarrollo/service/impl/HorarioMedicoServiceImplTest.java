@@ -67,6 +67,7 @@ class HorarioMedicoServiceImplTest {
     }
     @Test
     void eliminar() {
+        when(repository.existsById(1L)).thenReturn(true);
         doNothing().when(repository).deleteById(1L);
 
         servicio.eliminar(1L);

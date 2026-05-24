@@ -71,8 +71,7 @@ public class ArchivoClinicoServicioImplTest {
     @Test
     void testFindById_Inexistente() {
         when(repository.findById(99L)).thenReturn(Optional.empty());
-        ArchivoClinico resultado = servicio.findById(99L);
-        assertNull(resultado);
+        assertThrows(Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException.class, () -> servicio.findById(99L));
         verify(repository, times(1)).findById(99L);
     }
 
@@ -126,15 +125,15 @@ public class ArchivoClinicoServicioImplTest {
     @Test
     void testUpdateidInexistente() {
         when(repository.findById(99L)).thenReturn(Optional.empty());
-        ArchivoClinico resultado = servicio.update(99L, archivo);
-        assertNull(resultado);
+        assertThrows(Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException.class, () -> servicio.update(99L, archivo));
         verify(repository, times(1)).findById(99L);
-        verify(repository, never()).save(any()); 
+        verify(repository, never()).save(any());
     }
 
     
     @Test
     void testDelete() {
+        when(repository.existsById(1L)).thenReturn(true);
         doNothing().when(repository).deleteById(1L);
         servicio.delete(1L);
         verify(repository, times(1)).deleteById(1L);
@@ -142,10 +141,11 @@ public class ArchivoClinicoServicioImplTest {
 
     @Test
     void testDelete_noLlamaConOtroId() {
+        when(repository.existsById(3L)).thenReturn(true);
         doNothing().when(repository).deleteById(3L);
         servicio.delete(3L);
         verify(repository, times(1)).deleteById(3L);
-        verify(repository, never()).deleteById(1L); 
+        verify(repository, never()).deleteById(1L);
     }
 }
 

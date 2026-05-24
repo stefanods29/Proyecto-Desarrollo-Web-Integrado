@@ -1,5 +1,6 @@
 package Grupo4.ProyectoDesarrollo.service;
 
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.Factura;
 import Grupo4.ProyectoDesarrollo.model.enums.FacturaEstado;
 import Grupo4.ProyectoDesarrollo.model.enums.MetodoPago;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,8 +41,9 @@ class FacturaServiceTest {
         factura.setSubtotal(BigDecimal.valueOf(100));
         factura.setImpuesto(BigDecimal.valueOf(18));
         factura.setTotal(BigDecimal.valueOf(118));
-        factura.setEstado(FacturaEstado.PAGADA);
+        factura.setEstado(FacturaEstado.PENDIENTE);
         factura.setMetodoPago(MetodoPago.EFECTIVO);
+        factura.setDetalles(new ArrayList<>());
     }
 
     @Test
@@ -79,19 +82,17 @@ class FacturaServiceTest {
     void buscarPorId_NoExiste() {
         when(repository.findById(1L)).thenReturn(Optional.empty());
 
-        RuntimeException ex = assertThrows(RuntimeException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> service.buscarPorId(1L));
-
-        assertEquals("Factura no encontrada", ex.getMessage());
     }
-
 
     @Test
     void eliminar() {
-        doNothing().when(repository).deleteById(1L);
+        when(repository.findById(1L)).thenReturn(Optional.of(factura));
+        doNothing().when(repository).delete(factura);
 
         service.eliminar(1L);
 
-        verify(repository).deleteById(1L);
+        verify(repository).delete(factura);
     }
 }

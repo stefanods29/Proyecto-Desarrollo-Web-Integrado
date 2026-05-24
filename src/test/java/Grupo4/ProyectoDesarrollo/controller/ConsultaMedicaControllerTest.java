@@ -1,6 +1,7 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
 import Grupo4.ProyectoDesarrollo.dto.ConsultaMedicaDTO;
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.*;
 import Grupo4.ProyectoDesarrollo.service.*;
 import Grupo4.ProyectoDesarrollo.service.impl.HistoriaClinicaServicioImpl;
@@ -96,11 +97,9 @@ class ConsultaMedicaControllerTest {
     @Test
     void obtenerok() {
         Long id = 1L;
-        when(servicio.findById(id)).thenReturn(null);
+        when(servicio.findById(id)).thenThrow(new ResourceNotFoundException("Consulta médica no encontrada con id: 1"));
 
-        ResponseEntity<ConsultaMedicaDTO> response = controller.obtener(id);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(ResourceNotFoundException.class, () -> controller.obtener(id));
         verify(servicio, times(1)).findById(id);
     }
 
@@ -147,12 +146,11 @@ class ConsultaMedicaControllerTest {
         when(medicoService.buscarPorId(any())).thenReturn(medicoMock);
         when(clinicaService.buscarPorId(any())).thenReturn(clinicaMock);
         when(citaService.buscarPorId(any())).thenReturn(citaMock);
-        when(servicio.update(eq(id), any(ConsultaMedica.class))).thenReturn(null);
+        when(servicio.update(eq(id), any(ConsultaMedica.class)))
+                .thenThrow(new ResourceNotFoundException("Consulta médica no encontrada con id: 1"));
 
         ConsultaMedicaDTO dto = ConsultaMedicaDTO.fromEntity(consultaMock);
-        ResponseEntity<ConsultaMedicaDTO> response = controller.actualizar(id, dto);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(ResourceNotFoundException.class, () -> controller.actualizar(id, dto));
         verify(servicio, times(1)).update(eq(id), any(ConsultaMedica.class));
     }
 
@@ -160,7 +158,6 @@ class ConsultaMedicaControllerTest {
     void eliminarOk() {
         Long id = 1L;
 
-        when(servicio.findById(id)).thenReturn(consultaMock);
         doNothing().when(servicio).delete(id);
 
         ResponseEntity<Void> response = controller.eliminar(id);

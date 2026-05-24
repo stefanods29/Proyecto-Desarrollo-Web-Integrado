@@ -1,6 +1,7 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
 import Grupo4.ProyectoDesarrollo.dto.DetalleRecetaDTO;
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.DetalleReceta;
 import Grupo4.ProyectoDesarrollo.model.Medicamento;
 import Grupo4.ProyectoDesarrollo.model.Receta;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -83,11 +85,9 @@ class DetalleRecetaControllerTest {
     @Test
     void obtener_Ok() {
         Long id = 1L;
-        when(servicio.findById(id)).thenReturn(null);
+        when(servicio.findById(id)).thenThrow(new ResourceNotFoundException("Detalle de receta no encontrado con id: 1"));
 
-        ResponseEntity<DetalleRecetaDTO> response = controller.obtener(id);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(ResourceNotFoundException.class, () -> controller.obtener(id));
         verify(servicio, times(1)).findById(id);
     }
 
@@ -125,12 +125,11 @@ class DetalleRecetaControllerTest {
         Long id = 1L;
         when(recetaServicio.findById(any())).thenReturn(recetaMock);
         when(medicamentoServicio.findById(any())).thenReturn(medicamentoMock);
-        when(servicio.update(eq(id), any(DetalleReceta.class))).thenReturn(null);
+        when(servicio.update(eq(id), any(DetalleReceta.class)))
+                .thenThrow(new ResourceNotFoundException("Detalle de receta no encontrado con id: 1"));
 
         DetalleRecetaDTO dto = DetalleRecetaDTO.fromEntity(detalleMock);
-        ResponseEntity<DetalleRecetaDTO> response = controller.actualizar(id, dto);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(ResourceNotFoundException.class, () -> controller.actualizar(id, dto));
         verify(servicio, times(1)).update(eq(id), any(DetalleReceta.class));
     }
 

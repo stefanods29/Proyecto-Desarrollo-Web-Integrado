@@ -66,13 +66,12 @@ class MedicoServiceImplTest {
     void testBuscarPorId_NotFound() {
         when(repository.findById(1L)).thenReturn(Optional.empty());
 
-        Medico result = service.buscarPorId(1L);
-
-        assertNull(result); 
+        assertThrows(Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException.class, () -> service.buscarPorId(1L));
     }
 
     @Test
     void testEliminar() {
+        when(repository.existsById(1L)).thenReturn(true);
         doNothing().when(repository).deleteById(1L);
 
         service.eliminar(1L);

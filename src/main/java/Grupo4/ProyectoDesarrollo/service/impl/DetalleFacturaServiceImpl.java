@@ -1,5 +1,6 @@
 package Grupo4.ProyectoDesarrollo.service.impl;
 
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.DetalleFactura;
 import Grupo4.ProyectoDesarrollo.repository.DetalleFacturaRepository;
 import Grupo4.ProyectoDesarrollo.service.DetalleFacturaService;
@@ -26,11 +27,14 @@ public class DetalleFacturaServiceImpl implements DetalleFacturaService {
     @Override
     public DetalleFactura buscarPorId(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("DetalleFactura no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Detalle de factura no encontrado con id: " + id));
     }
 
     @Override
     public void eliminar(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Detalle de factura no encontrado con id: " + id);
+        }
         repository.deleteById(id);
     }
 }

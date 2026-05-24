@@ -1,21 +1,19 @@
 package Grupo4.ProyectoDesarrollo.service.impl;
 
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.Receta;
 import Grupo4.ProyectoDesarrollo.repository.RecetaRepository;
 import Grupo4.ProyectoDesarrollo.service.RecetaServicio;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RecetaServicioImpl implements RecetaServicio {
 
     private final RecetaRepository repository;
-
-    public RecetaServicioImpl(RecetaRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public List<Receta> findAll() {
@@ -24,7 +22,8 @@ public class RecetaServicioImpl implements RecetaServicio {
 
     @Override
     public Receta findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Receta no encontrada con id: " + id));
     }
 
     @Override
@@ -34,8 +33,8 @@ public class RecetaServicioImpl implements RecetaServicio {
 
     @Override
     public Receta update(Long id, Receta receta) {
-        Receta existente = repository.findById(id).orElse(null);
-        if (existente == null) return null;
+        Receta existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Receta no encontrada con id: " + id));
 
         existente.setConsultaMedica(receta.getConsultaMedica());
         existente.setIndicaciones(receta.getIndicaciones());
@@ -49,7 +48,9 @@ public class RecetaServicioImpl implements RecetaServicio {
 
     @Override
     public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Receta no encontrada con id: " + id);
+        }
         repository.deleteById(id);
-
     }
 }

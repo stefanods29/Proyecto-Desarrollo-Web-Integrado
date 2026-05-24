@@ -1,9 +1,9 @@
 package Grupo4.ProyectoDesarrollo.service.impl;
 
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.HorarioMedico;
 import Grupo4.ProyectoDesarrollo.repository.HorarioMedicoRepository;
 import Grupo4.ProyectoDesarrollo.service.HorarioMedicoService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +27,15 @@ public class HorarioMedicoServiceImpl implements HorarioMedicoService {
 
     @Override
     public HorarioMedico buscarPorId(Long id) {
-        return horarioMedicoRepository.findById(id).orElse(null);
+        return horarioMedicoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Horario médico no encontrado con id: " + id));
     }
 
     @Override
     public void eliminar(Long id) {
+        if (!horarioMedicoRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Horario médico no encontrado con id: " + id);
+        }
         horarioMedicoRepository.deleteById(id);
     }
 }

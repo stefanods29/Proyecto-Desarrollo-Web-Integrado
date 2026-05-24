@@ -43,6 +43,13 @@ public class PacienteController {
         return PacienteDTO.fromEntity(service.buscarPorId(id));
     }
 
+    @GetMapping("/buscar")
+    public List<PacienteDTO> buscarPorNombre(@RequestParam String q) {
+        return service.buscarPorNombreOApellido(q).stream()
+                .map(PacienteDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
     @PutMapping("/{id}")
     public PacienteDTO actualizar(@PathVariable Long id, @RequestBody PacienteDTO dto) {
         dto.setId(id);
