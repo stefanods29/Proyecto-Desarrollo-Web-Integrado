@@ -24,7 +24,7 @@ public class PacienteDTO {
     private LocalDate fechaNacimiento;
     private Genero genero;
     private GrupoSanguineo grupoSanguineo;
-    private String seguroMedico;
+    private SeguroMedico seguroMedico;
     private String numeroSeguro;
     private String contactoEmergencia;
     private String telefonoEmergencia;

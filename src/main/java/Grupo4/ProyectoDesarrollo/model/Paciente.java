@@ -72,9 +72,9 @@ public class Paciente {
     @Column(length = 10)
     private GrupoSanguineo grupoSanguineo;
 
-    @Column(length = 150)
-    @Size(max = 150)
-    private String seguroMedico;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50)
+    private SeguroMedico seguroMedico;
 
     @Column(length = 50)
     @Size(max = 50)
