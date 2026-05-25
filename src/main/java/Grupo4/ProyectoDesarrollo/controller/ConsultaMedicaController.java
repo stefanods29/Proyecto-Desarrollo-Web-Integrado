@@ -1,6 +1,7 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
 import Grupo4.ProyectoDesarrollo.dto.ConsultaMedicaDTO;
+import Grupo4.ProyectoDesarrollo.dto.MedicoRankingDTO;
 import Grupo4.ProyectoDesarrollo.model.*;
 import Grupo4.ProyectoDesarrollo.repository.ConsultaMedicaRepository;
 import Grupo4.ProyectoDesarrollo.service.*;
@@ -95,8 +96,10 @@ public class ConsultaMedicaController {
     }
 
     @GetMapping("/ranking-medicos")
-    public ResponseEntity<List<Object>> obtenerRankingMedicos() {
-        List<Object[]> ranking = consultaMedicaRepository.obtenerRankingMedicosPorConsultas();
-        return ResponseEntity.ok((List<Object>) (List<?>) ranking);
+    public ResponseEntity<List<MedicoRankingDTO>> obtenerRankingMedicos() {
+        List<MedicoRankingDTO> ranking = consultaMedicaRepository.obtenerRankingMedicosPorConsultas().stream()
+                .map(MedicoRankingDTO::fromObjectArray)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ranking);
     }
 }
