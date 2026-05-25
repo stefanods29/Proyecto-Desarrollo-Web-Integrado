@@ -2,6 +2,7 @@ package Grupo4.ProyectoDesarrollo.controller;
 
 import Grupo4.ProyectoDesarrollo.dto.EspecialidadDTO;
 import Grupo4.ProyectoDesarrollo.model.Especialidad;
+import Grupo4.ProyectoDesarrollo.repository.EspecialidadRepository;
 import Grupo4.ProyectoDesarrollo.service.EspecialidadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class EspecialidadController {
 
     private final EspecialidadService service;
+    private final EspecialidadRepository especialidadRepository;
 
     @PostMapping
     public EspecialidadDTO crear(@RequestBody EspecialidadDTO dto) {
@@ -47,5 +49,24 @@ public class EspecialidadController {
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Long id) {
         service.eliminar(id);
+    }
+
+    @GetMapping("/activas")
+    public List<EspecialidadDTO> obtenerActivas() {
+        return especialidadRepository.findByActivaTrue().stream()
+                .map(EspecialidadDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/buscar")
+    public List<EspecialidadDTO> buscarPorNombre(@RequestParam String nombre) {
+        return especialidadRepository.buscarPorNombre(nombre).stream()
+                .map(EspecialidadDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/existe/{nombre}")
+    public boolean existePorNombre(@PathVariable String nombre) {
+        return especialidadRepository.existsByNombreIgnoreCase(nombre);
     }
 }

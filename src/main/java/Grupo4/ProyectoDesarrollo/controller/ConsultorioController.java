@@ -3,6 +3,7 @@ package Grupo4.ProyectoDesarrollo.controller;
 import Grupo4.ProyectoDesarrollo.dto.ConsultorioDTO;
 import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.model.Consultorio;
+import Grupo4.ProyectoDesarrollo.repository.ConsultorioRepository;
 import Grupo4.ProyectoDesarrollo.service.ClinicaService;
 import Grupo4.ProyectoDesarrollo.service.ConsultorioService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class ConsultorioController {
 
     private final ConsultorioService service;
     private final ClinicaService clinicaService;
+    private final ConsultorioRepository consultorioRepository;
 
     @PostMapping
     public ConsultorioDTO crear(@RequestBody ConsultorioDTO dto) {
@@ -51,5 +53,21 @@ public class ConsultorioController {
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Long id) {
         service.eliminar(id);
+    }
+
+    @GetMapping("/clinica/{clinicaId}")
+    public List<ConsultorioDTO> buscarPorClinica(@PathVariable Long clinicaId) {
+        return consultorioRepository.findByClinicaId(clinicaId).stream()
+                .map(ConsultorioDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/buscar")
+    public List<ConsultorioDTO> buscarPorClinicaYNombre(
+            @RequestParam Long clinicaId,
+            @RequestParam String nombre) {
+        return consultorioRepository.buscarPorClinicaYNombre(clinicaId, nombre).stream()
+                .map(ConsultorioDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }

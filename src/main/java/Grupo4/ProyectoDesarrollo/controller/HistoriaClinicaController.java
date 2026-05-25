@@ -4,6 +4,7 @@ import Grupo4.ProyectoDesarrollo.dto.HistoriaClinicaDTO;
 import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.model.HistoriaClinica;
 import Grupo4.ProyectoDesarrollo.model.Paciente;
+import Grupo4.ProyectoDesarrollo.repository.HistoriaClinicaRepository;
 import Grupo4.ProyectoDesarrollo.service.ClinicaService;
 import Grupo4.ProyectoDesarrollo.service.HistoriaClinicaServicio;
 import Grupo4.ProyectoDesarrollo.service.PacienteService;
@@ -22,6 +23,7 @@ public class HistoriaClinicaController {
     private final HistoriaClinicaServicio servicio;
     private final PacienteService pacienteService;
     private final ClinicaService clinicaService;
+    private final HistoriaClinicaRepository historiaClinicaRepository;
 
     @GetMapping
     public ResponseEntity<List<HistoriaClinicaDTO>> listar() {
@@ -62,5 +64,12 @@ public class HistoriaClinicaController {
     public ResponseEntity<String> eliminar(@PathVariable Long id) {
         servicio.delete(id);
         return ResponseEntity.ok("Historia clínica eliminada");
+    }
+
+    @GetMapping("/paciente/{pacienteId}")
+    public ResponseEntity<HistoriaClinicaDTO> obtenerPorPaciente(@PathVariable Long pacienteId) {
+        return historiaClinicaRepository.findByPacienteId(pacienteId)
+                .map(hc -> ResponseEntity.ok(HistoriaClinicaDTO.fromEntity(hc)))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

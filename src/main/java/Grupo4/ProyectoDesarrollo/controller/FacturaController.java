@@ -5,6 +5,7 @@ import Grupo4.ProyectoDesarrollo.model.Cita;
 import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.model.Factura;
 import Grupo4.ProyectoDesarrollo.model.Paciente;
+import Grupo4.ProyectoDesarrollo.repository.FacturaRepository;
 import Grupo4.ProyectoDesarrollo.service.CitaService;
 import Grupo4.ProyectoDesarrollo.service.ClinicaService;
 import Grupo4.ProyectoDesarrollo.service.FacturaService;
@@ -24,6 +25,7 @@ public class FacturaController {
     private final PacienteService pacienteService;
     private final CitaService citaService;
     private final ClinicaService clinicaService;
+    private final FacturaRepository facturaRepository;
 
     @PostMapping
     public ResponseEntity<FacturaDTO> crear(@RequestBody FacturaDTO dto) {
@@ -59,5 +61,29 @@ public class FacturaController {
         Factura factura = dto.toEntity(paciente, cita, clinica);
         Factura actualizada = service.crear(factura);
         return ResponseEntity.ok(FacturaDTO.fromEntity(actualizada));
+    }
+
+    @GetMapping("/paciente/{pacienteId}")
+    public ResponseEntity<List<FacturaDTO>> obtenerPorPaciente(@PathVariable Long pacienteId) {
+        List<FacturaDTO> lista = facturaRepository.findByPacienteId(pacienteId).stream()
+                .map(FacturaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<List<FacturaDTO>> obtenerPorEstado(@PathVariable String estado) {
+        List<FacturaDTO> lista = facturaRepository.findByEstado(
+                Grupo4.ProyectoDesarrollo.model.enums.FacturaEstado.valueOf(estado)).stream()
+                .map(FacturaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/ultima")
+    public ResponseEntity<FacturaDTO> obtenerUltimaFactura() {
+        return facturaRepository.findFirstByOrderByIdDesc()
+                .map(f -> ResponseEntity.ok(FacturaDTO.fromEntity(f)))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

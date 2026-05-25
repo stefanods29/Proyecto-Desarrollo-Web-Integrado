@@ -5,6 +5,7 @@ import Grupo4.ProyectoDesarrollo.model.ConsultaMedica;
 import Grupo4.ProyectoDesarrollo.model.Medico;
 import Grupo4.ProyectoDesarrollo.model.Paciente;
 import Grupo4.ProyectoDesarrollo.model.Receta;
+import Grupo4.ProyectoDesarrollo.repository.RecetaRepository;
 import Grupo4.ProyectoDesarrollo.service.ConsultaMedicaServicio;
 import Grupo4.ProyectoDesarrollo.service.MedicoService;
 import Grupo4.ProyectoDesarrollo.service.PacienteService;
@@ -25,6 +26,7 @@ public class RecetaController {
     private final ConsultaMedicaServicio consultaMedicaServicio;
     private final MedicoService medicoService;
     private final PacienteService pacienteService;
+    private final RecetaRepository recetaRepository;
 
     @GetMapping
     public ResponseEntity<List<RecetaDTO>> listar() {
@@ -69,5 +71,21 @@ public class RecetaController {
     public ResponseEntity<String> eliminar(@PathVariable Long id) {
         servicio.delete(id);
         return ResponseEntity.ok("Receta eliminada");
+    }
+
+    @GetMapping("/paciente/{pacienteId}")
+    public ResponseEntity<List<RecetaDTO>> obtenerPorPaciente(@PathVariable Long pacienteId) {
+        List<RecetaDTO> lista = recetaRepository.findByPacienteId(pacienteId).stream()
+                .map(RecetaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/consulta/{consultaMedicaId}")
+    public ResponseEntity<List<RecetaDTO>> obtenerPorConsultaMedica(@PathVariable Long consultaMedicaId) {
+        List<RecetaDTO> lista = recetaRepository.findByConsultaMedicaId(consultaMedicaId).stream()
+                .map(RecetaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
     }
 }

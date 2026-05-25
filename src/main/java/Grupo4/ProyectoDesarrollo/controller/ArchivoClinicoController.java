@@ -3,6 +3,7 @@ package Grupo4.ProyectoDesarrollo.controller;
 import Grupo4.ProyectoDesarrollo.dto.ArchivoClinicoDTO;
 import Grupo4.ProyectoDesarrollo.model.ArchivoClinico;
 import Grupo4.ProyectoDesarrollo.model.ConsultaMedica;
+import Grupo4.ProyectoDesarrollo.repository.ArchivoClinicoRepository;
 import Grupo4.ProyectoDesarrollo.service.ArchivoClinicoServicio;
 import Grupo4.ProyectoDesarrollo.service.ConsultaMedicaServicio;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class ArchivoClinicoController {
 
     private final ArchivoClinicoServicio servicio;
     private final ConsultaMedicaServicio consultaMedicaServicio;
+    private final ArchivoClinicoRepository archivoClinicoRepository;
 
     @GetMapping
     public ResponseEntity<List<ArchivoClinicoDTO>> listar(){
@@ -53,5 +55,21 @@ public class ArchivoClinicoController {
     public ResponseEntity<String> eliminar (@PathVariable Long id){
         servicio.delete(id);
         return ResponseEntity.ok("Archivo Eliminado");
+    }
+
+    @GetMapping("/consulta/{consultaMedicaId}")
+    public ResponseEntity<List<ArchivoClinicoDTO>> obtenerPorConsultaMedica(@PathVariable Long consultaMedicaId) {
+        List<ArchivoClinicoDTO> lista = archivoClinicoRepository.findByConsultaMedicaId(consultaMedicaId).stream()
+                .map(ArchivoClinicoDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/paciente/{pacienteId}")
+    public ResponseEntity<List<ArchivoClinicoDTO>> obtenerPorPaciente(@PathVariable Long pacienteId) {
+        List<ArchivoClinicoDTO> lista = archivoClinicoRepository.buscarArchivosPorPacienteId(pacienteId).stream()
+                .map(ArchivoClinicoDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
     }
 }

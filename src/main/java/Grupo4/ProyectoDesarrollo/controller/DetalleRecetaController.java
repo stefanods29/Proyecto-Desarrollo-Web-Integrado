@@ -4,6 +4,7 @@ import Grupo4.ProyectoDesarrollo.dto.DetalleRecetaDTO;
 import Grupo4.ProyectoDesarrollo.model.DetalleReceta;
 import Grupo4.ProyectoDesarrollo.model.Medicamento;
 import Grupo4.ProyectoDesarrollo.model.Receta;
+import Grupo4.ProyectoDesarrollo.repository.DetalleRecetaRepository;
 import Grupo4.ProyectoDesarrollo.service.DetalleRecetaServicio;
 import Grupo4.ProyectoDesarrollo.service.MedicamentoServicio;
 import Grupo4.ProyectoDesarrollo.service.RecetaServicio;
@@ -22,6 +23,7 @@ public class DetalleRecetaController{
     private final DetalleRecetaServicio servicio;
     private final RecetaServicio recetaServicio;
     private final MedicamentoServicio medicamentoServicio;
+    private final DetalleRecetaRepository detalleRecetaRepository;
 
     @GetMapping
     public ResponseEntity<List<DetalleRecetaDTO>> listar() {
@@ -60,5 +62,37 @@ public class DetalleRecetaController{
     public ResponseEntity<String> eliminar(@PathVariable Long id) {
         servicio.delete(id);
         return ResponseEntity.ok("Detalle eliminado");
+    }
+
+    @GetMapping("/receta/{recetaId}")
+    public ResponseEntity<List<DetalleRecetaDTO>> obtenerPorReceta(@PathVariable Long recetaId) {
+        List<DetalleRecetaDTO> lista = detalleRecetaRepository.findByRecetaId(recetaId).stream()
+                .map(DetalleRecetaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/medicamento/{medicamentoId}")
+    public ResponseEntity<List<DetalleRecetaDTO>> obtenerPorMedicamento(@PathVariable Long medicamentoId) {
+        List<DetalleRecetaDTO> lista = detalleRecetaRepository.findByMedicamentoId(medicamentoId).stream()
+                .map(DetalleRecetaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/paciente/{pacienteId}")
+    public ResponseEntity<List<DetalleRecetaDTO>> obtenerPorPaciente(@PathVariable Long pacienteId) {
+        List<DetalleRecetaDTO> lista = detalleRecetaRepository.buscarDetallesPorPacienteId(pacienteId).stream()
+                .map(DetalleRecetaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/paciente/{pacienteId}/medicamentos-activos")
+    public ResponseEntity<List<DetalleRecetaDTO>> obtenerDetallesMedicamentosActivosPorPaciente(@PathVariable Long pacienteId) {
+        List<DetalleRecetaDTO> lista = detalleRecetaRepository.buscarDetallesMedicamentoActivoPorPacienteId(pacienteId).stream()
+                .map(DetalleRecetaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
     }
 }
