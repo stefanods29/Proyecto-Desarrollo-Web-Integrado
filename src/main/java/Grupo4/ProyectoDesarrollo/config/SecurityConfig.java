@@ -119,8 +119,9 @@ public class SecurityConfig {
                         .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
 
                         // Facturas: solo personal administrativo
-                        .requestMatchers("/api/facturas", "/api/facturas/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
+                        .requestMatchers("/api/facturas", "/api/facturas/*",
+                                "/api/detalle-factura", "/api/detalle-factura/*")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "PERSONAL_ADMINISTRATIVO","RECEPCIONISTA")
 
                         // Reportes: lectura solo para administración
                         .requestMatchers(HttpMethod.GET,
