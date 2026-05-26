@@ -2,6 +2,7 @@ package Grupo4.ProyectoDesarrollo.controller;
 
 import Grupo4.ProyectoDesarrollo.dto.MedicamentoDTO;
 import Grupo4.ProyectoDesarrollo.model.Medicamento;
+import Grupo4.ProyectoDesarrollo.repository.MedicamentoRepository;
 import Grupo4.ProyectoDesarrollo.service.MedicamentoServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class MedicamentoController {
 
     private final MedicamentoServicio servicio;
+    private final MedicamentoRepository medicamentoRepository;
 
     @GetMapping
     public ResponseEntity<List<MedicamentoDTO>> listar() {
@@ -52,5 +54,41 @@ public class MedicamentoController {
     public ResponseEntity<String> eliminar(@PathVariable Long id) {
         servicio.delete(id);
         return ResponseEntity.ok("Medicamento eliminado");
+    }
+
+    @GetMapping("/activos")
+    public ResponseEntity<List<MedicamentoDTO>> obtenerActivos() {
+        List<MedicamentoDTO> lista = medicamentoRepository.findByActivoTrue().stream()
+                .map(MedicamentoDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/buscar/nombre/{nombre}")
+    public ResponseEntity<List<MedicamentoDTO>> buscarPorNombreComercial(@PathVariable String nombre) {
+        List<MedicamentoDTO> lista = medicamentoRepository
+                .findByNombreComercialContainingIgnoreCaseOrNombreGenericoContainingIgnoreCase(nombre, nombre)
+                .stream()
+                .map(MedicamentoDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/buscar/via/{viaAdministracion}")
+    public ResponseEntity<List<MedicamentoDTO>> buscarPorViaAdministracion(@PathVariable String viaAdministracion) {
+        List<MedicamentoDTO> lista = medicamentoRepository.findByViaAdministracion(viaAdministracion)
+                .stream()
+                .map(MedicamentoDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/buscar-activos")
+    public ResponseEntity<List<MedicamentoDTO>> buscarActivosPorNombre(@RequestParam String term) {
+        List<MedicamentoDTO> lista = medicamentoRepository.buscarActivosPorNombreComercial(term)
+                .stream()
+                .map(MedicamentoDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
     }
 }

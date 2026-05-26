@@ -4,6 +4,7 @@ import Grupo4.ProyectoDesarrollo.dto.PacienteDTO;
 import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.model.Paciente;
 import Grupo4.ProyectoDesarrollo.model.Usuario;
+import Grupo4.ProyectoDesarrollo.repository.PacienteRepository;
 import Grupo4.ProyectoDesarrollo.service.ClinicaService;
 import Grupo4.ProyectoDesarrollo.service.PacienteService;
 import Grupo4.ProyectoDesarrollo.service.UsuarioService;
@@ -21,6 +22,7 @@ public class PacienteController {
     private final PacienteService service;
     private final ClinicaService clinicaService;
     private final UsuarioService usuarioService;
+    private final PacienteRepository pacienteRepository;
 
     @PostMapping
     public PacienteDTO crear(@RequestBody PacienteDTO dto) {
@@ -63,5 +65,17 @@ public class PacienteController {
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Long id) {
         service.eliminar(id);
+    }
+
+    @GetMapping("/documento/{numeroDocumento}")
+    public PacienteDTO buscarPorDocumento(@PathVariable String numeroDocumento) {
+        return PacienteDTO.fromEntity(service.buscarPorNumeroDocumento(numeroDocumento));
+    }
+
+    @GetMapping("/clinica/{clinicaId}")
+    public List<PacienteDTO> buscarPorClinica(@PathVariable Long clinicaId) {
+        return pacienteRepository.findByClinicaId(clinicaId).stream()
+                .map(PacienteDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }

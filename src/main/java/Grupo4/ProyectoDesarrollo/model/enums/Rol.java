@@ -6,5 +6,6 @@ public enum Rol {
     MEDICO,
     RECEPCIONISTA,
     ENFERMERA,
-    PACIENTE
+    PACIENTE,
+    PERSONAL_ADMINISTRATIVO
 }

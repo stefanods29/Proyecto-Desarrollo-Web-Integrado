@@ -1,7 +1,9 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
 import Grupo4.ProyectoDesarrollo.dto.ConsultaMedicaDTO;
+import Grupo4.ProyectoDesarrollo.dto.MedicoRankingDTO;
 import Grupo4.ProyectoDesarrollo.model.*;
+import Grupo4.ProyectoDesarrollo.repository.ConsultaMedicaRepository;
 import Grupo4.ProyectoDesarrollo.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ public class ConsultaMedicaController {
     private final MedicoService medicoService;
     private final CitaService citaService;
     private final ClinicaService clinicaService;
+    private final ConsultaMedicaRepository consultaMedicaRepository;
 
     @GetMapping
     public ResponseEntity<List<ConsultaMedicaDTO>> listar() {
@@ -66,5 +69,37 @@ public class ConsultaMedicaController {
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         servicio.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/paciente/{pacienteId}")
+    public ResponseEntity<List<ConsultaMedicaDTO>> obtenerPorPaciente(@PathVariable Long pacienteId) {
+        List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByPacienteId(pacienteId).stream()
+                .map(ConsultaMedicaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/medico/{medicoId}")
+    public ResponseEntity<List<ConsultaMedicaDTO>> obtenerPorMedico(@PathVariable Long medicoId) {
+        List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByMedicoId(medicoId).stream()
+                .map(ConsultaMedicaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/historia/{historiaClinicaId}")
+    public ResponseEntity<List<ConsultaMedicaDTO>> obtenerPorHistoriaClinica(@PathVariable Long historiaClinicaId) {
+        List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByHistoriaClinicaId(historiaClinicaId).stream()
+                .map(ConsultaMedicaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/ranking-medicos")
+    public ResponseEntity<List<MedicoRankingDTO>> obtenerRankingMedicos() {
+        List<MedicoRankingDTO> ranking = consultaMedicaRepository.obtenerRankingMedicosPorConsultas().stream()
+                .map(MedicoRankingDTO::fromObjectArray)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ranking);
     }
 }

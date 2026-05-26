@@ -4,6 +4,7 @@ import Grupo4.ProyectoDesarrollo.dto.HorarioMedicoDTO;
 import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.model.HorarioMedico;
 import Grupo4.ProyectoDesarrollo.model.Medico;
+import Grupo4.ProyectoDesarrollo.repository.HorarioMedicoRepository;
 import Grupo4.ProyectoDesarrollo.service.ClinicaService;
 import Grupo4.ProyectoDesarrollo.service.HorarioMedicoService;
 import Grupo4.ProyectoDesarrollo.service.MedicoService;
@@ -21,6 +22,7 @@ public class HorarioMedicoController {
     private final HorarioMedicoService service;
     private final MedicoService medicoService;
     private final ClinicaService clinicaService;
+    private final HorarioMedicoRepository horarioMedicoRepository;
 
     @PostMapping
     public HorarioMedicoDTO crear(@RequestBody HorarioMedicoDTO dto) {
@@ -57,5 +59,21 @@ public class HorarioMedicoController {
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Long id) {
         service.eliminar(id);
+    }
+
+    @GetMapping("/medico/{medicoId}")
+    public List<HorarioMedicoDTO> obtenerPorMedico(@PathVariable Long medicoId) {
+        return horarioMedicoRepository.findByMedicoId(medicoId).stream()
+                .map(HorarioMedicoDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/medico/{medicoId}/dia/{diaSemana}")
+    public List<HorarioMedicoDTO> obtenerPorMedicoYDia(
+            @PathVariable Long medicoId,
+            @PathVariable java.time.DayOfWeek diaSemana) {
+        return horarioMedicoRepository.findByMedicoIdAndDiaSemana(medicoId, diaSemana).stream()
+                .map(HorarioMedicoDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }

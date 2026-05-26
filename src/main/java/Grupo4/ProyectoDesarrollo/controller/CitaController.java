@@ -6,6 +6,7 @@ import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.model.Consultorio;
 import Grupo4.ProyectoDesarrollo.model.Medico;
 import Grupo4.ProyectoDesarrollo.model.Paciente;
+import Grupo4.ProyectoDesarrollo.repository.CitaRepository;
 import Grupo4.ProyectoDesarrollo.service.CitaService;
 import Grupo4.ProyectoDesarrollo.service.ClinicaService;
 import Grupo4.ProyectoDesarrollo.service.ConsultorioService;
@@ -27,6 +28,7 @@ public class CitaController {
     private final MedicoService medicoService;
     private final ConsultorioService consultorioService;
     private final ClinicaService clinicaService;
+    private final CitaRepository citaRepository;
 
     @GetMapping
     public List<CitaDTO> listarCitas() {
@@ -68,5 +70,33 @@ public class CitaController {
     public String eliminarCita(@PathVariable Long id) {
         service.eliminar(id);
         return "Cita eliminada";
+    }
+
+    @GetMapping("/paciente/{pacienteId}")
+    public List<CitaDTO> obtenerCitasPaciente(@PathVariable Long pacienteId) {
+        return citaRepository.findByPacienteId(pacienteId).stream()
+                .map(CitaDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/medico/{medicoId}")
+    public List<CitaDTO> obtenerCitasMedico(@PathVariable Long medicoId) {
+        return citaRepository.findByMedicoId(medicoId).stream()
+                .map(CitaDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/estado/{estado}")
+    public List<CitaDTO> obtenerCitasPorEstado(@PathVariable String estado) {
+        return citaRepository.findByEstado(
+                Grupo4.ProyectoDesarrollo.model.enums.CitaEstado.valueOf(estado)).stream()
+                .map(CitaDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/contar/estado/{estado}")
+    public long contarCitasPorEstado(@PathVariable String estado) {
+        return citaRepository.countByEstado(
+                Grupo4.ProyectoDesarrollo.model.enums.CitaEstado.valueOf(estado));
     }
 }
