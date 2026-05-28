@@ -69,12 +69,6 @@ public class GlobalExceptionHandler {
         return crearErrorResponse(HttpStatus.UNAUTHORIZED, "La cuenta está deshabilitada", request);
     }
 
-    @ExceptionHandler(LockedException.class)
-    public ResponseEntity<ErrorResponse> manejarLockedAccount(
-            LockedException ex, HttpServletRequest request) {
-        return crearErrorResponse(HttpStatus.UNAUTHORIZED, "La cuenta está bloqueada", request);
-    }
-
     @ExceptionHandler(CredentialsExpiredException.class)
     public ResponseEntity<ErrorResponse> manejarCredentialsExpired(
             CredentialsExpiredException ex, HttpServletRequest request) {
