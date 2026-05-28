@@ -37,4 +37,19 @@ public class DetalleFacturaServiceImpl implements DetalleFacturaService {
         }
         repository.deleteById(id);
     }
+
+    @Override
+    public List<DetalleFactura> buscarPorFacturaId(Long facturaId) {
+        return repository.findByFacturaId(facturaId);
+    }
+
+    @Override
+    public List<DetalleFactura> buscarPorDescripcion(String descripcion) {
+        return repository.findByDescripcionContainingIgnoreCase(descripcion);
+    }
+
+    @Override
+    public List<DetalleFactura> buscarPorClinicaId(Long clinicaId) {
+        return repository.buscarDetallesPorClinicaId(clinicaId);
+    }
 }

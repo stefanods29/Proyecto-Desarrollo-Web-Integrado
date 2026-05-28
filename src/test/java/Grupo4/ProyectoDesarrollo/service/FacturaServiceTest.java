@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,5 +95,18 @@ class FacturaServiceTest {
         service.eliminar(1L);
 
         verify(repository).delete(factura);
+    }
+
+    @Test
+    void sumTotalFacturadoPorClinicaYEstadoYFechas() {
+        LocalDateTime inicio = LocalDateTime.now();
+        LocalDateTime fin = LocalDateTime.now().plusDays(2);
+        when(repository.sumTotalFacturadoPorClinicaYEstadoYFechas(1L, FacturaEstado.PAGADA, inicio, fin))
+                .thenReturn(BigDecimal.valueOf(500));
+
+        BigDecimal total = service.sumTotalFacturadoPorClinicaYEstadoYFechas(1L, FacturaEstado.PAGADA, inicio, fin);
+
+        assertEquals(BigDecimal.valueOf(500), total);
+        verify(repository).sumTotalFacturadoPorClinicaYEstadoYFechas(1L, FacturaEstado.PAGADA, inicio, fin);
     }
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import java.util.stream.Collectors;
 
 @RestController
@@ -68,5 +69,12 @@ public class EspecialidadController {
     @GetMapping("/existe/{nombre}")
     public boolean existePorNombre(@PathVariable String nombre) {
         return especialidadRepository.existsByNombreIgnoreCase(nombre);
+    }
+
+    @GetMapping("/nombre-exacto/{nombre}")
+    public ResponseEntity<EspecialidadDTO> buscarPorNombreExacto(@PathVariable String nombre) {
+        return service.buscarPorNombreIgnoreCase(nombre)
+                .map(e -> ResponseEntity.ok(EspecialidadDTO.fromEntity(e)))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

@@ -55,4 +55,28 @@ class DetalleFacturaServiceTest {
         service.eliminar(1L);
         verify(repository, times(1)).deleteById(1L);
     }
+
+    @Test
+    void buscarPorFacturaId() {
+        when(repository.findByFacturaId(1L)).thenReturn(List.of(detalle));
+        List<DetalleFactura> resultado = service.buscarPorFacturaId(1L);
+        assertEquals(1, resultado.size());
+        verify(repository, times(1)).findByFacturaId(1L);
+    }
+
+    @Test
+    void buscarPorDescripcion() {
+        when(repository.findByDescripcionContainingIgnoreCase("Consulta")).thenReturn(List.of(detalle));
+        List<DetalleFactura> resultado = service.buscarPorDescripcion("Consulta");
+        assertEquals(1, resultado.size());
+        verify(repository, times(1)).findByDescripcionContainingIgnoreCase("Consulta");
+    }
+
+    @Test
+    void buscarPorClinicaId() {
+        when(repository.buscarDetallesPorClinicaId(1L)).thenReturn(List.of(detalle));
+        List<DetalleFactura> resultado = service.buscarPorClinicaId(1L);
+        assertEquals(1, resultado.size());
+        verify(repository, times(1)).buscarDetallesPorClinicaId(1L);
+    }
 }

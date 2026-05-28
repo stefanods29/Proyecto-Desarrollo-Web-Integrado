@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,5 +53,10 @@ public class MedicamentoServicioImpl implements MedicamentoServicio {
             throw new ResourceNotFoundException("Medicamento no encontrado con id: " + id);
         }
         repository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Medicamento> findByNombreComercialIgnoreCase(String nombreComercial) {
+        return repository.findByNombreComercialIgnoreCase(nombreComercial);
     }
 }

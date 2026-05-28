@@ -103,4 +103,9 @@ public class FacturaServiceImpl implements FacturaService {
         }
         repository.delete(existente);
     }
+
+    @Override
+    public BigDecimal sumTotalFacturadoPorClinicaYEstadoYFechas(Long clinicaId, FacturaEstado estado, LocalDateTime inicio, LocalDateTime fin) {
+        return repository.sumTotalFacturadoPorClinicaYEstadoYFechas(clinicaId, estado, inicio, fin);
+    }
 }

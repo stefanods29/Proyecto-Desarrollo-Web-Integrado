@@ -177,4 +177,53 @@ public class CitaServiceImplTest {
             () -> servicio.cambiarEstado(1L, CitaEstado.CANCELADA));
         assertTrue(ex.getMessage().contains("No se puede cancelar una cita que ya ha sido completada"));
     }
+
+    @Test
+    void testBuscarPorMedicoYFechaHoraRango() {
+        LocalDateTime inicio = LocalDateTime.now();
+        LocalDateTime fin = LocalDateTime.now().plusDays(2);
+        when(repository.findByMedicoIdAndFechaHoraBetween(1L, inicio, fin)).thenReturn(List.of(cita));
+
+        List<Cita> resultado = servicio.buscarPorMedicoYFechaHoraRango(1L, inicio, fin);
+
+        assertNotNull(resultado);
+        assertEquals(1, resultado.size());
+        verify(repository, times(1)).findByMedicoIdAndFechaHoraBetween(1L, inicio, fin);
+    }
+
+    @Test
+    void testBuscarPorClinicaYFechaHoraRango() {
+        LocalDateTime inicio = LocalDateTime.now();
+        LocalDateTime fin = LocalDateTime.now().plusDays(2);
+        when(repository.findByClinicaIdAndFechaHoraBetween(1L, inicio, fin)).thenReturn(List.of(cita));
+
+        List<Cita> resultado = servicio.buscarPorClinicaYFechaHoraRango(1L, inicio, fin);
+
+        assertNotNull(resultado);
+        assertEquals(1, resultado.size());
+        verify(repository, times(1)).findByClinicaIdAndFechaHoraBetween(1L, inicio, fin);
+    }
+
+    @Test
+    void testBuscarCitasPorMedicoYFecha() {
+        LocalDateTime inicio = LocalDateTime.now();
+        LocalDateTime fin = LocalDateTime.now().plusDays(2);
+        when(repository.buscarCitasPorMedicoYFecha(1L, inicio, fin)).thenReturn(List.of(cita));
+
+        List<Cita> resultado = servicio.buscarCitasPorMedicoYFecha(1L, inicio, fin);
+
+        assertNotNull(resultado);
+        assertEquals(1, resultado.size());
+        verify(repository, times(1)).buscarCitasPorMedicoYFecha(1L, inicio, fin);
+    }
+
+    @Test
+    void testContarCitasPorClinica() {
+        when(repository.contarCitasPorClinica(1L)).thenReturn(5L);
+
+        long resultado = servicio.contarCitasPorClinica(1L);
+
+        assertEquals(5L, resultado);
+        verify(repository, times(1)).contarCitasPorClinica(1L);
+    }
 }

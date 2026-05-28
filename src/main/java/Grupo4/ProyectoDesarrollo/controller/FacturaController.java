@@ -13,6 +13,10 @@ import Grupo4.ProyectoDesarrollo.service.PacienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import Grupo4.ProyectoDesarrollo.model.enums.FacturaEstado;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,5 +89,15 @@ public class FacturaController {
         return facturaRepository.findFirstByOrderByIdDesc()
                 .map(f -> ResponseEntity.ok(FacturaDTO.fromEntity(f)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/total-clinica")
+    public ResponseEntity<BigDecimal> sumTotalFacturadoPorClinicaYEstadoYFechas(
+            @RequestParam Long clinicaId,
+            @RequestParam FacturaEstado estado,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin) {
+        BigDecimal total = service.sumTotalFacturadoPorClinicaYEstadoYFechas(clinicaId, estado, inicio, fin);
+        return ResponseEntity.ok(total);
     }
 }

@@ -81,4 +81,15 @@ class EspecialidadServiceTest {
         verify(repository).existsById(1L);
         verify(repository).deleteById(1L);
     }
+
+    @Test
+    void buscarPorNombreIgnoreCase() {
+        when(repository.findByNombreIgnoreCase("Cardiologia")).thenReturn(Optional.of(especialidad));
+
+        Optional<Especialidad> resultado = service.buscarPorNombreIgnoreCase("Cardiologia");
+
+        assertTrue(resultado.isPresent());
+        assertEquals(especialidad.getId(), resultado.get().getId());
+        verify(repository).findByNombreIgnoreCase("Cardiologia");
+    }
 }
