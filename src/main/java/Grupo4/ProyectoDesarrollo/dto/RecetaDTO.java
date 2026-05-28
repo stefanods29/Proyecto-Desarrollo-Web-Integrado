@@ -50,7 +50,6 @@ public class RecetaDTO {
         receta.setPaciente(paciente);
         receta.setIndicaciones(this.indicaciones);
         receta.setFechaEmision(this.fechaEmision);
-        // Detalles are populated separately or mapped during entity construction
         return receta;
     }
 }

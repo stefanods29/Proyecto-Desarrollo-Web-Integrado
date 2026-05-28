@@ -23,7 +23,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
-        // Delegamos la excepción al GlobalExceptionHandler
         resolver.resolveException(request, response, null, authException);
     }
 }

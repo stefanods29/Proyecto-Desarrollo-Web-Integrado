@@ -17,7 +17,7 @@ public class ArchivoClinicoDTO {
     private String nombreArchivo;
     private String tipoArchivo;
     private String rutaArchivo;
-    private String description; // Wait, let's see if it's "descripcion" or "description" in entity.
+    private String description; 
     private LocalDateTime fechaSubida;
 
     public static ArchivoClinicoDTO fromEntity(ArchivoClinico ac) {
