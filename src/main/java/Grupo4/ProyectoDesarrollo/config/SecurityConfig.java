@@ -50,90 +50,79 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Autenticación abierta
+                        // Autenticación
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/me", "/api/auth/logout").authenticated()
 
-                        // Clínicas: consultas públicas, administración solo SUPER_ADMIN
+                        // Clínicas
                         .requestMatchers(HttpMethod.GET, "/api/clinicas", "/api/clinicas/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/clinicas").hasRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/clinicas/*").hasRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/clinicas/*").hasRole("SUPER_ADMIN")
 
-                        // Usuarios: solo administradores de clínica y super admin
-                        .requestMatchers("/api/usuarios", "/api/usuarios/*").hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                        // Usuarios
+                        .requestMatchers("/api/usuarios", "/api/usuarios/*")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
 
-                        // Pacientes: acceso a personal de clínica y al paciente
+                        // Pacientes
                         .requestMatchers(HttpMethod.GET, "/api/pacientes", "/api/pacientes/*", "/api/pacientes/buscar")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO")
                         .requestMatchers(HttpMethod.POST, "/api/pacientes")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO", "PACIENTE")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
                         .requestMatchers(HttpMethod.PUT, "/api/pacientes/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO", "PACIENTE")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
                         .requestMatchers(HttpMethod.DELETE, "/api/pacientes/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO", "PACIENTE")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
 
-                        // Catálogos médicos: lectura para el equipo clínico, edición solo para
-                        // administración
+                        // Catálogos médicos
                         .requestMatchers(HttpMethod.GET,
-                                "/api/medicos", "/api/medicos/*",
-                                "/api/especialidades", "/api/especialidades/*",
-                                "/api/consultorios", "/api/consultorios/*",
-                                "/api/horarios", "/api/horarios/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "RECEPCIONISTA", "ENFERMERA")
+                                "/api/medicos", "/api/medicos/*", "/api/especialidades", "/api/especialidades/*",
+                                "/api/consultorios", "/api/consultorios/*", "/api/horarios", "/api/horarios/*")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "RECEPCIONISTA")
                         .requestMatchers(HttpMethod.POST,
                                 "/api/medicos", "/api/especialidades", "/api/consultorios", "/api/horarios")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/medicos/*", "/api/especialidades/*", "/api/consultorios/*", "/api/horarios/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/medicos/*", "/api/especialidades/*", "/api/consultorios/*", "/api/horarios/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
 
-                        // Citas: paciente y personal autorizado pueden acceder
+                        // Citas
                         .requestMatchers("/api/citas", "/api/citas/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO", "PACIENTE")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
 
-                        // Expedientes y recetas: lectura para personal clínico y paciente; escritura
-                        // para personal autorizado
+                        // Expedientes y recetas
                         .requestMatchers(HttpMethod.GET,
-                                "/api/consulta-medica", "/api/consulta-medica/*",
-                                "/api/historia-clinica", "/api/historia-clinica/*",
-                                "/api/recetas", "/api/recetas/*",
-                                "/api/detalle-receta", "/api/detalle-receta/*",
-                                "/api/archivos", "/api/archivos/*",
-                                "/api/medicamentos", "/api/medicamentos/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA", "PACIENTE")
+                                "/api/consulta-medica", "/api/consulta-medica/*", "/api/historia-clinica", "/api/historia-clinica/*",
+                                "/api/recetas", "/api/recetas/*", "/api/detalle-receta", "/api/detalle-receta/*",
+                                "/api/archivos", "/api/archivos/*", "/api/medicamentos", "/api/medicamentos/*")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA", "PACIENTE")
                         .requestMatchers(HttpMethod.POST,
                                 "/api/consulta-medica", "/api/historia-clinica", "/api/recetas", "/api/detalle-receta",
                                 "/api/archivos", "/api/medicamentos")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/consulta-medica/*", "/api/historia-clinica/*", "/api/recetas/*",
                                 "/api/detalle-receta/*", "/api/archivos/*", "/api/medicamentos/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/consulta-medica/*", "/api/historia-clinica/*", "/api/recetas/*",
                                 "/api/detalle-receta/*", "/api/archivos/*", "/api/medicamentos/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
 
-                        // Facturas: solo personal administrativo
-                        .requestMatchers("/api/facturas", "/api/facturas/*",
-                                "/api/detalle-factura", "/api/detalle-factura/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "PERSONAL_ADMINISTRATIVO","RECEPCIONISTA")
+                        // Facturas
+                        .requestMatchers("/api/facturas", "/api/facturas/*", "/api/detalle-factura", "/api/detalle-factura/*")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "PERSONAL_ADMINISTRATIVO", "RECEPCIONISTA")
 
-                        // Reportes: lectura solo para administración
+                        // Reportes
                         .requestMatchers(HttpMethod.GET,
-                                "/api/reportes/ingresos",
-                                "/api/reportes/citas",
-                                "/api/reportes/pacientes",
-                                "/api/reportes/medicos")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                                "/api/reportes/ingresos", "/api/reportes/citas", "/api/reportes/pacientes", "/api/reportes/medicos")
+                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
 
                         .anyRequest().authenticated())
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                         .accessDeniedHandler(new AccessDeniedHandlerImpl()))

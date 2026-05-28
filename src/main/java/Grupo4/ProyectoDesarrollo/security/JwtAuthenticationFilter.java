@@ -56,7 +56,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            // If token is invalid or parsing fails, keep context clean
         }
 
         filterChain.doFilter(request, response);
