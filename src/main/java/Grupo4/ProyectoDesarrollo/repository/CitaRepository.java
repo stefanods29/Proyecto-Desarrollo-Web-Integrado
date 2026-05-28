@@ -15,6 +15,8 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
     List<Cita> findByPacienteId(Long pacienteId);
     List<Cita> findByMedicoId(Long medicoId);
     List<Cita> findByEstado(CitaEstado estado);
+
+    @Query("SELECT c FROM Cita c WHERE c.medico.id = :medicoId AND c.fechaHora BETWEEN :inicio AND :fin")
     List<Cita> findByMedicoIdAndFechaHoraBetween(Long medicoId, LocalDateTime inicio, LocalDateTime fin);
     List<Cita> findByClinicaIdAndFechaHoraBetween(Long clinicaId, LocalDateTime inicio, LocalDateTime fin);
     long countByEstado(CitaEstado estado);

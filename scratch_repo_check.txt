@@ -1,0 +1,503 @@
+REPOSITORIES AND THEIR ENDPOINT MAPPING VERIFICATION
+===================================================
+
+Repository: ArchivoClinicoRepository
+------------------------------------
+  * Method: findByConsultaMedicaId
+    Signature: List<ArchivoClinico> findByConsultaMedicaId(Long consultaMedicaId)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - ArchivoClinicoController.java:62 -> List<ArchivoClinicoDTO> lista = archivoClinicoRepository.findByConsultaMedicaId(consultaMedicaId).stream()
+      - RecetaController.java:86 -> List<RecetaDTO> lista = recetaRepository.findByConsultaMedicaId(consultaMedicaId).stream()
+
+  * Method: buscarArchivosPorPacienteId
+    Signature: @Query("SELECT a FROM ArchivoClinico a WHERE a.consultaMedica.paciente.id = :pacienteId")     List<ArchivoClinico> buscarArchivosPorPacienteId(@Param("pacienteId") Long pacienteId)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - ArchivoClinicoController.java:70 -> List<ArchivoClinicoDTO> lista = archivoClinicoRepository.buscarArchivosPorPacienteId(pacienteId).stream()
+
+
+Repository: CitaRepository
+--------------------------
+  * Method: findByPacienteId
+    Signature: List<Cita> findByPacienteId(Long pacienteId)
+    - Service/ServiceImpl layer:
+      - CitaServiceImpl.java:57 -> return repository.findByPacienteId(pacienteId);
+    - Controller/Endpoint layer:
+      - CitaController.java:79 -> return citaRepository.findByPacienteId(pacienteId).stream()
+      - ConsultaMedicaController.java:76 -> List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByPacienteId(pacienteId).stream()
+      - FacturaController.java:72 -> List<FacturaDTO> lista = facturaRepository.findByPacienteId(pacienteId).stream()
+      - HistoriaClinicaController.java:71 -> return historiaClinicaRepository.findByPacienteId(pacienteId)
+      - RecetaController.java:78 -> List<RecetaDTO> lista = recetaRepository.findByPacienteId(pacienteId).stream()
+
+  * Method: findByMedicoId
+    Signature: List<Cita> findByMedicoId(Long medicoId)
+    - Service/ServiceImpl layer:
+      - CitaServiceImpl.java:62 -> return repository.findByMedicoId(medicoId);
+    - Controller/Endpoint layer:
+      - CitaController.java:86 -> return citaRepository.findByMedicoId(medicoId).stream()
+      - ConsultaMedicaController.java:84 -> List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByMedicoId(medicoId).stream()
+      - HorarioMedicoController.java:66 -> return horarioMedicoRepository.findByMedicoId(medicoId).stream()
+
+  * Method: findByEstado
+    Signature: List<Cita> findByEstado(CitaEstado estado)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - CitaController.java:93 -> return citaRepository.findByEstado(
+      - FacturaController.java:80 -> List<FacturaDTO> lista = facturaRepository.findByEstado(
+
+  * Method: findByMedicoIdAndFechaHoraBetween
+    Signature: @Query("SELECT c FROM Cita c WHERE c.medico.id = :medicoId AND c.fechaHora BETWEEN :inicio AND :fin")     List<Cita> findByMedicoIdAndFechaHoraBetween(Long medicoId, LocalDateTime inicio, LocalDateTime fin)
+    - Service/ServiceImpl layer:
+      - CitaServiceImpl.java:145 -> return repository.findByMedicoIdAndFechaHoraBetween(medicoId, inicio, fin);
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+  * Method: findByClinicaIdAndFechaHoraBetween
+    Signature: List<Cita> findByClinicaIdAndFechaHoraBetween(Long clinicaId, LocalDateTime inicio, LocalDateTime fin)
+    - Service/ServiceImpl layer:
+      - CitaServiceImpl.java:150 -> return repository.findByClinicaIdAndFechaHoraBetween(clinicaId, inicio, fin);
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+  * Method: countByEstado
+    Signature: long countByEstado(CitaEstado estado)
+    - Service/ServiceImpl layer:
+      - ReporteServiceImpl.java:45 -> long count = citaRepository.countByEstado(estado);
+    - Controller/Endpoint layer:
+      - CitaController.java:101 -> return citaRepository.countByEstado(
+
+  * Method: buscarCitasPorMedicoYFecha
+    Signature: @Query("SELECT c FROM Cita c WHERE c.medico.id = :medicoId AND c.fechaHora >= :inicio AND c.fechaHora <= :fin")     List<Cita> buscarCitasPorMedicoYFecha(@Param("medicoId") Long medicoId, @Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin)
+    - Service/ServiceImpl layer:
+      - CitaService.java:18 -> List<Cita> buscarCitasPorMedicoYFecha(Long medicoId, LocalDateTime inicio, LocalDateTime fin);
+      - CitaServiceImpl.java:154 -> public List<Cita> buscarCitasPorMedicoYFecha(Long medicoId, LocalDateTime inicio, LocalDateTime fin) {
+      - CitaServiceImpl.java:155 -> return repository.buscarCitasPorMedicoYFecha(medicoId, inicio, fin);
+    - Controller/Endpoint layer:
+      - CitaController.java:126 -> public List<CitaDTO> buscarCitasPorMedicoYFecha(
+      - CitaController.java:130 -> return service.buscarCitasPorMedicoYFecha(medicoId, inicio, fin).stream()
+
+  * Method: contarCitasPorClinica
+    Signature: @Query("SELECT COUNT(c) FROM Cita c WHERE c.clinica.id = :clinicaId")     long contarCitasPorClinica(@Param("clinicaId") Long clinicaId)
+    - Service/ServiceImpl layer:
+      - CitaService.java:19 -> long contarCitasPorClinica(Long clinicaId);
+      - CitaServiceImpl.java:159 -> public long contarCitasPorClinica(Long clinicaId) {
+      - CitaServiceImpl.java:160 -> return repository.contarCitasPorClinica(clinicaId);
+    - Controller/Endpoint layer:
+      - CitaController.java:136 -> public long contarCitasPorClinica(@PathVariable Long clinicaId) {
+      - CitaController.java:137 -> return service.contarCitasPorClinica(clinicaId);
+
+  * Method: IN
+    Signature: @Query("SELECT COUNT(c) > 0 FROM Cita c WHERE c.medico.id = :medicoId " +            "AND c.estado NOT IN ('CANCELADA', 'NO_ASISTIO') " +            "AND c.fechaHora < :fechaFin AND c.fechaFin > :fechaHora " +            "AND (:id IS NULL OR c.id <> :id)")     boolean existsOverlappingCitaForMedico(         @Param("medicoId") Long medicoId,          @Param("fechaHora") LocalDateTime fechaHora,          @Param("fechaFin") LocalDateTime fechaFin,          @Param("id") Long id     )
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+  * Method: IN
+    Signature: @Query("SELECT COUNT(c) > 0 FROM Cita c WHERE c.consultorio.id = :consultorioId " +            "AND c.estado NOT IN ('CANCELADA', 'NO_ASISTIO') " +            "AND c.fechaHora < :fechaFin AND c.fechaFin > :fechaHora " +            "AND (:id IS NULL OR c.id <> :id)")     boolean existsOverlappingCitaForConsultorio(         @Param("consultorioId") Long consultorioId,          @Param("fechaHora") LocalDateTime fechaHora,          @Param("fechaFin") LocalDateTime fechaFin,          @Param("id") Long id     )
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+
+Repository: ClinicaRepository
+-----------------------------
+  * Method: findByRuc
+    Signature: Optional<Clinica> findByRuc(String ruc)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - ClinicaController.java:55 -> return clinicaRepository.findByRuc(ruc)
+
+  * Method: findByCorreo
+    Signature: Optional<Clinica> findByCorreo(String correo)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - ClinicaController.java:62 -> return clinicaRepository.findByCorreo(correo)
+      - UsuarioController.java:66 -> return usuarioRepository.findByCorreo(correo)
+
+  * Method: buscarClinicasPorEstado
+    Signature: @Query("SELECT c FROM Clinica c WHERE c.estado = :estado")     List<Clinica> buscarClinicasPorEstado(@Param("estado") ClinicaEstado estado)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - ClinicaController.java:69 -> return clinicaRepository.buscarClinicasPorEstado(
+
+
+Repository: ConsultaMedicaRepository
+------------------------------------
+  * Method: findByPacienteId
+    Signature: List<ConsultaMedica> findByPacienteId(Long pacienteId)
+    - Service/ServiceImpl layer:
+      - CitaServiceImpl.java:57 -> return repository.findByPacienteId(pacienteId);
+    - Controller/Endpoint layer:
+      - CitaController.java:79 -> return citaRepository.findByPacienteId(pacienteId).stream()
+      - ConsultaMedicaController.java:76 -> List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByPacienteId(pacienteId).stream()
+      - FacturaController.java:72 -> List<FacturaDTO> lista = facturaRepository.findByPacienteId(pacienteId).stream()
+      - HistoriaClinicaController.java:71 -> return historiaClinicaRepository.findByPacienteId(pacienteId)
+      - RecetaController.java:78 -> List<RecetaDTO> lista = recetaRepository.findByPacienteId(pacienteId).stream()
+
+  * Method: findByMedicoId
+    Signature: List<ConsultaMedica> findByMedicoId(Long medicoId)
+    - Service/ServiceImpl layer:
+      - CitaServiceImpl.java:62 -> return repository.findByMedicoId(medicoId);
+    - Controller/Endpoint layer:
+      - CitaController.java:86 -> return citaRepository.findByMedicoId(medicoId).stream()
+      - ConsultaMedicaController.java:84 -> List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByMedicoId(medicoId).stream()
+      - HorarioMedicoController.java:66 -> return horarioMedicoRepository.findByMedicoId(medicoId).stream()
+
+  * Method: findByHistoriaClinicaId
+    Signature: List<ConsultaMedica> findByHistoriaClinicaId(Long id)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - ConsultaMedicaController.java:92 -> List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByHistoriaClinicaId(historiaClinicaId).stream()
+
+  * Method: COUNT
+    Signature: @Query("SELECT cm.medico.id, cm.medico.usuario.nombre, cm.medico.usuario.apellido, COUNT(cm) " +            "FROM ConsultaMedica cm GROUP BY cm.medico.id, cm.medico.usuario.nombre, cm.medico.usuario.apellido " +            "ORDER BY COUNT(cm) DESC")     List<Object[]> obtenerRankingMedicosPorConsultas()
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+
+Repository: ConsultorioRepository
+---------------------------------
+  * Method: findByClinicaId
+    Signature: List<Consultorio> findByClinicaId(Long clinicaId)
+    - Service/ServiceImpl layer:
+      - PacienteServiceImpl.java:60 -> return repository.findByClinicaId(clinicaId);
+    - Controller/Endpoint layer:
+      - ConsultorioController.java:60 -> return consultorioRepository.findByClinicaId(clinicaId).stream()
+      - MedicoController.java:88 -> return medicoRepository.findByClinicaId(clinicaId).stream()
+      - PacienteController.java:77 -> return pacienteRepository.findByClinicaId(clinicaId).stream()
+      - UsuarioController.java:81 -> return usuarioRepository.findByClinicaId(clinicaId).stream()
+
+  * Method: LOWER
+    Signature: @Query("SELECT c FROM Consultorio c WHERE c.clinica.id = :clinicaId AND LOWER(c.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))")     List<Consultorio> buscarPorClinicaYNombre(@Param("clinicaId") Long clinicaId, @Param("nombre") String nombre)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+
+Repository: DetalleFacturaRepository
+------------------------------------
+  * Method: findByFacturaId
+    Signature: List<DetalleFactura> findByFacturaId(Long facturaId)
+    - Service/ServiceImpl layer:
+      - DetalleFacturaServiceImpl.java:43 -> return repository.findByFacturaId(facturaId);
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+  * Method: findByDescripcionContainingIgnoreCase
+    Signature: List<DetalleFactura> findByDescripcionContainingIgnoreCase(String descripcion)
+    - Service/ServiceImpl layer:
+      - DetalleFacturaServiceImpl.java:48 -> return repository.findByDescripcionContainingIgnoreCase(descripcion);
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+  * Method: buscarDetallesPorPacienteId
+    Signature: @Query("SELECT d FROM DetalleFactura d WHERE d.factura.paciente.id = :pacienteId")     List<DetalleFactura> buscarDetallesPorPacienteId(@Param("pacienteId") Long pacienteId)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - DetalleRecetaController.java:85 -> List<DetalleRecetaDTO> lista = detalleRecetaRepository.buscarDetallesPorPacienteId(pacienteId).stream()
+
+  * Method: buscarDetallesPorClinicaId
+    Signature: @Query("SELECT d FROM DetalleFactura d WHERE d.factura.clinica.id = :clinicaId")     List<DetalleFactura> buscarDetallesPorClinicaId(@Param("clinicaId") Long clinicaId)
+    - Service/ServiceImpl layer:
+      - DetalleFacturaServiceImpl.java:53 -> return repository.buscarDetallesPorClinicaId(clinicaId);
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+
+Repository: DetalleRecetaRepository
+-----------------------------------
+  * Method: findByRecetaId
+    Signature: List<DetalleReceta> findByRecetaId(Long recetaId)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - DetalleRecetaController.java:69 -> List<DetalleRecetaDTO> lista = detalleRecetaRepository.findByRecetaId(recetaId).stream()
+
+  * Method: findByMedicamentoId
+    Signature: List<DetalleReceta> findByMedicamentoId(Long medicamentoId)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - DetalleRecetaController.java:77 -> List<DetalleRecetaDTO> lista = detalleRecetaRepository.findByMedicamentoId(medicamentoId).stream()
+
+  * Method: buscarDetallesPorPacienteId
+    Signature: @Query("SELECT d FROM DetalleReceta d WHERE d.receta.paciente.id = :pacienteId")     List<DetalleReceta> buscarDetallesPorPacienteId(@Param("pacienteId") Long pacienteId)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - DetalleRecetaController.java:85 -> List<DetalleRecetaDTO> lista = detalleRecetaRepository.buscarDetallesPorPacienteId(pacienteId).stream()
+
+  * Method: buscarDetallesMedicamentoActivoPorPacienteId
+    Signature: @Query("SELECT d FROM DetalleReceta d WHERE d.medicamento.activo = true AND d.receta.paciente.id = :pacienteId")     List<DetalleReceta> buscarDetallesMedicamentoActivoPorPacienteId(@Param("pacienteId") Long pacienteId)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - DetalleRecetaController.java:93 -> List<DetalleRecetaDTO> lista = detalleRecetaRepository.buscarDetallesMedicamentoActivoPorPacienteId(pacienteId).stream()
+
+
+Repository: EspecialidadRepository
+----------------------------------
+  * Method: findByNombreIgnoreCase
+    Signature: Optional<Especialidad> findByNombreIgnoreCase(String nombre)
+    - Service/ServiceImpl layer:
+      - EspecialidadServiceImpl.java:54 -> return repository.findByNombreIgnoreCase(nombre);
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+  * Method: findByActivaTrue
+    Signature: List<Especialidad> findByActivaTrue()
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - EspecialidadController.java:57 -> return especialidadRepository.findByActivaTrue().stream()
+
+  * Method: existsByNombreIgnoreCase
+    Signature: boolean existsByNombreIgnoreCase(String nombre)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - EspecialidadController.java:71 -> return especialidadRepository.existsByNombreIgnoreCase(nombre);
+
+  * Method: LOWER
+    Signature: @Query("SELECT e FROM Especialidad e WHERE LOWER(e.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))")     List<Especialidad> buscarPorNombre(@Param("nombre") String nombre)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+
+Repository: FacturaRepository
+-----------------------------
+  * Method: findByPacienteId
+    Signature: List<Factura> findByPacienteId(Long pacienteId)
+    - Service/ServiceImpl layer:
+      - CitaServiceImpl.java:57 -> return repository.findByPacienteId(pacienteId);
+    - Controller/Endpoint layer:
+      - CitaController.java:79 -> return citaRepository.findByPacienteId(pacienteId).stream()
+      - ConsultaMedicaController.java:76 -> List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByPacienteId(pacienteId).stream()
+      - FacturaController.java:72 -> List<FacturaDTO> lista = facturaRepository.findByPacienteId(pacienteId).stream()
+      - HistoriaClinicaController.java:71 -> return historiaClinicaRepository.findByPacienteId(pacienteId)
+      - RecetaController.java:78 -> List<RecetaDTO> lista = recetaRepository.findByPacienteId(pacienteId).stream()
+
+  * Method: findByEstado
+    Signature: List<Factura> findByEstado(FacturaEstado estado)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - CitaController.java:93 -> return citaRepository.findByEstado(
+      - FacturaController.java:80 -> List<FacturaDTO> lista = facturaRepository.findByEstado(
+
+  * Method: findFirstByOrderByIdDesc
+    Signature: Optional<Factura> findFirstByOrderByIdDesc()
+    - Service/ServiceImpl layer:
+      - FacturaServiceImpl.java:41 -> Optional<Factura> lastFacturaOpt = repository.findFirstByOrderByIdDesc();
+    - Controller/Endpoint layer:
+      - FacturaController.java:89 -> return facturaRepository.findFirstByOrderByIdDesc()
+
+  * Method: sumTotalFacturadoPorClinicaYEstadoYFechas
+    Signature: @Query("SELECT COALESCE(SUM(f.total), 0) FROM Factura f WHERE f.clinica.id = :clinicaId AND f.estado = :estado AND f.fechaEmision BETWEEN :inicio AND :fin")     BigDecimal sumTotalFacturadoPorClinicaYEstadoYFechas(         @Param("clinicaId") Long clinicaId,          @Param("estado") FacturaEstado estado,          @Param("inicio") LocalDateTime inicio,          @Param("fin") LocalDateTime fin     )
+    - Service/ServiceImpl layer:
+      - FacturaService.java:14 -> BigDecimal sumTotalFacturadoPorClinicaYEstadoYFechas(Long clinicaId, FacturaEstado estado, LocalDateTime inicio, LocalDateTime fin);
+      - FacturaServiceImpl.java:108 -> public BigDecimal sumTotalFacturadoPorClinicaYEstadoYFechas(Long clinicaId, FacturaEstado estado, LocalDateTime inicio, LocalDateTime fin) {
+      - FacturaServiceImpl.java:109 -> return repository.sumTotalFacturadoPorClinicaYEstadoYFechas(clinicaId, estado, inicio, fin);
+    - Controller/Endpoint layer:
+      - FacturaController.java:95 -> public ResponseEntity<BigDecimal> sumTotalFacturadoPorClinicaYEstadoYFechas(
+      - FacturaController.java:100 -> BigDecimal total = service.sumTotalFacturadoPorClinicaYEstadoYFechas(clinicaId, estado, inicio, fin);
+
+  * Method: sumTotalFacturadoPorEstadoYFechas
+    Signature: @Query("SELECT COALESCE(SUM(f.total), 0) FROM Factura f WHERE f.estado = :estado AND f.fechaEmision BETWEEN :inicio AND :fin")     BigDecimal sumTotalFacturadoPorEstadoYFechas(         @Param("estado") FacturaEstado estado,          @Param("inicio") LocalDateTime inicio,          @Param("fin") LocalDateTime fin     )
+    - Service/ServiceImpl layer:
+      - ReporteServiceImpl.java:34 -> BigDecimal totalMes = facturaRepository.sumTotalFacturadoPorEstadoYFechas(FacturaEstado.PAGADA, inicioMes, ahora);
+      - ReporteServiceImpl.java:35 -> BigDecimal totalHistorico = facturaRepository.sumTotalFacturadoPorEstadoYFechas(FacturaEstado.PAGADA, inicioHistorico, ahora);
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+
+Repository: HistoriaClinicaRepository
+-------------------------------------
+  * Method: findByPacienteId
+    Signature: Optional<HistoriaClinica> findByPacienteId(Long pacienteId)
+    - Service/ServiceImpl layer:
+      - CitaServiceImpl.java:57 -> return repository.findByPacienteId(pacienteId);
+    - Controller/Endpoint layer:
+      - CitaController.java:79 -> return citaRepository.findByPacienteId(pacienteId).stream()
+      - ConsultaMedicaController.java:76 -> List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByPacienteId(pacienteId).stream()
+      - FacturaController.java:72 -> List<FacturaDTO> lista = facturaRepository.findByPacienteId(pacienteId).stream()
+      - HistoriaClinicaController.java:71 -> return historiaClinicaRepository.findByPacienteId(pacienteId)
+      - RecetaController.java:78 -> List<RecetaDTO> lista = recetaRepository.findByPacienteId(pacienteId).stream()
+
+
+Repository: HorarioMedicoRepository
+-----------------------------------
+  * Method: findByMedicoId
+    Signature: List<HorarioMedico> findByMedicoId(Long medicoId)
+    - Service/ServiceImpl layer:
+      - CitaServiceImpl.java:62 -> return repository.findByMedicoId(medicoId);
+    - Controller/Endpoint layer:
+      - CitaController.java:86 -> return citaRepository.findByMedicoId(medicoId).stream()
+      - ConsultaMedicaController.java:84 -> List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByMedicoId(medicoId).stream()
+      - HorarioMedicoController.java:66 -> return horarioMedicoRepository.findByMedicoId(medicoId).stream()
+
+  * Method: findByMedicoIdAndDiaSemana
+    Signature: List<HorarioMedico> findByMedicoIdAndDiaSemana(Long medicoId, DayOfWeek diaSemana)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - HorarioMedicoController.java:75 -> return horarioMedicoRepository.findByMedicoIdAndDiaSemana(medicoId, diaSemana).stream()
+
+
+Repository: MedicamentoRepository
+---------------------------------
+  * Method: findByActivoTrue
+    Signature: List<Medicamento> findByActivoTrue()
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - MedicamentoController.java:61 -> List<MedicamentoDTO> lista = medicamentoRepository.findByActivoTrue().stream()
+      - MedicoController.java:95 -> return medicoRepository.findByActivoTrue().stream()
+
+  * Method: findByNombreComercialIgnoreCase
+    Signature: Optional<Medicamento> findByNombreComercialIgnoreCase(String nombreComercial)
+    - Service/ServiceImpl layer:
+      - MedicamentoServicio.java:18 -> Optional<Medicamento> findByNombreComercialIgnoreCase(String nombreComercial);
+      - MedicamentoServicioImpl.java:59 -> public Optional<Medicamento> findByNombreComercialIgnoreCase(String nombreComercial) {
+      - MedicamentoServicioImpl.java:60 -> return repository.findByNombreComercialIgnoreCase(nombreComercial);
+    - Controller/Endpoint layer:
+      - MedicamentoController.java:97 -> return servicio.findByNombreComercialIgnoreCase(nombreComercial)
+
+  * Method: findByNombreComercialContainingIgnoreCaseOrNombreGenericoContainingIgnoreCase
+    Signature: List<Medicamento> findByNombreComercialContainingIgnoreCaseOrNombreGenericoContainingIgnoreCase(String nombreComercial, String nombreGenerico)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - MedicamentoController.java:70 -> .findByNombreComercialContainingIgnoreCaseOrNombreGenericoContainingIgnoreCase(nombre, nombre)
+
+  * Method: findByViaAdministracion
+    Signature: List<Medicamento> findByViaAdministracion(String viaAdministracion)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - MedicamentoController.java:79 -> List<MedicamentoDTO> lista = medicamentoRepository.findByViaAdministracion(viaAdministracion)
+
+  * Method: LOWER
+    Signature: @Query("SELECT m FROM Medicamento m WHERE m.activo = true AND LOWER(m.nombreComercial) LIKE LOWER(CONCAT('%', :term, '%'))")     List<Medicamento> buscarActivosPorNombreComercial(@Param("term") String term)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+
+Repository: MedicoRepository
+----------------------------
+  * Method: findByUsuarioId
+    Signature: Optional<Medico> findByUsuarioId(Long usuarioId)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - MedicoController.java:74 -> return medicoRepository.findByUsuarioId(usuarioId)
+
+  * Method: findByEspecialidadId
+    Signature: List<Medico> findByEspecialidadId(Long especialidadId)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - MedicoController.java:81 -> return medicoRepository.findByEspecialidadId(especialidadId).stream()
+
+  * Method: findByClinicaId
+    Signature: List<Medico> findByClinicaId(Long clinicaId)
+    - Service/ServiceImpl layer:
+      - PacienteServiceImpl.java:60 -> return repository.findByClinicaId(clinicaId);
+    - Controller/Endpoint layer:
+      - ConsultorioController.java:60 -> return consultorioRepository.findByClinicaId(clinicaId).stream()
+      - MedicoController.java:88 -> return medicoRepository.findByClinicaId(clinicaId).stream()
+      - PacienteController.java:77 -> return pacienteRepository.findByClinicaId(clinicaId).stream()
+      - UsuarioController.java:81 -> return usuarioRepository.findByClinicaId(clinicaId).stream()
+
+  * Method: findByActivoTrue
+    Signature: List<Medico> findByActivoTrue()
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - MedicamentoController.java:61 -> List<MedicamentoDTO> lista = medicamentoRepository.findByActivoTrue().stream()
+      - MedicoController.java:95 -> return medicoRepository.findByActivoTrue().stream()
+
+  * Method: buscarMedicosActivosPorEspecialidadYClinica
+    Signature: @Query("SELECT m FROM Medico m WHERE m.clinica.id = :clinicaId AND m.especialidad.id = :especialidadId AND m.activo = true")     List<Medico> buscarMedicosActivosPorEspecialidadYClinica(         @Param("clinicaId") Long clinicaId,          @Param("especialidadId") Long especialidadId     )
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - MedicoController.java:104 -> return medicoRepository.buscarMedicosActivosPorEspecialidadYClinica(clinicaId, especialidadId).stream()
+
+
+Repository: PacienteRepository
+------------------------------
+  * Method: findByNumeroDocumento
+    Signature: Optional<Paciente> findByNumeroDocumento(String numeroDocumento)
+    - Service/ServiceImpl layer:
+      - PacienteServiceImpl.java:54 -> return repository.findByNumeroDocumento(numeroDocumento)
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+  * Method: existsByNumeroDocumento
+    Signature: boolean existsByNumeroDocumento(String numeroDocumento)
+    - Service/ServiceImpl layer:
+      - PacienteServiceImpl.java:25 -> repository.existsByNumeroDocumento(paciente.getNumeroDocumento())) {
+      - PacienteServiceImpl.java:28 -> } else if (repository.existsByNumeroDocumento(paciente.getNumeroDocumento())) {
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+  * Method: findByClinicaId
+    Signature: List<Paciente> findByClinicaId(Long clinicaId)
+    - Service/ServiceImpl layer:
+      - PacienteServiceImpl.java:60 -> return repository.findByClinicaId(clinicaId);
+    - Controller/Endpoint layer:
+      - ConsultorioController.java:60 -> return consultorioRepository.findByClinicaId(clinicaId).stream()
+      - MedicoController.java:88 -> return medicoRepository.findByClinicaId(clinicaId).stream()
+      - PacienteController.java:77 -> return pacienteRepository.findByClinicaId(clinicaId).stream()
+      - UsuarioController.java:81 -> return usuarioRepository.findByClinicaId(clinicaId).stream()
+
+  * Method: LOWER
+    Signature: @Query("SELECT p FROM Paciente p WHERE LOWER(p.nombre) LIKE LOWER(CONCAT('%', :term, '%')) OR LOWER(p.apellido) LIKE LOWER(CONCAT('%', :term, '%'))")     List<Paciente> buscarPorNombreOApellido(@Param("term") String term)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+
+Repository: RecetaRepository
+----------------------------
+  * Method: findByPacienteId
+    Signature: List<Receta> findByPacienteId(Long pacienteId)
+    - Service/ServiceImpl layer:
+      - CitaServiceImpl.java:57 -> return repository.findByPacienteId(pacienteId);
+    - Controller/Endpoint layer:
+      - CitaController.java:79 -> return citaRepository.findByPacienteId(pacienteId).stream()
+      - ConsultaMedicaController.java:76 -> List<ConsultaMedicaDTO> lista = consultaMedicaRepository.findByPacienteId(pacienteId).stream()
+      - FacturaController.java:72 -> List<FacturaDTO> lista = facturaRepository.findByPacienteId(pacienteId).stream()
+      - HistoriaClinicaController.java:71 -> return historiaClinicaRepository.findByPacienteId(pacienteId)
+      - RecetaController.java:78 -> List<RecetaDTO> lista = recetaRepository.findByPacienteId(pacienteId).stream()
+
+  * Method: findByConsultaMedicaId
+    Signature: List<Receta> findByConsultaMedicaId(Long consultaMedicaId)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - ArchivoClinicoController.java:62 -> List<ArchivoClinicoDTO> lista = archivoClinicoRepository.findByConsultaMedicaId(consultaMedicaId).stream()
+      - RecetaController.java:86 -> List<RecetaDTO> lista = recetaRepository.findByConsultaMedicaId(consultaMedicaId).stream()
+
+
+Repository: UsuarioRepository
+-----------------------------
+  * Method: findByUsername
+    Signature: Optional<Usuario> findByUsername(String username)
+    - Service/ServiceImpl layer:
+      - CustomUserDetailsService.java:19 -> Usuario usuario = usuarioRepository.findByUsername(username)
+      - UsuarioServiceImpl.java:81 -> return repository.findByUsername(username)
+    - Controller/Endpoint layer:
+      - UsuarioController.java:59 -> return usuarioRepository.findByUsername(username)
+
+  * Method: findByCorreo
+    Signature: Optional<Usuario> findByCorreo(String correo)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - ClinicaController.java:62 -> return clinicaRepository.findByCorreo(correo)
+      - UsuarioController.java:66 -> return usuarioRepository.findByCorreo(correo)
+
+  * Method: existsByUsername
+    Signature: boolean existsByUsername(String username)
+    - Service/ServiceImpl layer:
+      - UsuarioServiceImpl.java:23 -> if (repository.existsByUsername(usuario.getUsername())) {
+      - UsuarioServiceImpl.java:50 -> repository.existsByUsername(usuario.getUsername())) {
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+  * Method: existsByCorreo
+    Signature: boolean existsByCorreo(String correo)
+    - Service/ServiceImpl layer:
+      - UsuarioServiceImpl.java:26 -> if (repository.existsByCorreo(usuario.getCorreo())) {
+      - UsuarioServiceImpl.java:54 -> repository.existsByCorreo(usuario.getCorreo())) {
+    - Controller/Endpoint layer: [WARNING] No direct reference in controllers
+
+  * Method: findByRol
+    Signature: List<Usuario> findByRol(Rol rol)
+    - Service/ServiceImpl layer: [WARNING] Not called in service layer
+    - Controller/Endpoint layer:
+      - UsuarioController.java:73 -> return usuarioRepository.findByRol(
+
+  * Method: findByClinicaId
+    Signature: List<Usuario> findByClinicaId(Long clinicaId)
+    - Service/ServiceImpl layer:
+      - PacienteServiceImpl.java:60 -> return repository.findByClinicaId(clinicaId);
+    - Controller/Endpoint layer:
+      - ConsultorioController.java:60 -> return consultorioRepository.findByClinicaId(clinicaId).stream()
+      - MedicoController.java:88 -> return medicoRepository.findByClinicaId(clinicaId).stream()
+      - PacienteController.java:77 -> return pacienteRepository.findByClinicaId(clinicaId).stream()
+      - UsuarioController.java:81 -> return usuarioRepository.findByClinicaId(clinicaId).stream()
+
+

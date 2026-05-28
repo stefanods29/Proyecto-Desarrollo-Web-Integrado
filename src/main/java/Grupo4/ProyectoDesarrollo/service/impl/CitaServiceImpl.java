@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -137,5 +138,25 @@ public class CitaServiceImpl implements CitaService {
         if (!esTransicionValida) {
             throw new BusinessRuleException("Transición de estado no permitida de " + estadoActual + " a " + nuevoEstado);
         }
+    }
+
+    @Override
+    public List<Cita> buscarPorMedicoYFechaHoraRango(Long medicoId, LocalDateTime inicio, LocalDateTime fin) {
+        return repository.findByMedicoIdAndFechaHoraBetween(medicoId, inicio, fin);
+    }
+
+    @Override
+    public List<Cita> buscarPorClinicaYFechaHoraRango(Long clinicaId, LocalDateTime inicio, LocalDateTime fin) {
+        return repository.findByClinicaIdAndFechaHoraBetween(clinicaId, inicio, fin);
+    }
+
+    @Override
+    public List<Cita> buscarCitasPorMedicoYFecha(Long medicoId, LocalDateTime inicio, LocalDateTime fin) {
+        return repository.buscarCitasPorMedicoYFecha(medicoId, inicio, fin);
+    }
+
+    @Override
+    public long contarCitasPorClinica(Long clinicaId) {
+        return repository.contarCitasPorClinica(clinicaId);
     }
 }

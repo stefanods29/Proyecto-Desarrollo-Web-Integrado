@@ -85,4 +85,15 @@ class MedicamentoServicioTest {
 
         verify(repository).deleteById(1L);
     }
+
+    @Test
+    void findByNombreComercialIgnoreCase() {
+        when(repository.findByNombreComercialIgnoreCase("Paracetamol")).thenReturn(Optional.of(medicamento));
+
+        Optional<Medicamento> resultado = service.findByNombreComercialIgnoreCase("Paracetamol");
+
+        assertTrue(resultado.isPresent());
+        assertEquals(medicamento.getId(), resultado.get().getId());
+        verify(repository).findByNombreComercialIgnoreCase("Paracetamol");
+    }
 }

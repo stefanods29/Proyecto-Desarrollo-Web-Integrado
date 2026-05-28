@@ -91,4 +91,11 @@ public class MedicamentoController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(lista);
     }
+
+    @GetMapping("/nombre-exacto/{nombreComercial}")
+    public ResponseEntity<MedicamentoDTO> buscarPorNombreComercialExacto(@PathVariable String nombreComercial) {
+        return servicio.findByNombreComercialIgnoreCase(nombreComercial)
+                .map(m -> ResponseEntity.ok(MedicamentoDTO.fromEntity(m)))
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

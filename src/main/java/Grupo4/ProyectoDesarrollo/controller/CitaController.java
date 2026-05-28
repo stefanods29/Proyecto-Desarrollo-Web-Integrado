@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.time.LocalDateTime;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.util.stream.Collectors;
 
 @RestController
@@ -98,5 +100,40 @@ public class CitaController {
     public long contarCitasPorEstado(@PathVariable String estado) {
         return citaRepository.countByEstado(
                 Grupo4.ProyectoDesarrollo.model.enums.CitaEstado.valueOf(estado));
+    }
+
+    @GetMapping("/medico/{medicoId}/rango")
+    public List<CitaDTO> obtenerCitasMedicoPorRangoFechas(
+            @PathVariable Long medicoId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin) {
+        return service.buscarPorMedicoYFechaHoraRango(medicoId, inicio, fin).stream()
+                .map(CitaDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/clinica/{clinicaId}/rango")
+    public List<CitaDTO> obtenerCitasClinicaPorRangoFechas(
+            @PathVariable Long clinicaId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin) {
+        return service.buscarPorClinicaYFechaHoraRango(clinicaId, inicio, fin).stream()
+                .map(CitaDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/medico/{medicoId}/buscar-fecha")
+    public List<CitaDTO> buscarCitasPorMedicoYFecha(
+            @PathVariable Long medicoId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin) {
+        return service.buscarCitasPorMedicoYFecha(medicoId, inicio, fin).stream()
+                .map(CitaDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/clinica/{clinicaId}/contar")
+    public long contarCitasPorClinica(@PathVariable Long clinicaId) {
+        return service.contarCitasPorClinica(clinicaId);
     }
 }
