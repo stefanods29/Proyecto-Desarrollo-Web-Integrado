@@ -1,11 +1,15 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
+import Grupo4.ProyectoDesarrollo.dto.EspecialidadDTO;
 import Grupo4.ProyectoDesarrollo.model.Especialidad;
+import Grupo4.ProyectoDesarrollo.repository.EspecialidadRepository;
 import Grupo4.ProyectoDesarrollo.service.EspecialidadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.http.ResponseEntity;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/especialidades")
@@ -13,31 +17,64 @@ import java.util.List;
 public class EspecialidadController {
 
     private final EspecialidadService service;
+    private final EspecialidadRepository especialidadRepository;
 
     @PostMapping
-    public Especialidad crear(@RequestBody Especialidad especialidad) {
-        return service.crear(especialidad);
+    public EspecialidadDTO crear(@RequestBody EspecialidadDTO dto) {
+        Especialidad especialidad = dto.toEntity();
+        Especialidad guardada = service.crear(especialidad);
+        return EspecialidadDTO.fromEntity(guardada);
     }
 
     @GetMapping
-    public List<Especialidad> listar() {
-        return service.listar();
+    public List<EspecialidadDTO> listar() {
+        return service.listar().stream()
+                .map(EspecialidadDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Especialidad buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id);
+    public EspecialidadDTO buscarPorId(@PathVariable Long id) {
+        return EspecialidadDTO.fromEntity(service.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public Especialidad actualizar(@PathVariable Long id,
-                                    @RequestBody Especialidad especialidad) {
-        especialidad.setId(id);
-        return service.crear(especialidad);
+    public EspecialidadDTO actualizar(@PathVariable Long id,
+                                    @RequestBody EspecialidadDTO dto) {
+        dto.setId(id);
+        Especialidad especialidad = dto.toEntity();
+        Especialidad guardada = service.crear(especialidad);
+        return EspecialidadDTO.fromEntity(guardada);
     }
 
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Long id) {
         service.eliminar(id);
+    }
+
+    @GetMapping("/activas")
+    public List<EspecialidadDTO> obtenerActivas() {
+        return especialidadRepository.findByActivaTrue().stream()
+                .map(EspecialidadDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/buscar")
+    public List<EspecialidadDTO> buscarPorNombre(@RequestParam String nombre) {
+        return especialidadRepository.buscarPorNombre(nombre).stream()
+                .map(EspecialidadDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/existe/{nombre}")
+    public boolean existePorNombre(@PathVariable String nombre) {
+        return especialidadRepository.existsByNombreIgnoreCase(nombre);
+    }
+
+    @GetMapping("/nombre-exacto/{nombre}")
+    public ResponseEntity<EspecialidadDTO> buscarPorNombreExacto(@PathVariable String nombre) {
+        return service.buscarPorNombreIgnoreCase(nombre)
+                .map(e -> ResponseEntity.ok(EspecialidadDTO.fromEntity(e)))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

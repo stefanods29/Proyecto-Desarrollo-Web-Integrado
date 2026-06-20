@@ -8,4 +8,7 @@ public interface DetalleFacturaService {
     List<DetalleFactura> listar();
     DetalleFactura buscarPorId(Long id);
     void eliminar(Long id);
+    List<DetalleFactura> buscarPorFacturaId(Long facturaId);
+    List<DetalleFactura> buscarPorDescripcion(String descripcion);
+    List<DetalleFactura> buscarPorClinicaId(Long clinicaId);
 }

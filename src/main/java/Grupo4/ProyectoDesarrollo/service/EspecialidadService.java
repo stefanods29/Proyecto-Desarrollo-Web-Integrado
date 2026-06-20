@@ -2,6 +2,7 @@ package Grupo4.ProyectoDesarrollo.service;
 
 import Grupo4.ProyectoDesarrollo.model.Especialidad;
 import java.util.List;
+import java.util.Optional;
 
 public interface EspecialidadService {
 
@@ -14,4 +15,6 @@ public interface EspecialidadService {
     Especialidad actualizar(Long id, Especialidad especialidad);
 
     void eliminar(Long id);
+
+    Optional<Especialidad> buscarPorNombreIgnoreCase(String nombre);
 }

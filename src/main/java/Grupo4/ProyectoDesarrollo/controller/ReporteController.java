@@ -1,30 +1,33 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import Grupo4.ProyectoDesarrollo.service.ReporteService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/reportes")
+@RequiredArgsConstructor
 public class ReporteController {
+
+    private final ReporteService service;
 
     @GetMapping("/ingresos")
     public String reporteIngresos() {
-        return "Reporte de ingresos";
+        return service.reporteIngresos();
     }
 
     @GetMapping("/citas")
     public String reporteCitas() {
-        return "Reporte de citas";
+        return service.reporteCitas();
     }
 
     @GetMapping("/pacientes")
     public String reportePacientes() {
-        return "Reporte de pacientes";
+        return service.reportePacientes();
     }
 
     @GetMapping("/medicos")
     public String reporteMedicos() {
-        return "Reporte de medicos";
+        return service.reporteMedicos();
     }
 }

@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class) // Esto asegura que los Mocks se inyecten bien
+@ExtendWith(MockitoExtension.class) 
 class ConsultorioServiceTest {
 
     @Mock
@@ -61,7 +61,7 @@ class ConsultorioServiceTest {
 
     @Test
     void actualizar() {
-        // Usamos anyLong() para evitar cualquier error de coincidencia de ID
+        
         when(repository.existsById(anyLong())).thenReturn(true);
         when(repository.save(any(Consultorio.class))).thenReturn(consultorio);
 

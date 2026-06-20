@@ -1,21 +1,19 @@
 package Grupo4.ProyectoDesarrollo.service.impl;
 
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.HistoriaClinica;
 import Grupo4.ProyectoDesarrollo.repository.HistoriaClinicaRepository;
 import Grupo4.ProyectoDesarrollo.service.HistoriaClinicaServicio;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class HistoriaClinicaServicioImpl implements HistoriaClinicaServicio {
 
     private final HistoriaClinicaRepository repository;
-
-    public HistoriaClinicaServicioImpl(HistoriaClinicaRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public List<HistoriaClinica> findAll() {
@@ -23,8 +21,9 @@ public class HistoriaClinicaServicioImpl implements HistoriaClinicaServicio {
     }
 
     @Override
-    public HistoriaClinica findById(Long id) {
-        return repository.findById(id).orElse(null);
+    public HistoriaClinica buscarPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Historia clínica no encontrada con id: " + id));
     }
 
     @Override
@@ -34,8 +33,8 @@ public class HistoriaClinicaServicioImpl implements HistoriaClinicaServicio {
 
     @Override
     public HistoriaClinica update(Long id, HistoriaClinica historia) {
-        HistoriaClinica existente = repository.findById(id).orElse(null);
-        if (existente == null) return null;
+        HistoriaClinica existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Historia clínica no encontrada con id: " + id));
 
         existente.setPaciente(historia.getPaciente());
         existente.setClinica(historia.getClinica());
@@ -47,7 +46,9 @@ public class HistoriaClinicaServicioImpl implements HistoriaClinicaServicio {
 
     @Override
     public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Historia clínica no encontrada con id: " + id);
+        }
         repository.deleteById(id);
-
     }
 }

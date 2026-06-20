@@ -1,20 +1,20 @@
 package Grupo4.ProyectoDesarrollo.service.impl;
 
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.Medicamento;
 import Grupo4.ProyectoDesarrollo.repository.MedicamentoRepository;
 import Grupo4.ProyectoDesarrollo.service.MedicamentoServicio;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MedicamentoServicioImpl implements MedicamentoServicio {
-    private final MedicamentoRepository repository;
 
-    public MedicamentoServicioImpl(MedicamentoRepository repository) {
-        this.repository = repository;
-    }
+    private final MedicamentoRepository repository;
 
     @Override
     public List<Medicamento> findAll() {
@@ -23,7 +23,8 @@ public class MedicamentoServicioImpl implements MedicamentoServicio {
 
     @Override
     public Medicamento findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Medicamento no encontrado con id: " + id));
     }
 
     @Override
@@ -33,21 +34,29 @@ public class MedicamentoServicioImpl implements MedicamentoServicio {
 
     @Override
     public Medicamento update(Long id, Medicamento medicamento) {
-        Medicamento existente = repository.findById(id).orElse(null);
-        if (existente == null) return null;
+        Medicamento existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Medicamento no encontrado con id: " + id));
+
         existente.setNombreComercial(medicamento.getNombreComercial());
         existente.setNombreGenerico(medicamento.getNombreGenerico());
         existente.setPresentacion(medicamento.getPresentacion());
         existente.setConcentracion(medicamento.getConcentracion());
         existente.setViaAdministracion(medicamento.getViaAdministracion());
-        existente.setActivo(medicamento.isActivo());
+        existente.setActivo(medicamento.getActivo());
+
         return repository.save(existente);
     }
 
     @Override
     public void delete(Long id) {
-        repository.deleteById(id
-        );
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Medicamento no encontrado con id: " + id);
+        }
+        repository.deleteById(id);
+    }
 
+    @Override
+    public Optional<Medicamento> findByNombreComercialIgnoreCase(String nombreComercial) {
+        return repository.findByNombreComercialIgnoreCase(nombreComercial);
     }
 }

@@ -1,37 +1,103 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
+import Grupo4.ProyectoDesarrollo.dto.FacturaDTO;
+import Grupo4.ProyectoDesarrollo.model.Cita;
+import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.model.Factura;
+import Grupo4.ProyectoDesarrollo.model.Paciente;
+import Grupo4.ProyectoDesarrollo.repository.FacturaRepository;
+import Grupo4.ProyectoDesarrollo.service.CitaService;
+import Grupo4.ProyectoDesarrollo.service.ClinicaService;
 import Grupo4.ProyectoDesarrollo.service.FacturaService;
+import Grupo4.ProyectoDesarrollo.service.PacienteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import Grupo4.ProyectoDesarrollo.model.enums.FacturaEstado;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/facturas")
 @RequiredArgsConstructor
 public class FacturaController {
-
     private final FacturaService service;
+    private final PacienteService pacienteService;
+    private final CitaService citaService;
+    private final ClinicaService clinicaService;
+    private final FacturaRepository facturaRepository;
 
     @PostMapping
-    public Factura crear(@RequestBody Factura factura) {
-        return service.crear(factura);
+    public ResponseEntity<FacturaDTO> crear(@RequestBody FacturaDTO dto) {
+        Paciente paciente = dto.getPacienteId() != null ? pacienteService.buscarPorId(dto.getPacienteId()) : null;
+        Cita cita = dto.getCitaId() != null ? citaService.buscarPorId(dto.getCitaId()) : null;
+        Clinica clinica = dto.getClinicaId() != null ? clinicaService.buscarPorId(dto.getClinicaId()) : null;
+
+        Factura factura = dto.toEntity(paciente, cita, clinica);
+        Factura guardada = service.crear(factura);
+        return ResponseEntity.ok(FacturaDTO.fromEntity(guardada));
     }
 
     @GetMapping
-    public List<Factura> listar() {
-        return service.listar();
+    public ResponseEntity<List<FacturaDTO>> listar() {
+        List<FacturaDTO> lista = service.listar().stream()
+                .map(FacturaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
     }
 
     @GetMapping("/{id}")
-    public Factura buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id);
+    public ResponseEntity<FacturaDTO> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(FacturaDTO.fromEntity(service.buscarPorId(id)));
     }
 
     @PutMapping("/{id}")
-    public Factura actualizar(@PathVariable Long id, @RequestBody Factura factura) {
-        factura.setIdFactura(id);
-        return service.crear(factura);
+    public ResponseEntity<FacturaDTO> actualizar(@PathVariable Long id, @RequestBody FacturaDTO dto) {
+        dto.setId(id);
+        Paciente paciente = dto.getPacienteId() != null ? pacienteService.buscarPorId(dto.getPacienteId()) : null;
+        Cita cita = dto.getCitaId() != null ? citaService.buscarPorId(dto.getCitaId()) : null;
+        Clinica clinica = dto.getClinicaId() != null ? clinicaService.buscarPorId(dto.getClinicaId()) : null;
+
+        Factura factura = dto.toEntity(paciente, cita, clinica);
+        Factura actualizada = service.crear(factura);
+        return ResponseEntity.ok(FacturaDTO.fromEntity(actualizada));
+    }
+
+    @GetMapping("/paciente/{pacienteId}")
+    public ResponseEntity<List<FacturaDTO>> obtenerPorPaciente(@PathVariable Long pacienteId) {
+        List<FacturaDTO> lista = facturaRepository.findByPacienteId(pacienteId).stream()
+                .map(FacturaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<List<FacturaDTO>> obtenerPorEstado(@PathVariable String estado) {
+        List<FacturaDTO> lista = facturaRepository.findByEstado(
+                Grupo4.ProyectoDesarrollo.model.enums.FacturaEstado.valueOf(estado)).stream()
+                .map(FacturaDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/ultima")
+    public ResponseEntity<FacturaDTO> obtenerUltimaFactura() {
+        return facturaRepository.findFirstByOrderByIdDesc()
+                .map(f -> ResponseEntity.ok(FacturaDTO.fromEntity(f)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/total-clinica")
+    public ResponseEntity<BigDecimal> sumTotalFacturadoPorClinicaYEstadoYFechas(
+            @RequestParam Long clinicaId,
+            @RequestParam FacturaEstado estado,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin) {
+        BigDecimal total = service.sumTotalFacturadoPorClinicaYEstadoYFechas(clinicaId, estado, inicio, fin);
+        return ResponseEntity.ok(total);
     }
 }

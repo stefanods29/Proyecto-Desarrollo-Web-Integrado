@@ -61,7 +61,6 @@ class EspecialidadServiceTest {
 
     @Test
     void actualizar() {
-        // Obligatorio simular que existe para que no lance la RuntimeException
         when(repository.existsById(anyLong())).thenReturn(true);
         when(repository.save(any(Especialidad.class))).thenReturn(especialidad);
 
@@ -74,7 +73,6 @@ class EspecialidadServiceTest {
 
     @Test
     void eliminar() {
-        // Obligatorio simular que existe para que no lance la RuntimeException
         when(repository.existsById(anyLong())).thenReturn(true);
         doNothing().when(repository).deleteById(anyLong());
 
@@ -82,5 +80,16 @@ class EspecialidadServiceTest {
 
         verify(repository).existsById(1L);
         verify(repository).deleteById(1L);
+    }
+
+    @Test
+    void buscarPorNombreIgnoreCase() {
+        when(repository.findByNombreIgnoreCase("Cardiologia")).thenReturn(Optional.of(especialidad));
+
+        Optional<Especialidad> resultado = service.buscarPorNombreIgnoreCase("Cardiologia");
+
+        assertTrue(resultado.isPresent());
+        assertEquals(especialidad.getId(), resultado.get().getId());
+        verify(repository).findByNombreIgnoreCase("Cardiologia");
     }
 }

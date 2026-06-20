@@ -1,5 +1,6 @@
 package Grupo4.ProyectoDesarrollo.service.impl;
 
+import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.Consultorio;
 import Grupo4.ProyectoDesarrollo.repository.ConsultorioRepository;
 import Grupo4.ProyectoDesarrollo.service.ConsultorioService;
@@ -27,13 +28,13 @@ public class ConsultorioServiceImpl implements ConsultorioService {
     @Override
     public Consultorio buscarPorId(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Error: Consultorio con ID " + id + " no encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Consultorio no encontrado con id: " + id));
     }
 
     @Override
     public Consultorio actualizar(Long id, Consultorio consultorio) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Error: No se puede actualizar. El consultorio con ID " + id + " no existe.");
+            throw new ResourceNotFoundException("Consultorio no encontrado con id: " + id);
         }
 
         consultorio.setId(id);
@@ -43,7 +44,7 @@ public class ConsultorioServiceImpl implements ConsultorioService {
     @Override
     public void eliminar(Long id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Error: No se puede eliminar. El consultorio con ID " + id + " no existe.");
+            throw new ResourceNotFoundException("Consultorio no encontrado con id: " + id);
         }
 
         repository.deleteById(id);

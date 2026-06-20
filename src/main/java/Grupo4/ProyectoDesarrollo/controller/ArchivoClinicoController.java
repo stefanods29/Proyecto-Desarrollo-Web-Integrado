@@ -1,48 +1,54 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
-
+import Grupo4.ProyectoDesarrollo.dto.ArchivoClinicoDTO;
 import Grupo4.ProyectoDesarrollo.model.ArchivoClinico;
+import Grupo4.ProyectoDesarrollo.model.ConsultaMedica;
+import Grupo4.ProyectoDesarrollo.repository.ArchivoClinicoRepository;
 import Grupo4.ProyectoDesarrollo.service.ArchivoClinicoServicio;
-
+import Grupo4.ProyectoDesarrollo.service.ConsultaMedicaServicio;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/archivos")
+@RequiredArgsConstructor
 public class ArchivoClinicoController {
 
     private final ArchivoClinicoServicio servicio;
-
-    public ArchivoClinicoController(ArchivoClinicoServicio servicio) {
-        this.servicio = servicio;
-    }
-
+    private final ConsultaMedicaServicio consultaMedicaServicio;
+    private final ArchivoClinicoRepository archivoClinicoRepository;
 
     @GetMapping
-    public ResponseEntity<List<ArchivoClinico>> listar(){
-        return ResponseEntity.ok(servicio.findAll());
+    public ResponseEntity<List<ArchivoClinicoDTO>> listar(){
+        List<ArchivoClinicoDTO> lista = servicio.findAll().stream()
+                .map(ArchivoClinicoDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ArchivoClinico> obtener(@PathVariable Long id){
-        ArchivoClinico obte = servicio.findById(id);
-        if(obte == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(obte);
+    public ResponseEntity<ArchivoClinicoDTO> obtener(@PathVariable Long id){
+        return ResponseEntity.ok(ArchivoClinicoDTO.fromEntity(servicio.findById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<ArchivoClinico> crear(@RequestBody ArchivoClinico obte){
-        return ResponseEntity.ok(servicio.save(obte));
+    public ResponseEntity<ArchivoClinicoDTO> crear(@RequestBody ArchivoClinicoDTO dto){
+        ConsultaMedica cm = dto.getConsultaMedicaId() != null ? consultaMedicaServicio.findById(dto.getConsultaMedicaId()) : null;
+        ArchivoClinico ac = dto.toEntity(cm);
+        ArchivoClinico guardado = servicio.save(ac);
+        return ResponseEntity.ok(ArchivoClinicoDTO.fromEntity(guardado));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ArchivoClinico> actualizar (@PathVariable Long id, @RequestBody ArchivoClinico obte){
-        ArchivoClinico actualizado = servicio.update(id, obte);
-        if (actualizado == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(actualizado);
-
+    public ResponseEntity<ArchivoClinicoDTO> actualizar (@PathVariable Long id, @RequestBody ArchivoClinicoDTO dto){
+        dto.setId(id);
+        ConsultaMedica cm = dto.getConsultaMedicaId() != null ? consultaMedicaServicio.findById(dto.getConsultaMedicaId()) : null;
+        ArchivoClinico ac = dto.toEntity(cm);
+        return ResponseEntity.ok(ArchivoClinicoDTO.fromEntity(servicio.update(id, ac)));
     }
 
     @DeleteMapping("/{id}")
@@ -51,5 +57,19 @@ public class ArchivoClinicoController {
         return ResponseEntity.ok("Archivo Eliminado");
     }
 
+    @GetMapping("/consulta/{consultaMedicaId}")
+    public ResponseEntity<List<ArchivoClinicoDTO>> obtenerPorConsultaMedica(@PathVariable Long consultaMedicaId) {
+        List<ArchivoClinicoDTO> lista = archivoClinicoRepository.findByConsultaMedicaId(consultaMedicaId).stream()
+                .map(ArchivoClinicoDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
 
+    @GetMapping("/paciente/{pacienteId}")
+    public ResponseEntity<List<ArchivoClinicoDTO>> obtenerPorPaciente(@PathVariable Long pacienteId) {
+        List<ArchivoClinicoDTO> lista = archivoClinicoRepository.buscarArchivosPorPacienteId(pacienteId).stream()
+                .map(ArchivoClinicoDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
 }

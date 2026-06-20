@@ -12,4 +12,5 @@ public interface HorarioMedicoService {
     HorarioMedico buscarPorId(Long id);
 
     void eliminar(Long id);
+
 }

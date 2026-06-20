@@ -2,6 +2,7 @@ package Grupo4.ProyectoDesarrollo.service;
 
 import Grupo4.ProyectoDesarrollo.model.Medicamento;
 import java.util.List;
+import java.util.Optional;
 
 public interface MedicamentoServicio {
     List<Medicamento> findAll();
@@ -13,4 +14,6 @@ public interface MedicamentoServicio {
     Medicamento update(Long id, Medicamento medicamento);
 
     void delete(Long id);
+
+    Optional<Medicamento> findByNombreComercialIgnoreCase(String nombreComercial);
 }
