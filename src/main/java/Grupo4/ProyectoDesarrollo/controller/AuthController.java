@@ -1,26 +1,27 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
-import Grupo4.ProyectoDesarrollo.dto.AuthRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody; // NUEVO
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import Grupo4.ProyectoDesarrollo.dto.AuthRequest; // NUEVO
 import Grupo4.ProyectoDesarrollo.dto.AuthResponse;
 import Grupo4.ProyectoDesarrollo.dto.RegisterRequest;
-import Grupo4.ProyectoDesarrollo.dto.UsuarioDTO;
 import Grupo4.ProyectoDesarrollo.model.Clinica;
-import Grupo4.ProyectoDesarrollo.model.Paciente; // NUEVO
+import Grupo4.ProyectoDesarrollo.model.Paciente;
 import Grupo4.ProyectoDesarrollo.model.Usuario;
 import Grupo4.ProyectoDesarrollo.repository.ClinicaRepository;
-import Grupo4.ProyectoDesarrollo.repository.PacienteRepository; // NUEVO
+import Grupo4.ProyectoDesarrollo.repository.PacienteRepository;
 import Grupo4.ProyectoDesarrollo.security.CustomUserDetails;
 import Grupo4.ProyectoDesarrollo.security.JwtService;
 import Grupo4.ProyectoDesarrollo.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
