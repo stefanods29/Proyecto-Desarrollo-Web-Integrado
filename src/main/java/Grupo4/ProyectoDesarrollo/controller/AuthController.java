@@ -40,8 +40,6 @@ public class AuthController {
     private final JwtService jwtService;
     private final UsuarioService usuarioService;
     private final ClinicaRepository clinicaRepository;
-    
-    // IMPORTANTE: Inyectamos el repositorio del Paciente
     private final PacienteRepository pacienteRepository;
 
     @PostMapping("/login")
@@ -65,17 +63,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    @Transactional(rollbackFor = Exception.class) // 🔥 MAGIA: Si algo falla, borra todo y no deja basura
+    @Transactional(rollbackFor = Exception.class) 
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         
-        // 1. Buscamos o asignamos una clínica por defecto
         Clinica clinica = null;
         if (request.getClinicaId() != null) {
             clinica = clinicaRepository.findById(request.getClinicaId())
                     .orElseThrow(() -> new Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException(
                             "Clinica no encontrada con id: " + request.getClinicaId()));
         } else {
-            // Si el frontend no manda clínica, buscamos la primera clínica que exista en la base de datos
             List<Clinica> clinicasDisponibles = clinicaRepository.findAll();
             if (!clinicasDisponibles.isEmpty()) {
                 clinica = clinicasDisponibles.get(0);
@@ -84,7 +80,6 @@ public class AuthController {
             }
         }
 
-        // 2. Creamos la cuenta de Usuario
         Usuario usuario = Usuario.builder()
                 .username(request.getUsername())
                 .password(request.getPassword())
@@ -99,25 +94,21 @@ public class AuthController {
 
         Usuario nuevoUsuario = usuarioService.crear(usuario);
 
-        // 3. SI EL ROL ES PACIENTE, CREAMOS AUTOMÁTICAMENTE SU PERFIL MÉDICO
         if ("PACIENTE".equalsIgnoreCase(request.getRol().name())) {
             
-            // Limitamos el nombre de usuario a 20 caracteres para usarlo como DNI temporal
-            String documentoTemporal = nuevoUsuario.getUsername();
-            if (documentoTemporal.length() > 20) {
-                documentoTemporal = documentoTemporal.substring(0, 20);
-            }
+            // Convierte correctamente DNI, PASAPORTE o CARNET_EXTRANJERIA al Enum de Java
+            Grupo4.ProyectoDesarrollo.model.enums.TipoDocumento tipoDoc = 
+                Grupo4.ProyectoDesarrollo.model.enums.TipoDocumento.valueOf(request.getTipoDocumento().toUpperCase());
 
             Paciente nuevoPaciente = Paciente.builder()
                     .nombre(nuevoUsuario.getNombre())
                     .apellido(nuevoUsuario.getApellido())
                     .correo(nuevoUsuario.getCorreo())
                     .telefono(nuevoUsuario.getTelefono())
-                    .usuario(nuevoUsuario) // Lo vinculamos a la cuenta que acabamos de crear
-                    .clinica(clinica)      // Le asignamos la clínica
-                    // Llenamos los campos obligatorios de MySQL con datos comodín
-                    .tipoDocumento(Grupo4.ProyectoDesarrollo.model.enums.TipoDocumento.DNI)
-                    .numeroDocumento(documentoTemporal) 
+                    .usuario(nuevoUsuario) 
+                    .clinica(clinica)      
+                    .tipoDocumento(tipoDoc) 
+                    .numeroDocumento(request.getNumeroDocumento()) 
                     .direccion("Dirección Pendiente de Actualizar")
                     .fechaNacimiento(LocalDate.of(2000, 1, 1))
                     .genero(Grupo4.ProyectoDesarrollo.model.enums.Genero.OTRO)
@@ -126,7 +117,6 @@ public class AuthController {
             pacienteRepository.save(nuevoPaciente);
         }
 
-        // 4. Generamos el Token de sesión
         String token = jwtService.generateToken(
                 nuevoUsuario.getUsername(),
                 nuevoUsuario.getRol().name(),
