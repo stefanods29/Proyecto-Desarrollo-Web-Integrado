@@ -40,4 +40,12 @@ public class RegisterRequest {
     private Rol rol;
 
     private Long clinicaId;
+
+    // --- NUEVOS CAMPOS REQUERIDOS PARA EL PACIENTE ---
+    @NotBlank(message = "El tipo de documento es obligatorio")
+    private String tipoDocumento;
+
+    @NotBlank(message = "El número de documento es obligatorio")
+    @Pattern(regexp = "^[0-9]+$", message = "El número de documento debe contener solo números")
+    private String numeroDocumento;
 }
