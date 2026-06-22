@@ -39,9 +39,8 @@ public class ClinicaController {
 
     @PutMapping("/{id}")
     public ClinicaDTO actualizar(@PathVariable Long id, @RequestBody ClinicaDTO dto) {
-        dto.setId(id);
         Clinica clinica = dto.toEntity();
-        Clinica guardada = service.crear(clinica);
+        Clinica guardada = service.actualizar(id, clinica);
         return ClinicaDTO.fromEntity(guardada);
     }
 

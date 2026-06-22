@@ -31,6 +31,21 @@ public class ClinicaServiceImpl implements ClinicaService {
     }
 
     @Override
+    public Clinica actualizar(Long id, Clinica clinicaActualizada) {
+        Clinica existente = buscarPorId(id);
+
+        existente.setNombre(clinicaActualizada.getNombre());
+        existente.setRuc(clinicaActualizada.getRuc());
+        existente.setDireccion(clinicaActualizada.getDireccion());
+        existente.setTelefono(clinicaActualizada.getTelefono());
+        existente.setCorreo(clinicaActualizada.getCorreo());
+        existente.setPlanSuscripcion(clinicaActualizada.getPlanSuscripcion());
+        existente.setEstado(clinicaActualizada.getEstado());
+
+        return repository.save(existente);
+    }
+
+    @Override
     public void eliminar(Long id) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Clínica no encontrada con id: " + id);
