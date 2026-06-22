@@ -1,5 +1,21 @@
 package Grupo4.ProyectoDesarrollo.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import Grupo4.ProyectoDesarrollo.dto.PacienteDTO;
 import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.model.Paciente;
@@ -9,10 +25,6 @@ import Grupo4.ProyectoDesarrollo.service.ClinicaService;
 import Grupo4.ProyectoDesarrollo.service.PacienteService;
 import Grupo4.ProyectoDesarrollo.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/pacientes")
@@ -23,6 +35,16 @@ public class PacienteController {
     private final ClinicaService clinicaService;
     private final UsuarioService usuarioService;
     private final PacienteRepository pacienteRepository;
+
+    // 🔥 NUEVO ENDPOINT PARA RECUPERAR EL PERFIL DEL USUARIO LOGUEADO
+    @GetMapping("/perfil")
+    public ResponseEntity<PacienteDTO> obtenerMiPerfil() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        
+        Paciente paciente = service.buscarPorUsername(username);
+        return ResponseEntity.ok(PacienteDTO.fromEntity(paciente));
+    }
 
     @PostMapping
     public PacienteDTO crear(@RequestBody PacienteDTO dto) {
