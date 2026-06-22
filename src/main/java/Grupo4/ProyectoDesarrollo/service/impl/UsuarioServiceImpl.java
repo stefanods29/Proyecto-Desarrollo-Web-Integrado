@@ -21,12 +21,25 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario crear(Usuario usuario) {
         if (repository.existsByUsername(usuario.getUsername())) {
-            throw new DuplicateResourceException("El nombre de usuario '" + usuario.getUsername() + "' ya está registrado");
+            throw new DuplicateResourceException(
+                    "El nombre de usuario '" + usuario.getUsername() + "' ya está registrado");
         }
+
         if (repository.existsByCorreo(usuario.getCorreo())) {
-            throw new DuplicateResourceException("El correo '" + usuario.getCorreo() + "' ya está registrado");
+            throw new DuplicateResourceException(
+                    "El correo '" + usuario.getCorreo() + "' ya está registrado");
         }
+
+        if (usuario.getPassword() == null || usuario.getPassword().trim().isEmpty()) {
+            throw new IllegalArgumentException("La contraseña es obligatoria");
+        }
+
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+
+        if (usuario.getActivo() == null) {
+            usuario.setActivo(true);
+        }
+    
         return repository.save(usuario);
     }
 
@@ -48,7 +61,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         if (!existente.getUsername().equalsIgnoreCase(usuario.getUsername()) &&
                 repository.existsByUsername(usuario.getUsername())) {
-            throw new DuplicateResourceException("El nombre de usuario '" + usuario.getUsername() + "' ya está registrado");
+            throw new DuplicateResourceException(
+                    "El nombre de usuario '" + usuario.getUsername() + "' ya está registrado");
         }
         if (!existente.getCorreo().equalsIgnoreCase(usuario.getCorreo()) &&
                 repository.existsByCorreo(usuario.getCorreo())) {
@@ -65,6 +79,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         existente.setTelefono(usuario.getTelefono());
         existente.setRol(usuario.getRol());
         existente.setActivo(usuario.getActivo());
+        existente.setClinica(usuario.getClinica());
 
         return repository.save(existente);
     }

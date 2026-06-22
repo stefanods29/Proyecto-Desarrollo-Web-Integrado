@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class UsuarioDTO {
     private Long id;
     private String username;
+    private String password;
     private String nombre;
     private String apellido;
     private String correo;
@@ -25,7 +26,8 @@ public class UsuarioDTO {
     private LocalDateTime fechaCreacion;
 
     public static UsuarioDTO fromEntity(Usuario usuario) {
-        if (usuario == null) return null;
+        if (usuario == null)
+            return null;
         return UsuarioDTO.builder()
                 .id(usuario.getId())
                 .username(usuario.getUsername())
@@ -44,6 +46,7 @@ public class UsuarioDTO {
         return Usuario.builder()
                 .id(this.id)
                 .username(this.username)
+                .password(this.password)
                 .nombre(this.nombre)
                 .apellido(this.apellido)
                 .correo(this.correo)
