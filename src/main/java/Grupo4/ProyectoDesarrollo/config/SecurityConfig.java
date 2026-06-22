@@ -1,8 +1,7 @@
 package Grupo4.ProyectoDesarrollo.config;
 
-import Grupo4.ProyectoDesarrollo.security.JwtAuthenticationFilter;
-import Grupo4.ProyectoDesarrollo.security.CustomUserDetailsService;
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,15 +14,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import Grupo4.ProyectoDesarrollo.security.CustomAuthenticationEntryPoint;
-import Grupo4.ProyectoDesarrollo.security.CustomAccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-// --- NUEVAS IMPORTACIONES PARA CORS ---
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import java.util.Arrays;
+
+import Grupo4.ProyectoDesarrollo.security.CustomAccessDeniedHandler;
+import Grupo4.ProyectoDesarrollo.security.CustomAuthenticationEntryPoint;
+import Grupo4.ProyectoDesarrollo.security.CustomUserDetailsService;
+import Grupo4.ProyectoDesarrollo.security.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -36,7 +36,7 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder( ) {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -53,11 +53,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http ) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // --- ACTIVACIÓN DEL CORS ---
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable( ))
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Autenticación
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
@@ -73,7 +73,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/usuarios", "/api/usuarios/*")
                             .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
 
-                        // Pacientes
+                        // 🔓 CORRECCIÓN AQUÍ: Permitir que el Paciente consulte su propio perfil
+                        .requestMatchers(HttpMethod.GET, "/api/pacientes/perfil")
+                            .hasAnyRole("PACIENTE", "SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO", "ENFERMERA")
+                        
+                        // Protección estricta para el resto de rutas de administración de pacientes
                         .requestMatchers(HttpMethod.GET, "/api/pacientes", "/api/pacientes/*", "/api/pacientes/buscar")
                             .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO")
                         .requestMatchers(HttpMethod.POST, "/api/pacientes")
@@ -138,10 +142,10 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build( );
+        return http.build();
     }
 
-    // --- NUEVO BEAN DE CONFIGURACIÓN CORS ---
+    // --- CONFIGURACIÓN CORS ---
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
