@@ -47,4 +47,14 @@ public class RegisterRequest {
     @NotBlank(message = "El número de documento es obligatorio")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "El documento contiene caracteres no permitidos")
     private String numeroDocumento;
+
+    @NotBlank(message = "El género es obligatorio")
+    private String genero;
+
+    // 🔥 NUEVOS CAMPOS: Seguro Médico
+    @NotBlank(message = "El seguro médico es obligatorio")
+    private String seguroMedico;
+
+    // Sin @NotBlank porque si elige "NINGUNO" vendrá vacío y Java lo cambiará a "NO_TIENE"
+    private String numeroSeguro; 
 }

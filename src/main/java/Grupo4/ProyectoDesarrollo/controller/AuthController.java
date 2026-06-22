@@ -96,9 +96,20 @@ public class AuthController {
 
         if ("PACIENTE".equalsIgnoreCase(request.getRol().name())) {
             
-            // Convierte correctamente DNI, PASAPORTE o CARNET_EXTRANJERIA al Enum de Java
             Grupo4.ProyectoDesarrollo.model.enums.TipoDocumento tipoDoc = 
                 Grupo4.ProyectoDesarrollo.model.enums.TipoDocumento.valueOf(request.getTipoDocumento().toUpperCase());
+
+            Grupo4.ProyectoDesarrollo.model.enums.Genero generoEnum = 
+                Grupo4.ProyectoDesarrollo.model.enums.Genero.valueOf(request.getGenero().toUpperCase());
+
+            // 🔥 LOGICA DEL SEGURO MÉDICO
+            Grupo4.ProyectoDesarrollo.model.enums.SeguroMedico seguroEnum = 
+                Grupo4.ProyectoDesarrollo.model.enums.SeguroMedico.valueOf(request.getSeguroMedico().toUpperCase());
+            
+            String numSeguroFinal = request.getNumeroSeguro();
+            if (seguroEnum == Grupo4.ProyectoDesarrollo.model.enums.SeguroMedico.NINGUNO || numSeguroFinal == null || numSeguroFinal.trim().isEmpty()) {
+                numSeguroFinal = "NO_TIENE";
+            }
 
             Paciente nuevoPaciente = Paciente.builder()
                     .nombre(nuevoUsuario.getNombre())
@@ -109,9 +120,11 @@ public class AuthController {
                     .clinica(clinica)      
                     .tipoDocumento(tipoDoc) 
                     .numeroDocumento(request.getNumeroDocumento()) 
+                    .genero(generoEnum)
+                    .seguroMedico(seguroEnum)         // 🔥 ASIGNA EL SEGURO
+                    .numeroSeguro(numSeguroFinal)     // 🔥 ASIGNA EL NÚMERO O "NO_TIENE"
                     .direccion("Dirección Pendiente de Actualizar")
                     .fechaNacimiento(LocalDate.of(2000, 1, 1))
-                    .genero(Grupo4.ProyectoDesarrollo.model.enums.Genero.OTRO)
                     .build();
 
             pacienteRepository.save(nuevoPaciente);
@@ -120,7 +133,7 @@ public class AuthController {
         String token = jwtService.generateToken(
                 nuevoUsuario.getUsername(),
                 nuevoUsuario.getRol().name(),
-                nuevoUsuario.getClinica() != null ? nuevoUsuario.getClinica().getId() : null
+                nuevoUsuario.getClinica() != null ? usuario.getClinica().getId() : null
         );
 
         return ResponseEntity.ok(AuthResponse.builder()
