@@ -1,14 +1,15 @@
 package Grupo4.ProyectoDesarrollo.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import Grupo4.ProyectoDesarrollo.exception.DuplicateResourceException;
 import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.Paciente;
 import Grupo4.ProyectoDesarrollo.repository.PacienteRepository;
 import Grupo4.ProyectoDesarrollo.service.PacienteService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -63,5 +64,11 @@ public class PacienteServiceImpl implements PacienteService {
     @Override
     public List<Paciente> buscarPorNombreOApellido(String termino) {
         return repository.buscarPorNombreOApellido(termino);
+    }
+    
+    @Override
+    public Paciente buscarPorUsername(String username) {
+        return repository.findByUsuarioUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró paciente asociado al usuario: " + username));
     }
 }

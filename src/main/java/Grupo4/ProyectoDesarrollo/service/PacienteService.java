@@ -1,7 +1,8 @@
 package Grupo4.ProyectoDesarrollo.service;
 
-import Grupo4.ProyectoDesarrollo.model.Paciente;
 import java.util.List;
+
+import Grupo4.ProyectoDesarrollo.model.Paciente;
 
 public interface PacienteService {
     Paciente crear(Paciente paciente);
@@ -11,4 +12,5 @@ public interface PacienteService {
     Paciente buscarPorNumeroDocumento(String numeroDocumento);
     List<Paciente> buscarPorClinica(Long clinicaId);
     List<Paciente> buscarPorNombreOApellido(String termino);
+    Paciente buscarPorUsername(String username);
 }
