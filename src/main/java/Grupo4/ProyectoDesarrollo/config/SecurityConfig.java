@@ -73,7 +73,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/usuarios", "/api/usuarios/*")
                             .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
 
-                        // 🔓 CORRECCIÓN AQUÍ: Permitir que el Paciente consulte su propio perfil
+                        // 🔓 Permitir que el Paciente consulte su propio perfil
                         .requestMatchers(HttpMethod.GET, "/api/pacientes/perfil")
                             .hasAnyRole("PACIENTE", "SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO", "ENFERMERA")
                         
@@ -102,7 +102,11 @@ public class SecurityConfig {
                                 "/api/medicos/*", "/api/especialidades/*", "/api/consultorios/*", "/api/horarios/*")
                             .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
 
-                        // Citas
+                        // 🔓 CORRECCIÓN AQUÍ: Permitir que el paciente vea sus propias citas
+                        .requestMatchers(HttpMethod.GET, "/api/citas/mis-citas")
+                            .hasAnyRole("PACIENTE", "SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO")
+
+                        // Citas (Protección general)
                         .requestMatchers("/api/citas", "/api/citas/*")
                             .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
 

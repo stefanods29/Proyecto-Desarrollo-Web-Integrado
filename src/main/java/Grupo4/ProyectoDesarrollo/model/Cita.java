@@ -70,4 +70,6 @@ public class Cita {
     public void prePersist() {
         this.fechaCreacion = LocalDateTime.now();
     }
+
+    
 }

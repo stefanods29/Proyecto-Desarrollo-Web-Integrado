@@ -25,7 +25,8 @@ public class CitaDTO {
     private LocalDateTime fechaCreacion;
 
     public static CitaDTO fromEntity(Cita cita) {
-        if (cita == null) return null;
+        if (cita == null)
+            return null;
         return CitaDTO.builder()
                 .id(cita.getId())
                 .pacienteId(cita.getPaciente() != null ? cita.getPaciente().getId() : null)
@@ -55,5 +56,93 @@ public class CitaDTO {
                 .clinica(clinica)
                 .fechaCreacion(this.fechaCreacion)
                 .build();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getPacienteId() {
+        return pacienteId;
+    }
+
+    public void setPacienteId(Long pacienteId) {
+        this.pacienteId = pacienteId;
+    }
+
+    public Long getMedicoId() {
+        return medicoId;
+    }
+
+    public void setMedicoId(Long medicoId) {
+        this.medicoId = medicoId;
+    }
+
+    public Long getConsultorioId() {
+        return consultorioId;
+    }
+
+    public void setConsultorioId(Long consultorioId) {
+        this.consultorioId = consultorioId;
+    }
+
+    public LocalDateTime getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora = fechaHora;
+    }
+
+    public LocalDateTime getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDateTime fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public CitaEstado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(CitaEstado estado) {
+        this.estado = estado;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+    public String getNotas() {
+        return notas;
+    }
+
+    public void setNotas(String notas) {
+        this.notas = notas;
+    }
+
+    public Long getClinicaId() {
+        return clinicaId;
+    }
+
+    public void setClinicaId(Long clinicaId) {
+        this.clinicaId = clinicaId;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 }

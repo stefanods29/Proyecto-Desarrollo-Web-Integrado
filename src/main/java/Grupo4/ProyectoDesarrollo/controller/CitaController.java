@@ -20,6 +20,11 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.util.stream.Collectors;
 
+// --- NUEVAS IMPORTACIONES DE SEGURIDAD ---
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
+
 @RestController
 @RequestMapping("/api/citas")
 @RequiredArgsConstructor
@@ -31,6 +36,21 @@ public class CitaController {
     private final ConsultorioService consultorioService;
     private final ClinicaService clinicaService;
     private final CitaRepository citaRepository;
+
+    // 🔥 NUEVO ENDPOINT: Obtiene estrictamente las citas del paciente logueado
+    @GetMapping("/mis-citas")
+    public ResponseEntity<List<CitaDTO>> obtenerMisCitas() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        
+        List<Cita> misCitas = service.buscarPorPacienteUsername(username);
+        
+        List<CitaDTO> dtos = misCitas.stream()
+                .map(CitaDTO::fromEntity)
+                .collect(Collectors.toList());
+                
+        return ResponseEntity.ok(dtos);
+    }
 
     @GetMapping
     public List<CitaDTO> listarCitas() {

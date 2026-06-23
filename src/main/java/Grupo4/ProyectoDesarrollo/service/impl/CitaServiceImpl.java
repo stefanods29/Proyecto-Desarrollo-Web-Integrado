@@ -66,9 +66,9 @@ public class CitaServiceImpl implements CitaService {
     public Cita cambiarEstado(Long id, CitaEstado nuevoEstado) {
         Cita cita = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada con id: " + id));
-        
+
         validarTransicionEstado(cita.getEstado(), nuevoEstado);
-        
+
         cita.setEstado(nuevoEstado);
         return repository.save(cita);
     }
@@ -88,21 +88,19 @@ public class CitaServiceImpl implements CitaService {
         }
 
         boolean medicoTraslapado = repository.existsOverlappingCitaForMedico(
-                cita.getMedico().getId(), 
-                cita.getFechaHora(), 
-                cita.getFechaFin(), 
-                cita.getId()
-        );
+                cita.getMedico().getId(),
+                cita.getFechaHora(),
+                cita.getFechaFin(),
+                cita.getId());
         if (medicoTraslapado) {
             throw new BusinessRuleException("El médico tiene otra cita programada que se solapa con este horario");
         }
 
         boolean consultorioTraslapado = repository.existsOverlappingCitaForConsultorio(
-                cita.getConsultorio().getId(), 
-                cita.getFechaHora(), 
-                cita.getFechaFin(), 
-                cita.getId()
-        );
+                cita.getConsultorio().getId(),
+                cita.getFechaHora(),
+                cita.getFechaFin(),
+                cita.getId());
         if (consultorioTraslapado) {
             throw new BusinessRuleException("El consultorio ya está ocupado en este horario");
         }
@@ -136,7 +134,8 @@ public class CitaServiceImpl implements CitaService {
         }
 
         if (!esTransicionValida) {
-            throw new BusinessRuleException("Transición de estado no permitida de " + estadoActual + " a " + nuevoEstado);
+            throw new BusinessRuleException(
+                    "Transición de estado no permitida de " + estadoActual + " a " + nuevoEstado);
         }
     }
 
@@ -158,5 +157,11 @@ public class CitaServiceImpl implements CitaService {
     @Override
     public long contarCitasPorClinica(Long clinicaId) {
         return repository.contarCitasPorClinica(clinicaId);
+    }
+
+    // 🔥 CORRECCIÓN AQUÍ: Se usa 'repository' en lugar de 'citaRepository'
+    @Override
+    public List<Cita> buscarPorPacienteUsername(String username) {
+        return repository.findByPacienteUsuarioUsername(username);
     }
 }
