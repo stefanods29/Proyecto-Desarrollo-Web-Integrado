@@ -71,72 +71,79 @@ public class SecurityConfig {
 
                         // Usuarios
                         .requestMatchers("/api/usuarios", "/api/usuarios/*")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+
+                        // 🔥 NUEVO: Recepcionistas (Gestión y Perfil)
+                        .requestMatchers("/api/recepcionistas", "/api/recepcionistas/**")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
 
                         // 🔓 Permitir que el Paciente consulte su propio perfil
                         .requestMatchers(HttpMethod.GET, "/api/pacientes/perfil")
-                            .hasAnyRole("PACIENTE", "SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO", "ENFERMERA")
-                        
+                        .hasAnyRole("PACIENTE", "SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO", "ENFERMERA")
+
                         // Protección estricta para el resto de rutas de administración de pacientes
                         .requestMatchers(HttpMethod.GET, "/api/pacientes", "/api/pacientes/*", "/api/pacientes/buscar")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO")
                         .requestMatchers(HttpMethod.POST, "/api/pacientes")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
                         .requestMatchers(HttpMethod.PUT, "/api/pacientes/*")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
                         .requestMatchers(HttpMethod.DELETE, "/api/pacientes/*")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
 
                         // Catálogos médicos
                         .requestMatchers(HttpMethod.GET,
                                 "/api/medicos", "/api/medicos/*", "/api/especialidades", "/api/especialidades/*",
                                 "/api/consultorios", "/api/consultorios/*", "/api/horarios", "/api/horarios/*")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "RECEPCIONISTA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "RECEPCIONISTA")
                         .requestMatchers(HttpMethod.POST,
                                 "/api/medicos", "/api/especialidades", "/api/consultorios", "/api/horarios")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/medicos/*", "/api/especialidades/*", "/api/consultorios/*", "/api/horarios/*")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/medicos/*", "/api/especialidades/*", "/api/consultorios/*", "/api/horarios/*")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
 
                         // 🔓 CORRECCIÓN AQUÍ: Permitir que el paciente vea sus propias citas
                         .requestMatchers(HttpMethod.GET, "/api/citas/mis-citas")
-                            .hasAnyRole("PACIENTE", "SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO")
+                        .hasAnyRole("PACIENTE", "SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO")
 
                         // Citas (Protección general)
                         .requestMatchers("/api/citas", "/api/citas/*")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
 
                         // Expedientes y recetas
                         .requestMatchers(HttpMethod.GET,
-                                "/api/consulta-medica", "/api/consulta-medica/*", "/api/historia-clinica", "/api/historia-clinica/*",
+                                "/api/consulta-medica", "/api/consulta-medica/*", "/api/historia-clinica",
+                                "/api/historia-clinica/*",
                                 "/api/recetas", "/api/recetas/*", "/api/detalle-receta", "/api/detalle-receta/*",
                                 "/api/archivos", "/api/archivos/*", "/api/medicamentos", "/api/medicamentos/*")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA", "PACIENTE")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA", "PACIENTE")
                         .requestMatchers(HttpMethod.POST,
                                 "/api/consulta-medica", "/api/historia-clinica", "/api/recetas", "/api/detalle-receta",
                                 "/api/archivos", "/api/medicamentos")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/consulta-medica/*", "/api/historia-clinica/*", "/api/recetas/*",
                                 "/api/detalle-receta/*", "/api/archivos/*", "/api/medicamentos/*")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/consulta-medica/*", "/api/historia-clinica/*", "/api/recetas/*",
                                 "/api/detalle-receta/*", "/api/archivos/*", "/api/medicamentos/*")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "MEDICO", "ENFERMERA")
 
                         // Facturas
-                        .requestMatchers("/api/facturas", "/api/facturas/*", "/api/detalle-factura", "/api/detalle-factura/*")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "PERSONAL_ADMINISTRATIVO", "RECEPCIONISTA")
+                        .requestMatchers("/api/facturas", "/api/facturas/*", "/api/detalle-factura",
+                                "/api/detalle-factura/*")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "PERSONAL_ADMINISTRATIVO", "RECEPCIONISTA")
 
                         // Reportes
                         .requestMatchers(HttpMethod.GET,
-                                "/api/reportes/ingresos", "/api/reportes/citas", "/api/reportes/pacientes", "/api/reportes/medicos")
-                            .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                                "/api/reportes/ingresos", "/api/reportes/citas", "/api/reportes/pacientes",
+                                "/api/reportes/medicos")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
 
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -153,13 +160,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://tu-futuro-dominio-vercel.vercel.app"));
+        configuration.setAllowedOrigins(
+                Arrays.asList("http://localhost:4200", "https://tu-futuro-dominio-vercel.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration); 
+        source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
 }
