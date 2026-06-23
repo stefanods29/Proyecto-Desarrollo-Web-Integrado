@@ -14,6 +14,10 @@ public class DetalleRecetaDTO {
     private Long id;
     private Long recetaId;
     private Long medicamentoId;
+    
+    // 🔥 NUEVO: Objeto anidado para llevar los datos del medicamento a Angular
+    private MedicamentoDTO medicamento;
+
     private String dosis;
     private String frecuencia;
     private String duracion;
@@ -21,10 +25,13 @@ public class DetalleRecetaDTO {
 
     public static DetalleRecetaDTO fromEntity(DetalleReceta dr) {
         if (dr == null) return null;
+        
         return DetalleRecetaDTO.builder()
                 .id(dr.getId())
                 .recetaId(dr.getReceta() != null ? dr.getReceta().getId() : null)
                 .medicamentoId(dr.getMedicamento() != null ? dr.getMedicamento().getId() : null)
+                // Cargar toda la info del medicamento para el Frontend:
+                .medicamento(dr.getMedicamento() != null ? MedicamentoDTO.fromEntity(dr.getMedicamento()) : null)
                 .dosis(dr.getDosis())
                 .frecuencia(dr.getFrecuencia())
                 .duracion(dr.getDuracion())
