@@ -51,4 +51,9 @@ public class HistoriaClinicaServicioImpl implements HistoriaClinicaServicio {
         }
         repository.deleteById(id);
     }
+
+    @Override
+    public HistoriaClinica buscarPorPacienteUsername(String username) {
+        return repository.findByPacienteUsuarioUsername(username).orElse(null);
+    }
 }

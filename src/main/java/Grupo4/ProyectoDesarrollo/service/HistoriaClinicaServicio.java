@@ -6,12 +6,9 @@ import java.util.List;
 
 public interface HistoriaClinicaServicio {
     List<HistoriaClinica> findAll();
-
     HistoriaClinica buscarPorId(Long id);
-
     HistoriaClinica save(HistoriaClinica historia);
-
     HistoriaClinica update(Long id, HistoriaClinica historia);
-
     void delete(Long id);
+    HistoriaClinica buscarPorPacienteUsername(String username);
 }

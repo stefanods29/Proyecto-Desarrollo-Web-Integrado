@@ -10,7 +10,10 @@ import Grupo4.ProyectoDesarrollo.service.HistoriaClinicaServicio;
 import Grupo4.ProyectoDesarrollo.service.PacienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +39,8 @@ public class HistoriaClinicaController {
     @GetMapping("/{id}")
     public ResponseEntity<HistoriaClinicaDTO> obtener(@PathVariable Long id) {
         HistoriaClinica obte = servicio.buscarPorId(id);
-        if (obte == null) return ResponseEntity.notFound().build();
+        if (obte == null)
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(HistoriaClinicaDTO.fromEntity(obte));
     }
 
@@ -56,7 +60,8 @@ public class HistoriaClinicaController {
         Clinica clinica = dto.getClinicaId() != null ? clinicaService.buscarPorId(dto.getClinicaId()) : null;
         HistoriaClinica hc = dto.toEntity(paciente, clinica);
         HistoriaClinica actualizado = servicio.update(id, hc);
-        if (actualizado == null) return ResponseEntity.notFound().build();
+        if (actualizado == null)
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(HistoriaClinicaDTO.fromEntity(actualizado));
     }
 
@@ -71,5 +76,17 @@ public class HistoriaClinicaController {
         return historiaClinicaRepository.findByPacienteId(pacienteId)
                 .map(hc -> ResponseEntity.ok(HistoriaClinicaDTO.fromEntity(hc)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/mi-historial")
+    public ResponseEntity<HistoriaClinicaDTO> obtenerMiHistorial() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        HistoriaClinica miHistoria = servicio.buscarPorPacienteUsername(username);
+        if (miHistoria == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(HistoriaClinicaDTO.fromEntity(miHistoria));
     }
 }
