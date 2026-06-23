@@ -6,12 +6,9 @@ import java.util.List;
 
 public interface RecetaServicio {
     List<Receta> findAll();
-
     Receta findById(Long id);
-
     Receta save(Receta receta);
-
     Receta update(Long id, Receta receta);
-
     void delete(Long id);
+    List<Receta> buscarPorPacienteUsername(String username);
 }

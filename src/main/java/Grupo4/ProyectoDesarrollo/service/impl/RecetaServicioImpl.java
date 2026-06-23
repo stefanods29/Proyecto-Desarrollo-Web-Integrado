@@ -53,4 +53,9 @@ public class RecetaServicioImpl implements RecetaServicio {
         }
         repository.deleteById(id);
     }
+
+    @Override
+    public List<Receta> buscarPorPacienteUsername(String username) {
+        return repository.findByPacienteUsuarioUsername(username);
+    }
 }

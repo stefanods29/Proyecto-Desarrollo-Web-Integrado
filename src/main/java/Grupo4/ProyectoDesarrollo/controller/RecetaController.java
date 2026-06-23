@@ -12,7 +12,9 @@ import Grupo4.ProyectoDesarrollo.service.PacienteService;
 import Grupo4.ProyectoDesarrollo.service.RecetaServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,5 +89,19 @@ public class RecetaController {
                 .map(RecetaDTO::fromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/mis-recetas")
+    public ResponseEntity<List<RecetaDTO>> obtenerMisRecetas() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        
+        List<Receta> misRecetas = servicio.buscarPorPacienteUsername(username);
+        
+        List<RecetaDTO> dtos = misRecetas.stream()
+                .map(RecetaDTO::fromEntity)
+                .collect(Collectors.toList());
+                
+        return ResponseEntity.ok(dtos);
     }
 }
