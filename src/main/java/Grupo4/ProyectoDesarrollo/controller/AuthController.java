@@ -22,9 +22,11 @@ import Grupo4.ProyectoDesarrollo.dto.RegisterRequest;
 import Grupo4.ProyectoDesarrollo.dto.UsuarioDTO;
 import Grupo4.ProyectoDesarrollo.model.Clinica;
 import Grupo4.ProyectoDesarrollo.model.Paciente;
+import Grupo4.ProyectoDesarrollo.model.Recepcionista;
 import Grupo4.ProyectoDesarrollo.model.Usuario;
 import Grupo4.ProyectoDesarrollo.repository.ClinicaRepository;
 import Grupo4.ProyectoDesarrollo.repository.PacienteRepository;
+import Grupo4.ProyectoDesarrollo.repository.RecepcionistaRepository;
 import Grupo4.ProyectoDesarrollo.security.CustomUserDetails;
 import Grupo4.ProyectoDesarrollo.security.JwtService;
 import Grupo4.ProyectoDesarrollo.service.UsuarioService;
@@ -41,6 +43,7 @@ public class AuthController {
     private final UsuarioService usuarioService;
     private final ClinicaRepository clinicaRepository;
     private final PacienteRepository pacienteRepository;
+    private final RecepcionistaRepository recepcionistaRepository; // 🔥 Agregado
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
@@ -102,7 +105,6 @@ public class AuthController {
             Grupo4.ProyectoDesarrollo.model.enums.Genero generoEnum = 
                 Grupo4.ProyectoDesarrollo.model.enums.Genero.valueOf(request.getGenero().toUpperCase());
 
-            // 🔥 LOGICA DEL SEGURO MÉDICO
             Grupo4.ProyectoDesarrollo.model.enums.SeguroMedico seguroEnum = 
                 Grupo4.ProyectoDesarrollo.model.enums.SeguroMedico.valueOf(request.getSeguroMedico().toUpperCase());
             
@@ -121,13 +123,26 @@ public class AuthController {
                     .tipoDocumento(tipoDoc) 
                     .numeroDocumento(request.getNumeroDocumento()) 
                     .genero(generoEnum)
-                    .seguroMedico(seguroEnum)         // 🔥 ASIGNA EL SEGURO
-                    .numeroSeguro(numSeguroFinal)     // 🔥 ASIGNA EL NÚMERO O "NO_TIENE"
+                    .seguroMedico(seguroEnum)         
+                    .numeroSeguro(numSeguroFinal)     
                     .direccion("Dirección Pendiente de Actualizar")
                     .fechaNacimiento(LocalDate.of(2000, 1, 1))
                     .build();
 
             pacienteRepository.save(nuevoPaciente);
+        } 
+        else if ("RECEPCIONISTA".equalsIgnoreCase(request.getRol().name())) {
+            Recepcionista nuevoRecepcionista = Recepcionista.builder()
+                    .nombre(nuevoUsuario.getNombre())
+                    .apellido(nuevoUsuario.getApellido())
+                    .correo(nuevoUsuario.getCorreo())
+                    .telefono(nuevoUsuario.getTelefono())
+                    .dni(request.getNumeroDocumento())
+                    .usuario(nuevoUsuario)
+                    .clinica(clinica)
+                    .build();
+
+            recepcionistaRepository.save(nuevoRecepcionista);
         }
 
         String token = jwtService.generateToken(
