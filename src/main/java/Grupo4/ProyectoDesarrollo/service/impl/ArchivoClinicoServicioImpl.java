@@ -1,13 +1,14 @@
 package Grupo4.ProyectoDesarrollo.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import Grupo4.ProyectoDesarrollo.exception.ResourceNotFoundException;
 import Grupo4.ProyectoDesarrollo.model.ArchivoClinico;
 import Grupo4.ProyectoDesarrollo.repository.ArchivoClinicoRepository;
 import Grupo4.ProyectoDesarrollo.service.ArchivoClinicoServicio;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,5 +53,10 @@ public class ArchivoClinicoServicioImpl implements ArchivoClinicoServicio {
             throw new ResourceNotFoundException("Archivo clínico no encontrado con id: " + id);
         }
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<ArchivoClinico> buscarPorPacienteUsername(String username) {
+        return repository.findByConsultaMedicaPacienteUsuarioUsername(username);
     }
 }

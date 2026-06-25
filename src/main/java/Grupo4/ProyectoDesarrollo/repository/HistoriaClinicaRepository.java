@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface HistoriaClinicaRepository extends JpaRepository<HistoriaClinica, Long> {
     Optional<HistoriaClinica> findByPacienteId(Long pacienteId);
+    Optional<HistoriaClinica> findByPacienteUsuarioUsername(String username);
 }
