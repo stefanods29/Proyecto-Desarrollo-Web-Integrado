@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import Grupo4.ProyectoDesarrollo.model.enums.CitaEstado;
+import java.time.LocalDateTime;
 
 import Grupo4.ProyectoDesarrollo.model.Cita;
 import Grupo4.ProyectoDesarrollo.model.enums.CitaEstado;
@@ -54,4 +56,6 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
             @Param("id") Long id);
 
     List<Cita> findByPacienteUsuarioUsername(String username);
+
+    List<Cita> findByEstadoAndFechaHoraBefore(CitaEstado estado, LocalDateTime fecha);
 }
