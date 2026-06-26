@@ -19,16 +19,9 @@ import java.util.stream.Collectors;
 public class FacturaDTO {
     private Long id;
     private String numeroFactura;
-    
-    @Setter(AccessLevel.NONE)
     private BigDecimal subtotal;
-    
-    @Setter(AccessLevel.NONE)
     private BigDecimal impuesto;
-    
-    @Setter(AccessLevel.NONE)
     private BigDecimal total;
-    
     private FacturaEstado estado;
     private MetodoPago metodoPago;
     private LocalDateTime fechaEmision;
@@ -37,12 +30,13 @@ public class FacturaDTO {
     private Long pacienteId;
     private Long citaId;
     private Long clinicaId;
-    
+
     @Builder.Default
     private List<DetalleFacturaDTO> detalles = new ArrayList<>();
 
     public static FacturaDTO fromEntity(Factura factura) {
-        if (factura == null) return null;
+        if (factura == null)
+            return null;
         List<DetalleFacturaDTO> detDTOs = new ArrayList<>();
         if (factura.getDetalles() != null) {
             detDTOs = factura.getDetalles().stream()
@@ -52,6 +46,9 @@ public class FacturaDTO {
         FacturaDTO dto = FacturaDTO.builder()
                 .id(factura.getId())
                 .numeroFactura(factura.getNumeroFactura())
+                .subtotal(factura.getSubtotal())
+                .impuesto(factura.getImpuesto())
+                .total(factura.getTotal())
                 .estado(factura.getEstado())
                 .metodoPago(factura.getMetodoPago())
                 .fechaEmision(factura.getFechaEmision())
@@ -62,26 +59,32 @@ public class FacturaDTO {
                 .clinicaId(factura.getClinica() != null ? factura.getClinica().getId() : null)
                 .detalles(detDTOs)
                 .build();
-        dto.calcularTotales();
+
         return dto;
     }
 
     public Factura toEntity(Paciente paciente, Cita cita, Clinica clinica) {
+
         Factura factura = new Factura();
+
         factura.setId(this.id);
         factura.setNumeroFactura(this.numeroFactura);
-        this.calcularTotales();
+
         factura.setSubtotal(this.subtotal);
         factura.setImpuesto(this.impuesto);
         factura.setTotal(this.total);
+
         factura.setEstado(this.estado);
         factura.setMetodoPago(this.metodoPago);
+
         factura.setFechaEmision(this.fechaEmision);
         factura.setFechaActualizacion(this.fechaActualizacion);
         factura.setFechaPago(this.fechaPago);
+
         factura.setPaciente(paciente);
         factura.setCita(cita);
         factura.setClinica(clinica);
+
         return factura;
     }
 
