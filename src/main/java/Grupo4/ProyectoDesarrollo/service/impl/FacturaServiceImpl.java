@@ -25,12 +25,13 @@ public class FacturaServiceImpl implements FacturaService {
     public Factura crear(Factura factura) {
         if (factura.getId() != null && repository.existsById(factura.getId())) {
             Factura existente = repository.findById(factura.getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Factura no encontrada con id: " + factura.getId()));
-            
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Factura no encontrada con id: " + factura.getId()));
+
             if (existente.getEstado() == FacturaEstado.PAGADA) {
                 throw new BusinessRuleException("No se puede modificar una factura que ya ha sido pagada");
             }
-            
+
             if (factura.getEstado() == FacturaEstado.PAGADA && existente.getEstado() != FacturaEstado.PAGADA) {
                 factura.setFechaPago(LocalDateTime.now());
             } else if (factura.getEstado() != FacturaEstado.PAGADA) {
@@ -52,7 +53,7 @@ public class FacturaServiceImpl implements FacturaService {
                 }
                 factura.setNumeroFactura(nextNum);
             }
-            
+
             if (factura.getEstado() == FacturaEstado.PAGADA) {
                 factura.setFechaPago(LocalDateTime.now());
             } else {
@@ -60,25 +61,42 @@ public class FacturaServiceImpl implements FacturaService {
             }
         }
 
-        BigDecimal subtotal = BigDecimal.ZERO;
         if (factura.getDetalles() != null) {
             for (DetalleFactura detalle : factura.getDetalles()) {
-                if (detalle.getCantidad() == null || detalle.getCantidad() < 1) {
-                    throw new BusinessRuleException("La cantidad en el detalle de la factura debe ser mayor a 0");
-                }
-                if (detalle.getPrecioUnitario() == null || detalle.getPrecioUnitario().compareTo(BigDecimal.ZERO) < 0) {
-                    throw new BusinessRuleException("El precio unitario en el detalle de la factura no puede ser negativo");
-                }
-                BigDecimal detalleTotal = detalle.getPrecioUnitario().multiply(BigDecimal.valueOf(detalle.getCantidad()));
-                detalle.setTotal(detalleTotal);
                 detalle.setFactura(factura);
-                subtotal = subtotal.add(detalleTotal);
             }
         }
-        factura.setSubtotal(subtotal);
-        BigDecimal impuesto = subtotal.multiply(BigDecimal.valueOf(0.18)).setScale(2, java.math.RoundingMode.HALF_UP);
-        factura.setImpuesto(impuesto);
-        factura.setTotal(subtotal.add(impuesto).setScale(2, java.math.RoundingMode.HALF_UP));
+
+        /*
+         * BigDecimal subtotal = BigDecimal.ZERO;
+         * if (factura.getDetalles() != null) {
+         * for (DetalleFactura detalle : factura.getDetalles()) {
+         * if (detalle.getCantidad() == null || detalle.getCantidad() < 1) {
+         * throw new
+         * BusinessRuleException("La cantidad en el detalle de la factura debe ser mayor a 0"
+         * );
+         * }
+         * if (detalle.getPrecioUnitario() == null ||
+         * detalle.getPrecioUnitario().compareTo(BigDecimal.ZERO) < 0) {
+         * throw new
+         * BusinessRuleException("El precio unitario en el detalle de la factura no puede ser negativo"
+         * );
+         * }
+         * BigDecimal detalleTotal =
+         * detalle.getPrecioUnitario().multiply(BigDecimal.valueOf(detalle.getCantidad()
+         * ));
+         * detalle.setTotal(detalleTotal);
+         * detalle.setFactura(factura);
+         * subtotal = subtotal.add(detalleTotal);
+         * }
+         * }
+         * factura.setSubtotal(subtotal);
+         * BigDecimal impuesto = subtotal.multiply(BigDecimal.valueOf(0.18)).setScale(2,
+         * java.math.RoundingMode.HALF_UP);
+         * factura.setImpuesto(impuesto);
+         * factura.setTotal(subtotal.add(impuesto).setScale(2,
+         * java.math.RoundingMode.HALF_UP));
+         */
 
         return repository.save(factura);
     }
@@ -105,7 +123,8 @@ public class FacturaServiceImpl implements FacturaService {
     }
 
     @Override
-    public BigDecimal sumTotalFacturadoPorClinicaYEstadoYFechas(Long clinicaId, FacturaEstado estado, LocalDateTime inicio, LocalDateTime fin) {
+    public BigDecimal sumTotalFacturadoPorClinicaYEstadoYFechas(Long clinicaId, FacturaEstado estado,
+            LocalDateTime inicio, LocalDateTime fin) {
         return repository.sumTotalFacturadoPorClinicaYEstadoYFechas(clinicaId, estado, inicio, fin);
     }
 }

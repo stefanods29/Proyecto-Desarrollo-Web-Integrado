@@ -124,11 +124,18 @@ public class CitaServiceImpl implements CitaService {
                 esTransicionValida = (nuevoEstado == CitaEstado.EN_ATENCION || nuevoEstado == CitaEstado.CANCELADA);
                 break;
             case EN_ATENCION:
-                esTransicionValida = (nuevoEstado == CitaEstado.COMPLETADA || nuevoEstado == CitaEstado.CANCELADA);
+                esTransicionValida = (nuevoEstado == CitaEstado.ATENDIDA || nuevoEstado == CitaEstado.CANCELADA);
                 break;
+            case ATENDIDA:
+                esTransicionValida = (nuevoEstado == CitaEstado.FINALIZADA);
+                break;
+            case FINALIZADA:
             case COMPLETADA:
             case CANCELADA:
             case NO_ASISTIO:
+                esTransicionValida = false;
+                break;
+            default:
                 esTransicionValida = false;
                 break;
         }
