@@ -23,6 +23,8 @@ public class CitaDTO {
     private String notas;
     private Long clinicaId;
     private LocalDateTime fechaCreacion;
+    private String pacienteNombre;
+    private String pacienteApellido;
 
     public static CitaDTO fromEntity(Cita cita) {
         if (cita == null)
@@ -37,6 +39,12 @@ public class CitaDTO {
                 .estado(cita.getEstado())
                 .motivo(cita.getMotivo())
                 .notas(cita.getNotas())
+                .pacienteNombre(cita.getPaciente() != null && cita.getPaciente().getUsuario() != null
+                        ? cita.getPaciente().getUsuario().getNombre()
+                        : null)
+                .pacienteApellido(cita.getPaciente() != null && cita.getPaciente().getUsuario() != null
+                        ? cita.getPaciente().getUsuario().getApellido()
+                        : null)
                 .clinicaId(cita.getClinica() != null ? cita.getClinica().getId() : null)
                 .fechaCreacion(cita.getFechaCreacion())
                 .build();
