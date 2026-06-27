@@ -63,6 +63,24 @@ public class CitaServiceImpl implements CitaService {
     }
 
     @Override
+    public Cita actualizar(Long id, Cita cita) {
+        Cita existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada con id: " + id));
+
+        existente.setPaciente(cita.getPaciente());
+        existente.setMedico(cita.getMedico());
+        existente.setConsultorio(cita.getConsultorio());
+        existente.setClinica(cita.getClinica());
+        existente.setFechaHora(cita.getFechaHora());
+        existente.setFechaFin(cita.getFechaFin());
+        existente.setMotivo(cita.getMotivo());
+        existente.setNotas(cita.getNotas());
+        existente.setEstado(cita.getEstado());
+
+        return repository.save(existente);
+    }
+
+    @Override
     public Cita cambiarEstado(Long id, CitaEstado nuevoEstado) {
         Cita cita = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada con id: " + id));

@@ -11,6 +11,7 @@ public interface CitaService {
     List<Cita> listar();
     Cita buscarPorId(Long id);
     void eliminar(Long id);
+    Cita actualizar(Long id, Cita cita);
     List<Cita> buscarPorPaciente(Long pacienteId);
     List<Cita> buscarPorMedico(Long medicoId);
     Cita cambiarEstado(Long id, CitaEstado estado);
