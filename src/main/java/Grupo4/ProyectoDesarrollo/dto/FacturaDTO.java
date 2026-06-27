@@ -64,27 +64,35 @@ public class FacturaDTO {
     }
 
     public Factura toEntity(Paciente paciente, Cita cita, Clinica clinica) {
-
         Factura factura = new Factura();
-
         factura.setId(this.id);
         factura.setNumeroFactura(this.numeroFactura);
-
         factura.setSubtotal(this.subtotal);
         factura.setImpuesto(this.impuesto);
         factura.setTotal(this.total);
-
         factura.setEstado(this.estado);
         factura.setMetodoPago(this.metodoPago);
-
         factura.setFechaEmision(this.fechaEmision);
         factura.setFechaActualizacion(this.fechaActualizacion);
         factura.setFechaPago(this.fechaPago);
-
         factura.setPaciente(paciente);
         factura.setCita(cita);
         factura.setClinica(clinica);
 
+        if (this.detalles != null && !this.detalles.isEmpty()) {
+            List<DetalleFactura> listaDetalles = new ArrayList<>();
+            for (DetalleFacturaDTO dtoDetalle : this.detalles) {
+                DetalleFactura d = new DetalleFactura();
+                d.setId(dtoDetalle.getId());
+                d.setDescripcion(dtoDetalle.getDescripcion());
+                d.setCantidad(dtoDetalle.getCantidad());
+                d.setPrecioUnitario(dtoDetalle.getPrecioUnitario());
+                d.setTotal(dtoDetalle.getTotal());
+                d.setFactura(factura); // Crucial para la BD
+                listaDetalles.add(d);
+            }
+            factura.setDetalles(listaDetalles);
+        }
         return factura;
     }
 
