@@ -3,7 +3,7 @@ package Grupo4.ProyectoDesarrollo.model;
 import Grupo4.ProyectoDesarrollo.model.enums.Genero;
 import Grupo4.ProyectoDesarrollo.model.enums.SeguroMedico;
 import Grupo4.ProyectoDesarrollo.model.enums.TipoDocumento;
-import Grupo4.ProyectoDesarrollo.model.enums.GrupoSanguineo; 
+import Grupo4.ProyectoDesarrollo.model.enums.GrupoSanguineo;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,7 +36,7 @@ public class Paciente {
     private String telefono;
 
     private String direccion;
-    
+
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 
@@ -58,7 +58,6 @@ public class Paciente {
     @Column(name = "numero_seguro")
     private String numeroSeguro;
 
-    // --- CAMPOS MÉDICOS RESTAURADOS ---
     @Enumerated(EnumType.STRING)
     @Column(name = "grupo_sanguineo")
     private GrupoSanguineo grupoSanguineo;
@@ -79,9 +78,8 @@ public class Paciente {
     private String antecedentesFamiliares;
 
     @Column(name = "fecha_registro")
-    private LocalDateTime fechaRegistro; 
+    private LocalDateTime fechaRegistro;
 
-    // --- RELACIONES ---
     @OneToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
@@ -89,4 +87,11 @@ public class Paciente {
     @ManyToOne
     @JoinColumn(name = "clinica_id")
     private Clinica clinica;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.fechaRegistro == null) {
+            this.fechaRegistro = LocalDateTime.now();
+        }
+    }
 }
