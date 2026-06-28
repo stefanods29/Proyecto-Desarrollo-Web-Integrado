@@ -31,7 +31,9 @@ public class MedicoController {
     @PostMapping
     public MedicoDTO crear(@RequestBody MedicoDTO dto) {
         Usuario usuario = dto.getUsuarioId() != null ? usuarioService.buscarPorId(dto.getUsuarioId()) : null;
-        Especialidad especialidad = dto.getEspecialidadId() != null ? especialidadService.buscarPorId(dto.getEspecialidadId()) : null;
+        Especialidad especialidad = dto.getEspecialidadId() != null
+                ? especialidadService.buscarPorId(dto.getEspecialidadId())
+                : null;
         Clinica clinica = dto.getClinicaId() != null ? clinicaService.buscarPorId(dto.getClinicaId()) : null;
         Medico medico = dto.toEntity(usuario, especialidad, clinica);
         Medico guardado = service.crear(medico);
@@ -48,19 +50,26 @@ public class MedicoController {
     @GetMapping("/{id}")
     public ResponseEntity<MedicoDTO> buscarPorId(@PathVariable Long id) {
         Medico medico = service.buscarPorId(id);
-        if (medico == null) return ResponseEntity.notFound().build();
+        if (medico == null)
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(MedicoDTO.fromEntity(medico));
     }
 
     @PutMapping("/{id}")
     public MedicoDTO actualizar(@PathVariable Long id,
-                              @RequestBody MedicoDTO dto) {
+            @RequestBody MedicoDTO dto) {
         dto.setId(id);
+
         Usuario usuario = dto.getUsuarioId() != null ? usuarioService.buscarPorId(dto.getUsuarioId()) : null;
-        Especialidad especialidad = dto.getEspecialidadId() != null ? especialidadService.buscarPorId(dto.getEspecialidadId()) : null;
+        Especialidad especialidad = dto.getEspecialidadId() != null
+                ? especialidadService.buscarPorId(dto.getEspecialidadId())
+                : null;
         Clinica clinica = dto.getClinicaId() != null ? clinicaService.buscarPorId(dto.getClinicaId()) : null;
+
         Medico medico = dto.toEntity(usuario, especialidad, clinica);
-        Medico guardado = service.crear(medico);
+
+        Medico guardado = service.actualizar(id, medico);
+
         return MedicoDTO.fromEntity(guardado);
     }
 

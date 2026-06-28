@@ -89,18 +89,20 @@ public class CitaController {
     }
 
     @PutMapping("/{id}")
-    public CitaDTO actualizarCita(@PathVariable Long id, @RequestBody CitaDTO dto) {
-        dto.setId(id);
-        Paciente paciente = dto.getPacienteId() != null ? pacienteService.buscarPorId(dto.getPacienteId()) : null;
-        Medico medico = dto.getMedicoId() != null ? medicoService.buscarPorId(dto.getMedicoId()) : null;
-        Consultorio consultorio = dto.getConsultorioId() != null
-                ? consultorioService.buscarPorId(dto.getConsultorioId())
-                : null;
-        Clinica clinica = dto.getClinicaId() != null ? clinicaService.buscarPorId(dto.getClinicaId()) : null;
-        Cita cita = dto.toEntity(paciente, medico, consultorio, clinica);
-        Cita guardada = service.crear(cita);
-        return CitaDTO.fromEntity(guardada);
-    }
+public CitaDTO actualizarCita(@PathVariable Long id, @RequestBody CitaDTO dto) {
+    dto.setId(id);
+
+    Paciente paciente = dto.getPacienteId() != null ? pacienteService.buscarPorId(dto.getPacienteId()) : null;
+    Medico medico = dto.getMedicoId() != null ? medicoService.buscarPorId(dto.getMedicoId()) : null;
+    Consultorio consultorio = dto.getConsultorioId() != null ? consultorioService.buscarPorId(dto.getConsultorioId()) : null;
+    Clinica clinica = dto.getClinicaId() != null ? clinicaService.buscarPorId(dto.getClinicaId()) : null;
+
+    Cita cita = dto.toEntity(paciente, medico, consultorio, clinica);
+
+    Cita guardada = service.actualizar(id, cita);
+
+    return CitaDTO.fromEntity(guardada);
+}
 
     @PatchMapping("/{id}/estado")
     public CitaDTO cambiarEstado(

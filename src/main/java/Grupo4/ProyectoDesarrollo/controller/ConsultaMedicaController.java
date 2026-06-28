@@ -94,6 +94,13 @@ public class ConsultaMedicaController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(lista);
     }
+    @GetMapping("/cita/{citaId}")
+public ResponseEntity<ConsultaMedicaDTO> obtenerPorCita(@PathVariable Long citaId) {
+
+    return consultaMedicaRepository.findByCitaId(citaId)
+            .map(consulta -> ResponseEntity.ok(ConsultaMedicaDTO.fromEntity(consulta)))
+            .orElse(ResponseEntity.notFound().build());
+}
 
     @GetMapping("/ranking-medicos")
     public ResponseEntity<List<MedicoRankingDTO>> obtenerRankingMedicos() {

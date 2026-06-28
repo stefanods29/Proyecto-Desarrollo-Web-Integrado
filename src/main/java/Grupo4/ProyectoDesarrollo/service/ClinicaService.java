@@ -8,4 +8,5 @@ public interface ClinicaService {
     List<Clinica> listar();
     Clinica buscarPorId(Long id);
     void eliminar(Long id);
+    Clinica actualizar(Long id, Clinica clinica);
 }
