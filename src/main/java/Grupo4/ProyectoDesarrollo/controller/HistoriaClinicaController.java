@@ -75,7 +75,22 @@ public class HistoriaClinicaController {
     public ResponseEntity<HistoriaClinicaDTO> obtenerPorPaciente(@PathVariable Long pacienteId) {
         return historiaClinicaRepository.findByPacienteId(pacienteId)
                 .map(hc -> ResponseEntity.ok(HistoriaClinicaDTO.fromEntity(hc)))
-                .orElse(ResponseEntity.notFound().build());
+                .orElseGet(() -> {
+                    Paciente paciente = pacienteService.buscarPorId(pacienteId);
+
+                    if (paciente == null || paciente.getClinica() == null) {
+                        return ResponseEntity.notFound().build();
+                    }
+
+                    HistoriaClinica nuevaHistoria = HistoriaClinica.builder()
+                            .paciente(paciente)
+                            .clinica(paciente.getClinica())
+                            .build();
+
+                    HistoriaClinica guardada = servicio.save(nuevaHistoria);
+
+                    return ResponseEntity.ok(HistoriaClinicaDTO.fromEntity(guardada));
+                });
     }
 
     @GetMapping("/mi-historial")

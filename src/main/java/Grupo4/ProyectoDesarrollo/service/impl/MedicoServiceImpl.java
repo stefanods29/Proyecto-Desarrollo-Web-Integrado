@@ -41,10 +41,15 @@ public class MedicoServiceImpl implements MedicoService {
 
     @Override
     public Medico actualizar(Long id, Medico medico) {
-        if (!medicoRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Médico no encontrado con id: " + id);
-        }
-        medico.setId(id);
-        return medicoRepository.save(medico);
+        Medico existente = medicoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Médico no encontrado con id: " + id));
+
+        existente.setNumeroColegiatura(medico.getNumeroColegiatura());
+        existente.setUsuario(medico.getUsuario());
+        existente.setEspecialidad(medico.getEspecialidad());
+        existente.setClinica(medico.getClinica());
+        existente.setActivo(medico.getActivo());
+
+        return medicoRepository.save(existente);
     }
 }
