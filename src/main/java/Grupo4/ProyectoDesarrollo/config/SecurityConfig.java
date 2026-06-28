@@ -83,13 +83,13 @@ public class SecurityConfig {
 
                         // Protección estricta para el resto de rutas de administración de pacientes
                         .requestMatchers(HttpMethod.GET, "/api/pacientes", "/api/pacientes/*", "/api/pacientes/buscar")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "MEDICO")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "ENFERMERA", "MEDICO")
                         .requestMatchers(HttpMethod.POST, "/api/pacientes")
                         .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
                         .requestMatchers(HttpMethod.PUT, "/api/pacientes/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "ENFERMERA", "MEDICO")
                         .requestMatchers(HttpMethod.DELETE, "/api/pacientes/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
 
                         // Catálogos médicos
                         .requestMatchers(HttpMethod.GET,
