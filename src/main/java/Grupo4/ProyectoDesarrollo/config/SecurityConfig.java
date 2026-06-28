@@ -112,7 +112,7 @@ public class SecurityConfig {
 
                         // Citas (Protección general)
                         .requestMatchers("/api/citas", "/api/citas/*")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA", "ENFERMERA")
 
                         // Expedientes y recetas
                         .requestMatchers(HttpMethod.GET,
