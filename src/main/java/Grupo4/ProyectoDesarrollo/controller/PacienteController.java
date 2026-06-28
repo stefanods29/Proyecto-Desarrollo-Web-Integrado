@@ -36,12 +36,11 @@ public class PacienteController {
     private final UsuarioService usuarioService;
     private final PacienteRepository pacienteRepository;
 
-    // 🔥 NUEVO ENDPOINT PARA RECUPERAR EL PERFIL DEL USUARIO LOGUEADO
     @GetMapping("/perfil")
     public ResponseEntity<PacienteDTO> obtenerMiPerfil() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        
+
         Paciente paciente = service.buscarPorUsername(username);
         return ResponseEntity.ok(PacienteDTO.fromEntity(paciente));
     }
@@ -53,6 +52,27 @@ public class PacienteController {
         Paciente paciente = dto.toEntity(clinica, usuario);
         Paciente guardado = service.crear(paciente);
         return PacienteDTO.fromEntity(guardado);
+    }
+
+    @PutMapping("/perfil")
+    public ResponseEntity<PacienteDTO> actualizarMiPerfil(@RequestBody PacienteDTO dto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        Paciente paciente = service.buscarPorUsername(username);
+
+        paciente.setNombre(dto.getNombre());
+        paciente.setApellido(dto.getApellido());
+        paciente.setCorreo(dto.getCorreo());
+        paciente.setTelefono(dto.getTelefono());
+        paciente.setDireccion(dto.getDireccion());
+        paciente.setGenero(dto.getGenero());
+        paciente.setSeguroMedico(dto.getSeguroMedico());
+        paciente.setNumeroSeguro(dto.getNumeroSeguro());
+
+        Paciente actualizado = service.crear(paciente);
+
+        return ResponseEntity.ok(PacienteDTO.fromEntity(actualizado));
     }
 
     @GetMapping
