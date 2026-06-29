@@ -3,6 +3,8 @@ package Grupo4.ProyectoDesarrollo.dto;
 import Grupo4.ProyectoDesarrollo.model.enums.Rol;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import java.time.LocalDate;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -51,10 +53,12 @@ public class RegisterRequest {
     @NotBlank(message = "El género es obligatorio")
     private String genero;
 
-    // 🔥 NUEVOS CAMPOS: Seguro Médico
     @NotBlank(message = "El seguro médico es obligatorio")
     private String seguroMedico;
 
-    // Sin @NotBlank porque si elige "NINGUNO" vendrá vacío y Java lo cambiará a "NO_TIENE"
-    private String numeroSeguro; 
+    private String numeroSeguro;
+
+    @NotNull(message = "La fecha de nacimiento es obligatoria")
+    @PastOrPresent(message = "La fecha de nacimiento no puede ser futura")
+    private LocalDate fechaNacimiento;
 }
