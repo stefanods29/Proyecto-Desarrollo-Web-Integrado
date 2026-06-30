@@ -19,4 +19,12 @@ public interface MedicamentoRepository extends JpaRepository<Medicamento, Long> 
 
     @Query("SELECT m FROM Medicamento m WHERE m.activo = true AND LOWER(m.nombreComercial) LIKE LOWER(CONCAT('%', :term, '%'))")
     List<Medicamento> buscarActivosPorNombreComercial(@Param("term") String term);
+
+    @Query("""
+    SELECT m FROM Medicamento m
+    JOIN m.especialidades e
+    WHERE e.id = :especialidadId
+    AND m.activo = true
+""")
+List<Medicamento> buscarActivosPorEspecialidad(@Param("especialidadId") Long especialidadId);
 }

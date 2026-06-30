@@ -30,7 +30,8 @@ public class MedicamentoController {
     @GetMapping("/{id}")
     public ResponseEntity<MedicamentoDTO> obtener(@PathVariable Long id) {
         Medicamento obte = servicio.findById(id);
-        if (obte == null) return ResponseEntity.notFound().build();
+        if (obte == null)
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(MedicamentoDTO.fromEntity(obte));
     }
 
@@ -46,7 +47,8 @@ public class MedicamentoController {
         dto.setId(id);
         Medicamento medicamento = dto.toEntity();
         Medicamento actualizado = servicio.update(id, medicamento);
-        if (actualizado == null) return ResponseEntity.notFound().build();
+        if (actualizado == null)
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(MedicamentoDTO.fromEntity(actualizado));
     }
 
@@ -97,5 +99,15 @@ public class MedicamentoController {
         return servicio.findByNombreComercialIgnoreCase(nombreComercial)
                 .map(m -> ResponseEntity.ok(MedicamentoDTO.fromEntity(m)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/especialidad/{especialidadId}")
+    public ResponseEntity<List<MedicamentoDTO>> buscarPorEspecialidad(@PathVariable Long especialidadId) {
+        List<MedicamentoDTO> lista = medicamentoRepository.buscarActivosPorEspecialidad(especialidadId)
+                .stream()
+                .map(MedicamentoDTO::fromEntity)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(lista);
     }
 }

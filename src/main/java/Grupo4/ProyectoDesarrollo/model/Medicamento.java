@@ -9,13 +9,17 @@ import jakarta.validation.constraints.*;
 @Getter
 @Setter
 @Entity
-@Table(name="Medicamento")
+@Table(name = "Medicamento")
 public class Medicamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idMedicamento")
     private Long id;
+
+    @ManyToMany
+    @JoinTable(name = "medicamento_especialidad", joinColumns = @JoinColumn(name = "medicamento_id"), inverseJoinColumns = @JoinColumn(name = "especialidad_id"))
+    private List<Especialidad> especialidades;
 
     @OneToMany(mappedBy = "medicamento")
     private List<DetalleReceta> detalleRecetas;
@@ -52,7 +56,8 @@ public class Medicamento {
     public Medicamento() {
     }
 
-    public Medicamento(Long id, String nombreComercial, String nombreGenerico, String presentacion, String concentracion, String viaAdministracion, boolean activo) {
+    public Medicamento(Long id, String nombreComercial, String nombreGenerico, String presentacion,
+            String concentracion, String viaAdministracion, boolean activo) {
         this.id = id;
         this.nombreComercial = nombreComercial;
         this.nombreGenerico = nombreGenerico;
