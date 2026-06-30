@@ -27,6 +27,7 @@ public class CitaDTO {
     private String pacienteApellido;
     private String medicoNombre;
     private String medicoApellido;
+    private Long especialidadId;
     private String medicoEspecialidad;
 
     public static CitaDTO fromEntity(Cita cita) {
@@ -58,6 +59,9 @@ public class CitaDTO {
                         : null)
                 .medicoEspecialidad(cita.getMedico() != null && cita.getMedico().getEspecialidad() != null
                         ? cita.getMedico().getEspecialidad().getNombre()
+                        : null)
+                .especialidadId(cita.getMedico() != null && cita.getMedico().getEspecialidad() != null
+                        ? cita.getMedico().getEspecialidad().getId()
                         : null)
                 .build();
     }
