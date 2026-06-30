@@ -89,7 +89,8 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.PUT, "/api/pacientes/perfil")
                                                 .hasRole("PACIENTE")
 
-                                                // Proteccion estricta para el resto de rutas de administracion de pacientes
+                                                // Proteccion estricta para el resto de rutas de administracion de
+                                                // pacientes
                                                 .requestMatchers(HttpMethod.GET, "/api/pacientes", "/api/pacientes/*",
                                                                 "/api/pacientes/buscar")
                                                 .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA",
@@ -131,9 +132,33 @@ public class SecurityConfig {
                                                                 "MEDICO")
 
                                                 // Citas (Protección general)
-                                                .requestMatchers("/api/citas", "/api/citas/*")
-                                                .hasAnyRole("SUPER_ADMIN", "ADMIN_CLINICA", "RECEPCIONISTA",
+                                                .requestMatchers(HttpMethod.GET, "/api/citas", "/api/citas/*")
+                                                .hasAnyRole(
+                                                                "SUPER_ADMIN",
+                                                                "ADMIN_CLINICA",
+                                                                "RECEPCIONISTA",
+                                                                "ENFERMERA",
+                                                                "MEDICO")
+
+                                                .requestMatchers(HttpMethod.POST, "/api/citas")
+                                                .hasAnyRole(
+                                                                "SUPER_ADMIN",
+                                                                "ADMIN_CLINICA",
+                                                                "RECEPCIONISTA",
                                                                 "ENFERMERA")
+
+                                                .requestMatchers(HttpMethod.PUT, "/api/citas/*")
+                                                .hasAnyRole(
+                                                                "SUPER_ADMIN",
+                                                                "ADMIN_CLINICA",
+                                                                "RECEPCIONISTA",
+                                                                "ENFERMERA",
+                                                                "MEDICO")
+
+                                                .requestMatchers(HttpMethod.DELETE, "/api/citas/*")
+                                                .hasAnyRole(
+                                                                "SUPER_ADMIN",
+                                                                "ADMIN_CLINICA")
 
                                                 // Expedientes y recetas
                                                 .requestMatchers(HttpMethod.GET,
