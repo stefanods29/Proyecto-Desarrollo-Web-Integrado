@@ -22,12 +22,23 @@ public class HorarioMedicoDTO {
     private LocalTime horaFin;
     private Integer duracionTurnoMinutos;
     private Boolean activo;
+    private String medicoNombre;
+    private String medicoApellido;
 
     public static HorarioMedicoDTO fromEntity(HorarioMedico hm) {
-        if (hm == null) return null;
+        if (hm == null)
+            return null;
         return HorarioMedicoDTO.builder()
                 .id(hm.getId())
                 .medicoId(hm.getMedico() != null ? hm.getMedico().getId() : null)
+                .medicoNombre(
+                        hm.getMedico() != null && hm.getMedico().getUsuario() != null
+                                ? hm.getMedico().getUsuario().getNombre()
+                                : null)
+                .medicoApellido(
+                        hm.getMedico() != null && hm.getMedico().getUsuario() != null
+                                ? hm.getMedico().getUsuario().getApellido()
+                                : null)
                 .clinicaId(hm.getClinica() != null ? hm.getClinica().getId() : null)
                 .diaSemana(hm.getDiaSemana())
                 .horaInicio(hm.getHoraInicio())
