@@ -33,27 +33,23 @@ public class ConsultaMedicaServicioImpl implements ConsultaMedicaServicio {
 
     @Override
     public ConsultaMedica update(Long id, ConsultaMedica consulta) {
-        ConsultaMedica existente = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Consulta médica no encontrada con id: " + id));
 
-        existente.setHistoriaClinica(consulta.getHistoriaClinica());
-        existente.setMedico(consulta.getMedico());
-        existente.setCita(consulta.getCita());
-        existente.setClinica(consulta.getClinica());
-        existente.setPaciente(consulta.getPaciente());
+        ConsultaMedica existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Consulta médica no encontrada con id: " + id));
+
         existente.setAnamnesis(consulta.getAnamnesis());
         existente.setExamenFisico(consulta.getExamenFisico());
         existente.setDiagnostico(consulta.getDiagnostico());
         existente.setTratamiento(consulta.getTratamiento());
         existente.setObservaciones(consulta.getObservaciones());
+
         existente.setPresionArterial(consulta.getPresionArterial());
         existente.setTemperatura(consulta.getTemperatura());
         existente.setFrecuenciaCardiaca(consulta.getFrecuenciaCardiaca());
         existente.setFrecuenciaRespiratoria(consulta.getFrecuenciaRespiratoria());
         existente.setPeso(consulta.getPeso());
         existente.setTalla(consulta.getTalla());
-        existente.setFechaConsulta(consulta.getFechaConsulta());
-        existente.setFechaActualizacion(consulta.getFechaActualizacion());
 
         return repository.save(existente);
     }
