@@ -39,6 +39,8 @@ public class ConsultaMedicaServicioImpl implements ConsultaMedicaServicio {
         existente.setHistoriaClinica(consulta.getHistoriaClinica());
         existente.setMedico(consulta.getMedico());
         existente.setCita(consulta.getCita());
+        existente.setClinica(consulta.getClinica());
+        existente.setPaciente(consulta.getPaciente());
         existente.setAnamnesis(consulta.getAnamnesis());
         existente.setExamenFisico(consulta.getExamenFisico());
         existente.setDiagnostico(consulta.getDiagnostico());
